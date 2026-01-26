@@ -1,1 +1,1 @@
-Sitemap: https://inseefrlab.github.io/funathon2024_sujet3/sitemap.xml
+Sitemap: https://AIML4OS.github.io/funathon-project1/sitemap.xml
