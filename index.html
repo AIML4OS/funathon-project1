@@ -42,7 +42,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-3ed0f71d960802c1d422fb8718019ce4.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-42bf3e1af73d1040bfd0cb58048c1b47.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/quarto-contrib/fontawesome6-0.1.0/all.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/fontawesome6-0.1.0/latex-fontsize.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -74,7 +76,6 @@ ul.task-list li input[type="checkbox"] {
 
 <meta property="og:title" content="Project 1 – AIML4OS Funathon - Project 1">
 <meta property="og:description" content="Predicting housing prices">
-<meta property="og:image" content="https://AIML4OS.github.io/funathon-project1/img/app_preview.jpg">
 <meta property="og:site_name" content="AIML4OS Funathon - Project 1">
 </head>
 
@@ -142,11 +143,11 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#déroulement-du-sujet" id="toc-déroulement-du-sujet" class="nav-link" data-scroll-target="#déroulement-du-sujet"><span class="header-section-number">1</span> Déroulement du sujet</a></li>
-  <li><a href="#initialisation-du-projet" id="toc-initialisation-du-projet" class="nav-link" data-scroll-target="#initialisation-du-projet"><span class="header-section-number">2</span> Initialisation du projet</a>
+  <li><a href="#structure-of-the-project" id="toc-structure-of-the-project" class="nav-link" data-scroll-target="#structure-of-the-project"><span class="header-section-number">1</span> Structure of the project</a></li>
+  <li><a href="#initialization-of-the-project" id="toc-initialization-of-the-project" class="nav-link" data-scroll-target="#initialization-of-the-project"><span class="header-section-number">2</span> Initialization of the project</a>
   <ul class="collapse">
-  <li><a href="#récupérer-le-projet-avec-git" id="toc-récupérer-le-projet-avec-git" class="nav-link" data-scroll-target="#récupérer-le-projet-avec-git"><span class="header-section-number">2.1</span> Récupérer le projet avec <code>Git</code> {{&lt; fa brands git-alt &gt;}}</a></li>
-  <li><a href="#installation-des-librairies-nécessaires" id="toc-installation-des-librairies-nécessaires" class="nav-link" data-scroll-target="#installation-des-librairies-nécessaires"><span class="header-section-number">2.2</span> Installation des librairies nécessaires</a></li>
+  <li><a href="#clone-the-project-with-git" id="toc-clone-the-project-with-git" class="nav-link" data-scroll-target="#clone-the-project-with-git"><span class="header-section-number">2.1</span> Clone the project with <code>Git</code> <i class="fa-brands fa-git-alt" aria-label="git-alt"></i></a></li>
+  <li><a href="#installation-of-dependencies" id="toc-installation-of-dependencies" class="nav-link" data-scroll-target="#installation-of-dependencies"><span class="header-section-number">2.2</span> Installation of dependencies</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/AIML4OS/funathon-project1/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/AIML4OS/funathon-project1/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
@@ -197,59 +198,44 @@ ul.task-list li input[type="checkbox"] {
 <table class="caption-top table">
 <thead>
 <tr class="header">
-<th data-quarto-table-cell-role="th">Niveau technique</th>
+<th data-quarto-table-cell-role="th">Technical level</th>
 <th data-quarto-table-cell-role="th">Enjeux</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><span class="level-button level-intermediaire">Intermédiaire</span></td>
-<td>Chercher à faire les exercices et ne regarder les aides que si nécessaire. <strong>Ne pas se préoccuper de la fin du tutoriel (l'ouverture vers la mise en production)</strong>.</td>
+<td><span class="level-button level-beginner">Beginner</span></td>
+<td>Doing the exercises, relying on clues and solutions if needed.</td>
 </tr>
 <tr class="even">
+<td><span class="level-button level-intermediate">Intermediate</span></td>
+<td>Doing the exercises, without relying on clues and solutions.</td>
+</tr>
+<tr class="odd">
 <td><span class="level-button level-expert">Expert</span></td>
-<td>Faire les premiers exercices en autonomie. <strong>Ajouter des éléments supplémentaires à l'application et aller jusqu'à la partie mise en production</strong>.</td>
+<td>&gt;Doing the exercises, without relying on clues and solutions, and completing steps 4 (logging) and 5 (deployment).</td>
 </tr>
 </tbody>
 </table>
 <section id="introduction" class="level1 unnumbered">
 <h1 class="unnumbered">Introduction</h1>
-<p>Flightradar24 est un service de suivi des vols qui fournit des informations en temps réel sur des milliers d’avions dans le monde entier. <a href="https://www.flightradar24.com/">Le site Internet</a> propose une visualisation interactive des vols en cours à chaque instant, comportant des informations issues de plusieurs sources sur chaque vol.&nbsp;Des données de position sont agrégées avec des données sur les horaires et le statut des vols provenant des compagnies aériennes et des aéroports.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="img/fr24.jpg" class="img-fluid figure-img"></p>
-<figcaption>Site Internet FlightRadar24</figcaption>
-</figure>
-</div>
-<p>Flightradar24 vend la plupart de ces données disponibles en temps réel, ainsi que des fichiers d’historiques de vols. Certaines données en temps réel sont toutefois disponibles en accès libre. Il est possible de récupérer ces données de manière programmatique en utilisant par exemple <a href="https://github.com/JeanExtreme002/FlightRadarAPI">cette librarie Python</a>.</p>
-<p>Avec ce sujet, nous vous proposons de reconstruire une interface utilisateur qui se rapproche de celle du <a href="https://www.flightradar24.com/">site FlightRadar24</a> avec Python. Une version démo de l’application est accessible via le bandeau en haut de cette page.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="img/app_preview.jpg" class="img-fluid figure-img"></p>
-<figcaption>Reconstruction de l’interface utilisateur FlightRadar24</figcaption>
-</figure>
-</div>
-<p>L’objet de ce sujet est de reconstruire pas à pas l’interface utilisateur de FlightRadar24. Ce faisant, ce sujet vous apprendra trois choses:</p>
+<p>What is the project about? What data, what methods, what skills?</p>
+</section>
+<section id="structure-of-the-project" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Structure of the project</h1>
+<p>This project has five steps (listed in the banner at the top of the page):</p>
 <ul>
-<li>Récupérer les données de FlightRadar24 avec interface de programmation Python ;</li>
-<li>Développer un site interactif avec <a href="https://dash.plotly.com/">Dash</a>, un framework Python réputé servant à construire des applications de visualisation de données ;</li>
-<li>Déployer facilement une application de visualisation dans un environnement Cloud.</li>
+<li>data generation;</li>
+<li>data preprocessing;</li>
+<li>model fitting and evaluation;</li>
+<li>model logging with MLflow;</li>
+<li>deployment.</li>
 </ul>
 </section>
-<section id="déroulement-du-sujet" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> Déroulement du sujet</h1>
-<p>Ce sujet comporte 5 parties listées dans le bandeau en haut de la page :</p>
-<ul>
-<li>Dans la première partie, nous explorerons les données disponibles via une <a href="https://github.com/JeanExtreme002/FlightRadarAPI">interface de programmation</a> ;</li>
-<li>Dans la deuxième partie, nous écrirons une première version de l’application de visualisation ;</li>
-<li>Dans les troisième et quatrième parties, nous raffinerons l’application ;</li>
-<li>Dans la cinquième partie, nous verrons comment déployer l’application sur le <a href="https://datalab.sspcloud.fr/">SSP Cloud</a> et la rendre accessible depuis Internet.</li>
-</ul>
-</section>
-<section id="initialisation-du-projet" class="level1" data-number="2">
-<h1 data-number="2"><span class="header-section-number">2</span> Initialisation du projet</h1>
-<section id="récupérer-le-projet-avec-git" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="récupérer-le-projet-avec-git"><span class="header-section-number">2.1</span> Récupérer le projet avec <code>Git</code> {{&lt; fa brands git-alt &gt;}}</h2>
+<section id="initialization-of-the-project" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Initialization of the project</h1>
+<section id="clone-the-project-with-git" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="clone-the-project-with-git"><span class="header-section-number">2.1</span> Clone the project with <code>Git</code> <i class="fa-brands fa-git-alt" aria-label="git-alt"></i></h2>
 <div class="callout callout-style-simple callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -260,30 +246,28 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Pour se lancer dans le sujet, commencer par ouvrir un service <a href="https://datalab.sspcloud.fr/launcher/ide/vscode-python">Vscode-python</a>. Pour éviter les problèmes plus tard, il faut impérativement modifier deux éléments de configuration du service :</p>
+<p>Pour se lancer dans le sujet, commencer par ouvrir un service <a href="https://datalab.sspcloud.fr/launcher/ide/vscode-python">Vscode-python</a>. Pour éviter les problèmes plus tard, il faut impérativement modifier deux éléments de configuration du service:</p>
 <ul>
 <li>Dans l’onglet <em>Networking</em> de la configuration, cocher la case “Enable a custom service port” ;</li>
 <li>Dans l’onglet <em>Kubernetes</em> de la configuration, changer le rôle en <code>admin</code>.</li>
 </ul>
 </div>
 </div>
-<p>Dans le service créé, cloner le projet depuis un Terminal avec la commande</p>
-<pre><code>git clone https://github.com/InseeFrLab/funathon2024_sujet3.git</code></pre>
+<p>Create a VScode service on SSP Cloud. In the service, open a terminal by clicking on <i class="fa-brands fa-fa-bars" aria-label="fa-bars"></i>, then <code>Terminal &gt; New Terminal</code>. Clone the project repository with:</p>
+<pre><code>git clone https://github.com/AIML4OS/funathon-project1.git</code></pre>
 <p>Le projet a la structure suivante :</p>
 <ul>
-<li>Les fichiers <code>.qmd</code> ainsi que le fichier <code>_quarto.yaml</code> ont servi à la construction de ce site ;</li>
-<li>Le fichier <code>requirements.txt</code> possède toutes les dépendances Python nécessaires pour le sujet ;</li>
-<li>Plusieurs versions de l’application, à différents stades du développement, et à modifier lors des exercices sont situées dans les répertoire <code>intermediate_app</code>, <code>better_app</code>, <code>even_better_app</code> et <code>final_app</code> ;<br>
-</li>
-<li>Le corrigé (version finale) de l’application se trouve dans le répertoire <code>correction</code> ;</li>
-<li>Le fichier <code>Dockerfile</code> et les fichiers du répertoire <code>kubernetes</code> serviront au déploiement de l’application.</li>
+<li>The <code>.qmd</code> files and the <code>_quarto.yaml</code> file are necessary to build the website ;</li>
+<li>The file <code>pyproject.toml</code> describes the dependencies of the project ;</li>
+<li>Intermediate solutions to the exercices are available in the <code>intermediate_solutions</code> folder;</li>
+<li>The final solution is available in the <code>final_solution</code> folder;</li>
+<li>TO BE COMPLETED DEPENDING ON THE PROJECT (<code>Dockerfile</code>, <code>kubernetes</code>…)/</li>
 </ul>
 </section>
-<section id="installation-des-librairies-nécessaires" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="installation-des-librairies-nécessaires"><span class="header-section-number">2.2</span> Installation des librairies nécessaires</h2>
-<p>Pour progresser, il vous faudra installer quelques librairies qui sont listées dans le fichier <code>requirements.txt</code>. Pour ce faire, depuis un Terminal, exécutez la commande</p>
-<pre><code>pip install -r requirements.txt</code></pre>
-<p>Pour ouvrir un terminal, il suffit de cliquer sur le menu VScode en haut à gauche (les trois petites barres horizontales), puis <code>Terminal &gt; New Terminal</code>.</p>
+<section id="installation-of-dependencies" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="installation-of-dependencies"><span class="header-section-number">2.2</span> Installation of dependencies</h2>
+<p>Install the project dependencies by running the following command in the terminal:</p>
+<pre><code>uv sync</code></pre>
 <div class="callout callout-style-simple callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
