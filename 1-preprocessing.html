@@ -227,7 +227,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ol type="1">
 <li>Initialiser un client <code>FlightRadar24API</code>.</li>
 </ol>
-<div id="6fbbd428" class="cell" data-execution_count="1">
+<div id="d61c5927" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Cliquer pour voir la réponse</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> FlightRadar24 <span class="im">import</span> FlightRadar24API</span>
@@ -237,7 +237,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ol start="2" type="1">
 <li>En utilisant le client, compter le nombre de compagnies aériennes.</li>
 </ol>
-<div id="73d7b111" class="cell" data-execution_count="2">
+<div id="7359bfbe" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Cliquer pour voir la réponse</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>airlines <span class="op">=</span> fr_api.get_airlines()</span>
@@ -256,7 +256,7 @@ Cliquer pour voir un indice
 </summary>
 La méthode <code>FlightRadar24API.get_zones</code> retourne un dictionnaire contenant une clé pour chaque zone.
 </details>
-<div id="6b622922" class="cell" data-execution_count="3">
+<div id="a3f20e39" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Cliquer pour voir la réponse</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>zones <span class="op">=</span> fr_api.get_zones().keys()</span>
@@ -276,7 +276,7 @@ Cliquer pour voir un indice
 </summary>
 La méthode à utiliser prend un argument <code>bounds</code>, que la méthode <code>FlightRadar24API.get_bounds</code> permet de récupérer à partir d’une zone géographique.
 </details>
-<div id="996693f1" class="cell" data-execution_count="4">
+<div id="aec238d9" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Cliquer pour voir la réponse</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>airline_icao <span class="op">=</span> <span class="st">"AFR"</span></span>
@@ -299,7 +299,7 @@ La méthode à utiliser prend un argument <code>bounds</code>, que la méthode <
 <ol start="5" type="1">
 <li>Il est possible de changer la configuration du client avec les méthodes <code>FlightRadar24API.get_flight_tracker_config</code> et <code>FlightRadar24API.set_flight_tracker_config</code>. Changer la configuration pour récupérer 5 vols à l’aide de la méthode <code>FlightRadar24API.get_flights</code> sans fournir d’argument.</li>
 </ol>
-<div id="1b1f103d" class="cell" data-execution_count="5">
+<div id="0a6d72ab" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Cliquer pour voir la réponse</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>flight_tracker <span class="op">=</span> fr_api.get_flight_tracker_config()</span>
@@ -332,7 +332,7 @@ La méthode à utiliser prend un argument <code>bounds</code>, que la méthode <
 <li><code>airline_icao</code>: Code ICAO de compagnie aérienne.</li>
 </ul>
 <p>Essayez d’identifier les différentes informations associées à un vol.</p>
-<div id="1bd85433" class="cell" data-execution_count="6">
+<div id="feaf6a9d" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Cliquer pour voir la réponse</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>flight <span class="op">=</span> flights[<span class="dv">2</span>]</span>
