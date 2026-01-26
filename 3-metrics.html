@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Première version de l’interface utilisateur – Funathon 2024 - Sujet 3</title>
+<title>Amélioration de l’interface utilisateur – AIML4OS Funathon - Project 1</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -104,11 +104,40 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<meta property="og:title" content="Première version de l’interface utilisateur – Funathon 2024 - Sujet 3">
-<meta property="og:description" content="Reconstruction de l’interface utilisateur de FlightRadar24">
-<meta property="og:image" content="https://AIML4OS.github.io/funathon-project1/img/custom_port.jpg">
-<meta property="og:site_name" content="Funathon 2024 - Sujet 3">
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<meta property="og:title" content="Amélioration de l’interface utilisateur – AIML4OS Funathon - Project 1">
+<meta property="og:description" content="Predicting housing prices">
+<meta property="og:image" content="https://AIML4OS.github.io/funathon-project1/img/plane.png">
+<meta property="og:site_name" content="AIML4OS Funathon - Project 1">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -128,24 +157,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text">Introduction</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./1-api.html"> 
-<span class="menu-text">1 Manipuler API FlightRadar24</span></a>
+    <a class="nav-link" href="./1-preprocessing.html"> 
+<span class="menu-text">Preprocessing</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./2-dash.html" aria-current="page"> 
-<span class="menu-text">2 Première version de l’UI</span></a>
+    <a class="nav-link" href="./2-model.html"> 
+<span class="menu-text">Modelling</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./3-advanced.html"> 
-<span class="menu-text">3 Améliorer l’UI</span></a>
+    <a class="nav-link active" href="./3-metrics.html" aria-current="page"> 
+<span class="menu-text">Model evaluation</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./4-final.html"> 
-<span class="menu-text">4 Améliorer encore l’UI</span></a>
+    <a class="nav-link" href="./4-logging.html"> 
+<span class="menu-text">Model logging</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./5-deployment.html"> 
-<span class="menu-text">5 Déployer l’UI</span></a>
+<span class="menu-text">Deployment</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="https://flightradar-ui-demo.lab.sspcloud.fr"> 
@@ -177,7 +206,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Première version de l’interface utilisateur</h1>
+<h1 class="title">Amélioration de l’interface utilisateur</h1>
 </div>
 
 
@@ -194,171 +223,145 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Dans la première partie de ce sujet, nous avons vu comment utiliser une API Python pour récupérer des données de vols en temps réel. Dans cette deuxième partie, nous allons utiliser le framework Python <a href="https://dash.plotly.com/">Dash</a> qui permet de construire des applications de visualisation de données rapidement et avec peu de code. Commençons par prendre en main le framework à partir de la <a href="https://dash.plotly.com/minimal-app">documentation</a>.</p>
+<p>Dans cette partie, on propose un exercice intéressant pour appréhender une fonctionnalité majeure de Dash, le partage de données entre <a href="https://dash.plotly.com/sharing-data-between-callbacks">callbacks</a>. L’exercice consiste à changer l’icône de marqueur des vols dans l’application en avion <img src="img/plane.png" height="20"> et à faire en sorte que chaque avion soit correctement orienté en fonction de son cap de vol.</p>
+<p>Comme nous avons pu le voir dans la première partie de ce sujet, l’API FlightRadar permet de récupérer pour chaque vol une variable <code>heading</code> qui contient le cap de vol en degrés. Nous pourrions utiliser cette variable pour donner une orientation aux icônes des marqueurs sur la carte, mais nous allons plutôt essayer de la recalculer au vol.&nbsp;D’ailleurs, ce n’est pas proposé dans l’exercice mais vous pouvez comparer les résultats de ce calcul avec la donnée brute disponible !</p>
 <div class="callout callout-style-default callout-tip no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Astuce</span><i class="bi bi-book"></i> Exercice 2: Prise en main de Dash
+<span class="screen-reader-only">Astuce</span><i class="bi bi-book"></i> Exercice 4: Calcul en direct du cap des vols
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Le script ci-dessous permet de faire tourner une application Dash minimale à partir des données contenues dans <a href="https://raw.githubusercontent.com/plotly/datasets/master/gapminder_unfiltered.csv">ce fichier <code>.csv</code></a>. Il est disponible au chemin <code>minimal_app/main.py</code> du dépôt du sujet.</p>
-<div id="9c185848" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> dash <span class="im">import</span> Dash, html, dcc, callback, Output, Input</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotly.express <span class="im">as</span> px</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'https://raw.githubusercontent.com/plotly/datasets/master/gapminder_unfiltered.csv'</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>app <span class="op">=</span> Dash()</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>app.layout <span class="op">=</span> [</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    html.H1(children<span class="op">=</span><span class="st">'Title of Dash App'</span>, style<span class="op">=</span>{<span class="st">'textAlign'</span>: <span class="st">'center'</span>}),</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    dcc.Dropdown(df.country.unique(), <span class="st">'Canada'</span>, <span class="bu">id</span><span class="op">=</span><span class="st">'dropdown-selection'</span>),</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    dcc.Graph(<span class="bu">id</span><span class="op">=</span><span class="st">'graph-content'</span>)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="at">@callback</span>(</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    Output(<span class="st">'graph-content'</span>, <span class="st">'figure'</span>),</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    Input(<span class="st">'dropdown-selection'</span>, <span class="st">'value'</span>)</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> update_graph(value):</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    dff <span class="op">=</span> df[df.country <span class="op">==</span> value]</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> px.line(dff, x<span class="op">=</span><span class="st">'year'</span>, y<span class="op">=</span><span class="st">'pop'</span>)</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">'__main__'</span>:</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    app.run(debug<span class="op">=</span><span class="va">True</span>, port<span class="op">=</span><span class="dv">5000</span>, host<span class="op">=</span><span class="st">'0.0.0.0'</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Pour exécuter l’application, lancer depuis la racine du projet dans un Terminal la commande</p>
-<pre><code>python minimal_app/main.py</code></pre>
-<p>L’application est disponible à une URL indiquée sur l’interface utilisateur du SSP Cloud. Voici comment accéder au lien : depuis la page <code>Mes Services</code>, cliquer sur le bouton <code>Ouvrir</code> du service VSCode, puis sur le lien indiqué dans le texte (voir la capture d’écran ci-dessous). Pour rappel, il faut que vous ayez lancé le service VSCode en changeant la configuration (ouverture du port custom 5000 dans l’onglet <code>Networking</code>).</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="img/custom_port.jpg" class="img-fluid figure-img"></p>
-<figcaption>Emplacement du lien pour accéder à l’application Dash</figcaption>
-</figure>
-</div>
-<p>Regardez les différents composants de l’application et identifiez les éléments du code correspondants, en lisant attentivement cette <a href="https://dash.plotly.com/basic-callbacks">page de la documentation de <code>Dash</code></a>. En particulier, essayez de comprendre comment la fonction <code>update_graph()</code> est appelée.</p>
+<p>Cet exercice est à réaliser dans le répertoire <code>better_app</code>, qui contient encore une fois deux fichiers <code>main.py</code> et <code>utils.py</code>.</p>
+<ol type="1">
+<li>Comparer le fichier <code>better_app/main.py</code> avec la correction du fichier <code>intermediate_app/main.py</code>. Identifier les nouveaux éléments et rechercher à quoi ils correspondent dans la documentation Dash.</li>
+</ol>
 <details>
 <summary>
 Cliquer pour voir la réponse
 </summary>
-<p>L’application est initialisée avec l’instruction <code>app = Dash()</code>. L’attribut <code>layout</code> (mise en page) de l’objet <code>app</code> est ensuite modifié. On ajoute un titre centré, un menu déroulant qui permet de choisir une option parmi une liste de valeurs uniques, puis un emplacement pour un graphique. La fonction <code>update_graph</code> est ensuite définie, qui prend en argument une variable <code>value</code> et renvoie un graphique (<em>line chart</em>) construit à partir des données filtrées à l’aide de la variable <code>value</code>. L’abscisse du graphique correspond à la colonne <code>year</code> du tableau de données, et l’ordonnée à la colonne <code>pop</code>.</p>
-La fonction est décorée avec <code>@callback</code>, une <a href="https://dash.plotly.com/basic-callbacks">fonctionnalité majeure de Dash</a>. Une telle fonction est automatiquement appelée chaque fois que la propriété d’un composant d’entrée change, afin de mettre à jour une propriété dans un autre composant (la sortie). En l’occurrence le composant de sortie est l’emplacement pour graphique avec l’identifiant <code>'graph-content'</code> et le composant d’entrée est le menu déroulant avec l’identifiant <code>'dropdown-selection'</code>. Tout ceci permet d’afficher le graphique correspondant au choix fait par l’utilisateur dans le menu déroulant.
+<p>On a plusieurs nouveaux éléments. D’abord, la mise en page de l’application intègre 3 nouveaux composants <code>dcc.Store</code>. Ce composant permet de stocker de la donnée JSON dans le navigateur de l’utilisateur. On va s’en servir pour communiquer la position précédente des vols en activité à chaque callback.</p>
+<p>L’attribut <code>storage_type</code> du composant détermine le type de stockage utilisé: - <code>memory</code>: les données sont effacées lors d’un rafraichissement de la page; - <code>local</code>: les données sont conservées après la sortie du navigateur; - <code>session</code>: les données sont effacées après la sortie du navigateur.</p>
+<p>Le décorateur de callback a également changé:</p>
+<div id="4330ff47" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="at">@app.callback</span>(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    [Output(<span class="st">'map'</span>, <span class="st">'children'</span>), Output(<span class="st">'memory'</span>, <span class="st">'data'</span>)],</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    [Input(<span class="st">'interval-component'</span>, <span class="st">'n_intervals'</span>)],</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    [State(<span class="st">'memory'</span>, <span class="st">'data'</span>)]</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li>Premièrement, le callback met maintenant à jour deux attributs, l’attribut <code>children</code> du <code>dl.MapContainer</code> mais aussi l’attribut <code>data</code> d’un <code>dcc.Store</code>. C’est cet attribut qui est utilisé pour transmettre des données entre callbacks. Notez bien la présence d’une liste dans le <code>Output</code> du callback, qui permet de changer plusieurs éléments en une seule fois;</li>
+<li>Deuxièmement, <code>dash.dependencies.State</code> permet de transmettre des données sans déclencher de callback lorsque l’attribut indiqué est modifié. Ici, on transmet les données du <code>dcc.Store 'memory'</code>.</li>
+</ul>
+<p>La fonction <code>update_graph_live</code> prend ainsi un argument supplémentaire en entrée, <code>previous_data</code>. Nous souhaitons ajouter aux dictionnaires des vols de la liste <code>data</code> une clé <code>rotation_angle</code> qui contient le cap de vol en degrés. Un bloc conditionnel a donc été ajouté pour:</p>
+<ul>
+<li>Initialiser cette clé à 0 pour chaque vol (lorsque le <code>dcc.Store</code> a son attribut <code>data</code> vide, donc à l’ouverture de la page);</li>
+<li>Calculer un nouveau cap à chaque callback à partir des données de position au temps <span class="math inline">\(t\)</span> et au temps <span class="math inline">\(t-1\)</span>.</li>
+</ul>
+Enfin, la liste <code>children</code> renvoyée par la fonction <code>update_graph_live</code> est légèrement modifiée. Chaque marqueur a maintenant un icône spécifique récupéré grâce aux fonctions <code>get_custom_icon</code> et <code>get_closest_round_angle</code>.
 </details>
-</div>
-</div>
-</div>
-<p>Essayons maintenant d’implémenter une première version de l’application de visualisation des données FlightRadar24.</p>
-<div class="callout callout-style-default callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Astuce</span><i class="bi bi-book"></i> Exercice 3: Première application de visualisation
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>On souhaite implémenter une première application de visualisation simple, affichant une carte sur laquelle se déplacent en temps réel des points correspondant aux vols Air France en Europe. Un squelette d’application se trouve dans le répertoire <code>intermediate_app</code>, avec des éléments à compléter.</p>
-<ol type="1">
-<li>Le répertoire <code>intermediate_app</code> comporte deux fichiers: <code>main.py</code>, qui contient le code de l’application Dash et <code>utils.py</code> qui contient une fonction utilitaire non encore implémentée. Cette fonction utilitaire <code>fetch_flight_data</code> prend en entrée un client FlightRadar, un code ICAO de compagnie aérienne, un type d’aéronef et une zone géographique. Elle renvoie la liste des vols en cours correspondant aux arguments donnés en entrée, où un vol est représenté par un simple dictionnaire avec trois clés <code>'latitude'</code>, <code>'longitude'</code> et <code>'id'</code>. Implémenter cette fonction.</li>
-</ol>
-<div id="b386c506" class="cell" data-execution_count="2">
-<details class="code-fold">
-<summary>Cliquer pour voir la réponse</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fetch_flight_data(</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    client: FlightRadar24API,</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    airline_icao: Optional[<span class="bu">str</span>] <span class="op">=</span> <span class="va">None</span>,</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    aircraft_type: Optional[<span class="bu">str</span>] <span class="op">=</span> <span class="va">None</span>,</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    zone_str: Optional[<span class="bu">str</span>] <span class="op">=</span> <span class="va">None</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> List[Dict]:</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">    Fetch flight data from FlightRadar24 API for</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">    a given airline, aircraft type and zone.</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">        client (FlightRadar24API): FlightRadar24API client.</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">        airline_icao (str): ICAO code of the airline.</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">        aircraft_type (str): Type of aircraft.</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">        zone_str (str): Zone string.</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">        List[Dict]: List of flights. A flight should be represented</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co">            as a dictionary with latitude, longitude and id keys.</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    zone <span class="op">=</span> client.get_zones()[zone_str]</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    bounds <span class="op">=</span> client.get_bounds(zone)</span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    flights <span class="op">=</span> client.get_flights(</span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>        aircraft_type<span class="op">=</span>aircraft_type,</span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>        airline<span class="op">=</span>airline_icao,</span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>        bounds<span class="op">=</span>bounds</span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> [</span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>        {</span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>            <span class="st">"latitude"</span>: flight.latitude,</span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>            <span class="st">"longitude"</span>: flight.longitude,</span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>            <span class="st">"id"</span>: flight.<span class="bu">id</span>,</span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>        } <span class="cf">for</span> flight <span class="kw">in</span> flights</span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    ]</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-</div>
 <ol start="2" type="1">
-<li><p>On trouve dans le fichier <code>main.py</code> le code de l’application Dash. La mise en page de l’application est simple. Elle contient d’abord un composant <a href="https://www.dash-leaflet.com/components/map_container"><code>dash_leaflet.MapContainer</code></a> abrévié en <code>dash_leaflet.Map</code>, avec un argument <code>children</code> initialisé avec la liste <code>[dash_leaflet.TileLayer()]</code> qui intègre un fond de carte OpenStreetMap au <code>dash_leaflet.MapContainer</code>.</p>
-<p>Le second composant est un <a href="https://dash.plotly.com/dash-core-components/interval"><code>dcc.Interval</code></a> qui va permettre d’initier un callback périodiquement. Ce composant contient un attribut <code>n_intervals</code> (initialisé à 0 ici) qui est incrémenté à intervalle de temps régulier, toutes les <code>interval</code> millisecondes.</p>
-<p>De fait, il faut définir la fonction <code>update_graph_live</code> comme un callback. Ecrire un décorateur pour que la fonction soit exécutée à chaque fois que l’attribut <code>n_intervals</code> du composant <code>dcc.Interval</code> est incrémenté, et de sorte à ce que la sortie de la fonction modifie l’attribut <code>children</code> du composant <code>dash_leaflet.MapContainer</code>.</p></li>
+<li>La fonction <code>update_rotation_angles</code> de <code>better_app/utils.py</code> prend en entrée la liste des dictionnaires de vols récupérer via l’API FlightRadar et ajoute à chaque dictionnaire une clé <code>'rotation_angle'</code> associée au cap de vol de l’aéronef. En regardant cette fonction, on voit que pour chaque vol de la liste, on récupère les positions à <span class="math inline">\(t\)</span> et <span class="math inline">\(t-1\)</span> si elles existent (les cas particuliers sont gérés à part). Si elles diffèrent, on calcule un nouveau cap avec la fonction <code>bearing_from_positions</code>. Implémenter cette fonction.</li>
 </ol>
-<div id="26b6d16f" class="cell" data-execution_count="3">
+<details>
+<summary>
+Cliquer pour voir un indice
+</summary>
+Pour calculer un cap à partir de positions différentes à <span class="math inline">\(t\)</span> et <span class="math inline">\(t-1\)</span> en degrés, vous pouvez suivre la méthode décrite sur <a href="https://www.movable-type.co.uk/scripts/latlong.html">cette page</a>, paragraphe <em>Bearing</em>.
+</details>
+<div id="04e0e3d4" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Cliquer pour voir la réponse</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="at">@app.callback</span>(</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    Output(<span class="st">'map'</span>, <span class="st">'children'</span>),</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    Input(<span class="st">'interval-component'</span>, <span class="st">'n_intervals'</span>),</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> bearing_from_positions(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    longitude: <span class="bu">float</span>,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    latitude: <span class="bu">float</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    previous_longitude: <span class="bu">float</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    previous_latitude: <span class="bu">float</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> <span class="bu">float</span>:</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">    Compute bearing from two sets of coordinates, at</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">    t-1 and t. Bearing is measured clockwise from the north.</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">        longitude (float): Longitude (in degrees).</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">        latitude (float): Latitude (in degrees).</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co">        previous_longitude (float): Previous longitude (in degrees).</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co">        previous_latitude (float): Previous latitude (in degrees).</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co">        float: Bearing in degrees.</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert to radians</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    lat1, lon1, lat2, lon2 <span class="op">=</span> <span class="bu">map</span>(</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>        math.radians,</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>        [previous_latitude, previous_longitude, latitude, longitude]</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Compute the difference between the two longitudes</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    dlon <span class="op">=</span> lon2 <span class="op">-</span> lon1</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Compute the initial bearing</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> math.sin(dlon) <span class="op">*</span> math.cos(lat2)</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> math.cos(lat1) <span class="op">*</span> math.sin(lat2) <span class="op">-</span> math.sin(lat1) <span class="op">*</span> math.cos(lat2) <span class="op">*</span> math.cos(dlon)</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    bearing_rad <span class="op">=</span> math.atan2(y, x)</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert the bearing to degrees</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    bearing_deg <span class="op">=</span> math.degrees(bearing_rad)</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Ensure the bearing is between 0 and 360 degrees</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    bearing_deg <span class="op">=</span> (bearing_deg <span class="op">+</span> <span class="dv">360</span>) <span class="op">%</span> <span class="dv">360</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> bearing_deg</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <ol start="3" type="1">
-<li><p>On souhaite maintenant modifier la fonction <code>update_graph_live</code> pour que sa sortie modifie la carte affichée de manière adaptée. Pour le moment, à chaque fois que la fonction est appelée, elle renvoie une liste contenant un fond de carte et un marqueur par vol récupéré grâce à la fonction <code>fetch_flight_data</code>, placé aux latitude et longitude 0.</p>
-<p>Modifier la liste renvoyée par la fonction <code>update_graph_live</code> pour que 1/ les marqueurs soient placés là où se situent les avions des vols, et pour que 2/ l’identifiant d’un vol s’affiche lorsqu’on clique sur le marqueur associé. Vous pourrez consulter <a href="https://www.dash-leaflet.com/components/ui_layers/popup">cette page</a> de la documentation de Dash Leaflet.</p></li>
+<li>La fonction <code>get_custom_icon</code> renvoie un icône d’avion orienté dans une certaine direction (voir le répertoire <code>img</code> du dépôt) en fonction de l’angle <code>round_angle</code> donné en entrée. Cette angle doit avoir une valeur multiple de 15 comprise entre 0 et 345. Implémenter la fonction <code>get_closest_round_angle</code> qui prend en entrée un angle en degrés (compris entre 0 et 360) et qui renvoie l’angle le plus proche parmi les valeurs autorisées pour <code>get_custom_icon</code>.</li>
 </ol>
-<div id="d35c4b8d" class="cell" data-execution_count="4">
+<div id="8be0d2e0" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Cliquer pour voir la réponse</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>children <span class="op">=</span> default_map_children <span class="op">+</span> [</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    dl.Marker(</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">id</span><span class="op">=</span>flight[<span class="st">'id'</span>],</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        position<span class="op">=</span>[flight[<span class="st">'latitude'</span>], flight[<span class="st">'longitude'</span>]],</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        children<span class="op">=</span>[dl.Popup(content<span class="op">=</span><span class="ss">f"Id: </span><span class="sc">{</span>flight[<span class="st">'id'</span>]<span class="sc">}</span><span class="ss">"</span>)]</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        ],</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    ) <span class="cf">for</span> flight <span class="kw">in</span> data</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>]</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_closest_round_angle(angle: <span class="bu">float</span>) <span class="op">-&gt;</span> <span class="bu">int</span>:</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Get closest round angle (multiple of 15 degrees)</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">    to the given angle.</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">        angle (float): Given angle.</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">        int: Closest angle among the following values:</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">            0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150,</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">            165, 180, 195, 210, 225, 240, 255, 270,</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">            285, 300, 315, 330, 345.</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    round_angles <span class="op">=</span> [</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        <span class="dv">0</span>, <span class="dv">15</span>, <span class="dv">30</span>, <span class="dv">45</span>, <span class="dv">60</span>, <span class="dv">75</span>, <span class="dv">90</span>,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        <span class="dv">105</span>, <span class="dv">120</span>, <span class="dv">135</span>, <span class="dv">150</span>, <span class="dv">165</span>, <span class="dv">180</span>,</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        <span class="dv">195</span>, <span class="dv">210</span>, <span class="dv">225</span>, <span class="dv">240</span>, <span class="dv">255</span>, <span class="dv">270</span>,</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>        <span class="dv">285</span>, <span class="dv">300</span>, <span class="dv">315</span>, <span class="dv">330</span>, <span class="dv">345</span>, <span class="dv">360</span>,</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    differences <span class="op">=</span> np.array([</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>        angle <span class="op">-</span> round_angle <span class="cf">for</span> round_angle <span class="kw">in</span> round_angles</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    ])</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    abs_differences <span class="op">=</span> np.<span class="bu">abs</span>(differences)</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    closest_angle_idx <span class="op">=</span> abs_differences.argmin()</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    closest_angle <span class="op">=</span> round_angles[closest_angle_idx]</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> closest_angle <span class="op">==</span> <span class="dv">360</span>:</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="dv">0</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> closest_angle</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <ol start="4" type="1">
 <li>Exécuter l’application en lançant depuis la racine du projet dans un Terminal la commande</li>
 </ol>
-<pre><code>python intermediate_app/main.py</code></pre>
-<p>Vous devriez observer le résultat suivant:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="img/intermediate_app.jpg" class="img-fluid figure-img"></p>
-<figcaption>Première application Dash de visualisation des vols</figcaption>
-</figure>
+<pre><code>python better_app/main.py</code></pre>
+<p>Vous devriez observer une application similaire à celle présentée en page d’accueil du sujet !</p>
 </div>
 </div>
 </div>
-</div>
-<p>Dans l’étape suivante, on propose d’améliorer le rendu de l’application en changeant l’icône des marqueurs et en implémentant un calcul du cap de vol des avions en temps réel.</p>
+<p>Dans l’étape suivante, on propose d’améliorer une nouvelle fois l’application en autorisant l’utilisateur à appliquer des filtres différents sur les vols qu’il souhaite observer.</p>
 
 
 
@@ -771,7 +774,7 @@ La fonction est décorée avec <code>@callback</code>, une <a href="https://dash
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions"><ul><li><a href="https://github.com/AIML4OS/funathon-project1/edit/main/2-dash.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/AIML4OS/funathon-project1/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></div>
+    <div class="toc-actions"><ul><li><a href="https://github.com/AIML4OS/funathon-project1/edit/main/3-metrics.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/AIML4OS/funathon-project1/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item">
