@@ -1,14 +1,17 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="fr-FR" xml:lang="fr-FR"><head>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.27">
+<meta name="generator" content="quarto-1.9.37">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Améliorations supplémentaires de l’interface utilisateur – AIML4OS Funathon - Project 1</title>
+<title>Logging a Random Forest model with MLflow – AIML4OS Funathon - Project 1</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -67,15 +70,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="quarto:offset" content="./">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-42bf3e1af73d1040bfd0cb58048c1b47.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-9c86c6a150ad8204aa26c688cf8b52e3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -90,22 +92,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   ],
   "show-item-context": false,
   "language": {
-    "search-no-results-text": "Pas de résultats",
-    "search-matching-documents-text": "documents trouvés",
-    "search-copy-link-title": "Copier le lien vers la recherche",
-    "search-hide-matches-text": "Cacher les correspondances additionnelles",
-    "search-more-match-text": "correspondance de plus dans ce document",
-    "search-more-matches-text": "correspondances de plus dans ce document",
-    "search-clear-button-title": "Effacer",
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
     "search-text-placeholder": "",
-    "search-detached-cancel-button-title": "Annuler",
-    "search-submit-button-title": "Envoyer",
-    "search-label": "Recherche"
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
 
 
-<meta property="og:title" content="Améliorations supplémentaires de l’interface utilisateur – AIML4OS Funathon - Project 1">
+<meta property="og:title" content="Logging a Random Forest model with MLflow – AIML4OS Funathon - Project 1">
 <meta property="og:description" content="Predicting housing prices">
 <meta property="og:site_name" content="AIML4OS Funathon - Project 1">
 </head>
@@ -116,8 +118,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
-            <div id="quarto-search" class="" title="Recherche"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Basculer la navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -130,10 +132,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="nav-link" href="./1-preprocessing.html"> 
 <span class="menu-text">Preprocessing</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./2-model.html"> 
-<span class="menu-text">Modelling</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-modelling" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Modelling</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-modelling">    
+        <li>
+    <a class="dropdown-item" href="./2-RF_model.html">
+ <span class="dropdown-text">with a random forest</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="./2-GB_model.html">
+ <span class="dropdown-text">with a gradient boosting</span></a>
+  </li>  
+    </ul>
+  </li>
   <li class="nav-item">
     <a class="nav-link" href="./3-metrics.html"> 
 <span class="menu-text">Model evaluation</span></a>
@@ -145,10 +158,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li class="nav-item">
     <a class="nav-link" href="./5-deployment.html"> 
 <span class="menu-text">Deployment</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="https://flightradar-ui-demo.lab.sspcloud.fr"> 
-<span class="menu-text">Application démo</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
@@ -176,7 +185,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Améliorations supplémentaires de l’interface utilisateur</h1>
+<h1 class="title">Logging a Random Forest model with MLflow</h1>
 </div>
 
 
@@ -193,210 +202,343 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Dans cette partie on propose deux améliorations à l’interface utilisateur qui font l’objet de deux exercices:</p>
+<p>After training and tuning a model, it is essential to track experiments and save artifacts in a reproducible way. <a href="https://mlflow.org/">MLflow</a> is an open-source platform that manages the full ML lifecycle: experiment tracking, model logging and deployment.</p>
+<p>In this section, we will use MLflow to log the pre-trained RF model built in the <a href="./2-RF_model.html">dedicated section</a>, along with its configuration tags, hyperparameters, evaluation metrics, diagnostic figures and the model artifact itself.</p>
+<p>Key MLflow concepts you will use in this exercise are:</p>
 <ul>
-<li>On souhaite d’abord afficher des informations supplémentaires concernant chaque vol lorsqu’un utilise clique sur un marqueur;</li>
-<li>On souhaite ajouter un menu permettant à l’utilisateur de choisir la compagnie aérienne dont il souhaite observer les vols.</li>
+<li><strong>Run</strong>: a single execution associated with parameters, metrics and artifacts — everything is grouped under a run;</li>
+<li><strong>Experiment</strong>: a named collection of runs, used to organize related training sessions;</li>
+<li><strong>Tags</strong>: free-form key-value metadata attached to a run (model type, framework, target column, etc.);</li>
+<li><strong>Parameters</strong>: hyperparameters or configuration values logged before or during training;</li>
+<li><strong>Metrics</strong>: scalar performance values (RMSE, MAE, R², etc.);</li>
+<li><strong>Artifacts</strong>: any files saved with a run — figures, serialized models, datasets;</li>
+<li><strong>Model signature</strong>: a schema that describes the expected input and output types of the model, used for validation and serving.</li>
 </ul>
-<div class="callout callout-style-default callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
+<p>The MLflow tracking user interface (UI) lets you compare runs, visualize metrics over time and retrieve any logged artifact. All the logging calls in this exercise are made inside a single <code>with mlflow.start_run()</code> block, which automatically closes the run when the block exits.</p>
+<p>Don’t forget to search in <a href="https://mlflow.org/docs/latest/api_reference/python_api/mlflow.html#">MLFlow documentation</a> for the functions details you’re looking for.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
+<i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Astuce</span><i class="bi bi-book"></i> Exercice 5: Informations supplémentaires sur chaque vol
+<span class="screen-reader-only">Tip</span><i class="bi bi-book"></i> Exercice 7: Log your RF model with MLflow
 </div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-1" class="callout-1-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
-<p>Le code pour cet exercice se trouve dans le répertoire <code>even_better_app</code>. Ce code correspond à l’application qui devrait être obtenue à la fin de l’exercice précédent. Pour afficher des informations supplémentaires sur chaque vol, il faut procéder en deux étapes.</p>
+<p>In this exercise, you will log the pre-trained RF model step by step, following the structure of the main training script. By the end, every artifact produced during training — figures, parameters, metrics and the model itself — will be registered in MLflow.</p>
 <ol type="1">
-<li>Dans le fichier <code>even_better_app/utils.py</code>, modifier la fonction <code>fetch_flight_data</code> pour inclure les information dans les dictionnaires de vols: code IATA des aéroports de départ et d’arrivée, vitesse au sol et type d’avion. <strong>Attention : il ne faut pas utiliser la fonction <code>get_flight_details()</code> car vous atteindriez immédiatement la limite de consultation de l’API Flightradar24.</strong></li>
+<li>Before starting, make sure that the MLflow tracking URI is set and that the experiment exists.</li>
 </ol>
-<div id="3ccf7caf" class="cell" data-execution_count="1">
+<div id="b3bf26c4" class="cell" data-execution_count="1">
 <details class="code-fold">
-<summary>Cliquer pour voir la réponse</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fetch_flight_data(</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    client: FlightRadar24API,</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    airline_icao: Optional[<span class="bu">str</span>] <span class="op">=</span> <span class="va">None</span>,</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    aircraft_type: Optional[<span class="bu">str</span>] <span class="op">=</span> <span class="va">None</span>,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    zone_str: Optional[<span class="bu">str</span>] <span class="op">=</span> <span class="va">None</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> List[Dict]:</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">    Fetch flight data from FlightRadar24 API for</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">    a given airline, aircraft type and zone.</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">        client (FlightRadar24API): FlightRadar24API client.</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">        airline_icao (str): ICAO code of the airline.</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">        aircraft_type (str): Type of aircraft.</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">        zone_str (str): Zone string.</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co">        List[Dict]: List of flights. A flight should be represented</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co">            as a dictionary with latitude, longitude, id and additional</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co">            keys.</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    zone <span class="op">=</span> client.get_zones()[zone_str]</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    bounds <span class="op">=</span> client.get_bounds(zone)</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    flights <span class="op">=</span> client.get_flights(</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>        aircraft_type<span class="op">=</span>aircraft_type,</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>        airline<span class="op">=</span>airline_icao,</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>        bounds<span class="op">=</span>bounds</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> [</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>        {</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>            <span class="st">"id"</span>: flight.<span class="bu">id</span>,</span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>            <span class="st">"aircraft_code"</span>: flight.aircraft_code,</span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>            <span class="st">"latitude"</span>: flight.latitude,</span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>            <span class="st">"longitude"</span>: flight.longitude,</span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>            <span class="st">"origin_airport_iata"</span>: flight.origin_airport_iata,</span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>            <span class="st">"destination_airport_iata"</span>: flight.destination_airport_iata,</span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>            <span class="st">"ground_speed"</span>: flight.ground_speed,</span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>        } <span class="cf">for</span> flight <span class="kw">in</span> flights</span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    ]</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<summary>See the solution</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> mlflow</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>mlflow_server <span class="op">=</span> os.getenv(<span class="st">"MLFLOW_TRACKING_URI"</span>) <span class="co"># your environment feature for accessing to MLFlow server</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>mlflow.set_tracking_uri(mlflow_server)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>mlflow.set_experiment(<span class="st">"run_rf"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <ol start="2" type="1">
-<li>Pour afficher plus d’informations dans l’application, il faut modifier le contenu de la fonction <code>update_graph_live</code> dans <code>even_better_app/main.py</code>, et plus spécifiquement l’argument <code>children</code> du constructeur <code>dl.Marker</code>. Ajouter les codes des aéroports de départ et d’arrivée et la vitesse au sol.</li>
+<li>Open a new MLflow run using the run <code>run_rf</code>.</li>
 </ol>
-<div id="bec1145f" class="cell" data-execution_count="2">
-<details class="code-fold">
-<summary>Cliquer pour voir la réponse</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="at">@app.callback</span>(</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    ...</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> update_graph_live(n, previous_data):</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    ...</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Update map children by adding markers to the default tiles layer</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    children <span class="op">=</span> default_map_children <span class="op">+</span> [</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        dl.Marker(</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>            position<span class="op">=</span>[flight[<span class="st">'latitude'</span>], flight[<span class="st">'longitude'</span>]],</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>            children<span class="op">=</span>[</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>                dl.Popup(html.Div([</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>                    dcc.Markdown(<span class="ss">f'''</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="ss">                        **Identifiant du vol**: </span><span class="sc">{</span>flight[<span class="st">'id'</span>]<span class="sc">}</span><span class="ss">.</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="ss">                        **Aéroport d'origine**: </span><span class="sc">{</span>flight[<span class="st">'origin_airport_iata'</span>]<span class="sc">}</span><span class="ss">.</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="ss">                        **Aéroport de destination**: </span><span class="sc">{</span>flight[<span class="st">'destination_airport_iata'</span>]<span class="sc">}</span><span class="ss">.</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="ss">                        **Vitesse au sol**: </span><span class="sc">{</span>flight[<span class="st">'ground_speed'</span>]<span class="sc">}</span><span class="ss"> noeuds.</span></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="ss">                    '''</span>)</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>                ]))</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>            ],</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>            icon<span class="op">=</span>get_custom_icon(</span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>                get_closest_round_angle(flight[<span class="st">'rotation_angle'</span>])</span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>            ),</span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>        ) <span class="cf">for</span> flight <span class="kw">in</span> data</span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    ]</span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> [children, data]</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-</div>
-<ol start="3" type="1">
-<li>Exécuter l’application en lançant depuis la racine du projet dans un Terminal la commande</li>
-</ol>
-<pre><code>python even_better_app/main.py</code></pre>
-<p>Vous devriez obtenir davantage d’informations sur un vol en cliquant dessus, en fonction des changements que vous avez effectués.</p>
-</div>
-</div>
-</div>
-<p>Passons à l’exercice suivant.</p>
-<div class="callout callout-style-default callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout callout-style-default callout-tip callout-titled" title="Click to view a hint">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
+<i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Astuce</span><i class="bi bi-book"></i> Exercice 6: Ajout d’un filtre sur la compagnie aérienne
+<span class="screen-reader-only">Tip</span>Click to view a hint
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse show">
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Dans cette exercice, nous allons ajouter à l’interface utilisateur un filtre permettant de choisir la compagnie aérienne dont les vols seront affichés. Le code pour cet exercice (à modifier encore une fois) se trouve dans le répertoire <code>final_app</code>.</p>
-<ol type="1">
-<li>Nous souhaitons d’abord modifier la mise en page de l’application. Modifier <code>final_app/main.py</code> de manière à intégrer dans <code>app.layout</code> une zone incluant un <a href="https://dash.plotly.com/dash-core-components/dropdown">menu déroulant</a>. Ce menu déroulant devra proposer plusieurs options de compagnie aériennes. Pour faciliter la suite, afficher le nom complet de la compagnie dans le menu déroulant mais faire en sorte que l’attribut <code>value</code> soit un code ICAO.</li>
-</ol>
-<div id="39425ee2" class="cell" data-execution_count="3">
+<p>Use <code>mlflow.start_run()</code> as a context manager (with block). All subsequent logging calls must be placed inside this block.</p>
+</div>
+</div>
+</div>
+<div id="60eb6699" class="cell" data-execution_count="2">
 <details class="code-fold">
-<summary>Cliquer pour voir la réponse</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>app.layout <span class="op">=</span> html.Div([</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># The memory store reverts to the default on every page refresh</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    dcc.Store(<span class="bu">id</span><span class="op">=</span><span class="st">"memory"</span>),</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># The local store will take the initial data</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># only the first time the page is loaded</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># and keep it until it is cleared.</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    dcc.Store(<span class="bu">id</span><span class="op">=</span><span class="st">"local"</span>, storage_type<span class="op">=</span><span class="st">"local"</span>),</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Same as the local store but will lose the data</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># when the browser/tab closes.</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    dcc.Store(<span class="bu">id</span><span class="op">=</span><span class="st">"session"</span>, storage_type<span class="op">=</span><span class="st">"session"</span>),</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    html.Div([</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>        html.H3(<span class="st">'Choix de la compagnie aérienne'</span>),</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>        dcc.Dropdown(</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>            <span class="bu">id</span><span class="op">=</span><span class="st">'dropdown'</span>,</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>            options<span class="op">=</span>[</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>                {<span class="st">'label'</span>: <span class="st">'Air France'</span>, <span class="st">'value'</span>: <span class="st">'AFR'</span>},</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>                {<span class="st">'label'</span>: <span class="st">'Iberia'</span>, <span class="st">'value'</span>: <span class="st">'IBE'</span>},</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>            ],</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>            value<span class="op">=</span><span class="st">'AFR'</span></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    ], style<span class="op">=</span>{</span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>        <span class="st">'width'</span>: <span class="st">'250px'</span>,</span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>        <span class="st">'background'</span>: <span class="st">'#f8f9fa'</span>,</span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>        <span class="st">'padding'</span>: <span class="st">'10px'</span>,</span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>        <span class="st">'position'</span>: <span class="st">'fixed'</span>,</span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>        <span class="st">'top'</span>: <span class="dv">0</span>,</span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>        <span class="st">'left'</span>: <span class="dv">0</span>,</span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>        <span class="st">'height'</span>: <span class="st">'100vh'</span></span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    }),</span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>    html.Div([</span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>        dl.Map(</span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>            <span class="bu">id</span><span class="op">=</span><span class="st">'map'</span>,</span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>            center<span class="op">=</span>[<span class="dv">56</span>, <span class="dv">10</span>],</span>
-<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>            zoom<span class="op">=</span><span class="dv">6</span>,</span>
-<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>            style<span class="op">=</span>{<span class="st">'width'</span>: <span class="st">'100%'</span>, <span class="st">'height'</span>: <span class="st">'800px'</span>},</span>
-<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>            children<span class="op">=</span>default_map_children</span>
-<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>    ], style<span class="op">=</span>{<span class="st">'marginLeft'</span>: <span class="st">'270px'</span>, <span class="st">'padding'</span>: <span class="st">'10px'</span>}),</span>
-<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>    dcc.Interval(</span>
-<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>        <span class="bu">id</span><span class="op">=</span><span class="st">"interval-component"</span>,</span>
-<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>        interval<span class="op">=</span><span class="dv">2</span><span class="op">*</span><span class="dv">1000</span>,  <span class="co"># in milliseconds</span></span>
-<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>        n_intervals<span class="op">=</span><span class="dv">0</span></span>
-<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>])</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<summary>See the solution</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> mlflow.start_run(run_name<span class="op">=</span><span class="st">"run_rf"</span>):</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    ...  <span class="co"># all logging calls go here</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<ol start="2" type="1">
-<li>Toujours dans <code>final_app/main.py</code>, modifier le décorateur callback de la fonction <code>update_graph_live</code> pour ajouter un <code>Input</code> correspondant à la compagnie sélectionnée dans le menu déroulant. Pour vous aider, vous pouvez relire <a href="https://dash.plotly.com/basic-callbacks">cette page</a>, notamment le point 1.c. Modifier également l’appel de la fonction <code>fetch_flight_data</code> pour que les données de la bonne compagnie soient récupérées.</li>
-</ol>
-<div id="7ce04d5e" class="cell" data-execution_count="4">
-<details class="code-fold">
-<summary>Cliquer pour voir la réponse</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="at">@app.callback</span>(</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    [Output(<span class="st">'map'</span>, <span class="st">'children'</span>), Output(<span class="st">'memory'</span>, <span class="st">'data'</span>)],</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    [Input(<span class="st">'interval-component'</span>, <span class="st">'n_intervals'</span>), Input(<span class="st">'dropdown'</span>, <span class="st">'value'</span>)],</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    [State(<span class="st">'memory'</span>, <span class="st">'data'</span>)]</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> update_graph_live(n, airline_icao, previous_data):</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Retrieve a list of flight dictionaries with 'latitude', 'longitude', 'id'</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># and additional keys</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> fetch_flight_data(client<span class="op">=</span>fr_api, airline_icao<span class="op">=</span>airline_icao, zone_str<span class="op">=</span><span class="st">"europe"</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-</div>
+<blockquote class="blockquote">
+<p>Note : When testing MLflow logging with the following instructions (from 3. to 10.), you must run the code inside this block. Otherwise, the logging will not work.</p>
+</blockquote>
 <ol start="3" type="1">
-<li>Exécuter l’application en lançant depuis la racine du projet dans un Terminal la commande</li>
+<li>Log tags to describe the context of the run: model type, task, data paths, target column, framework.</li>
 </ol>
-<pre><code>python final_app/main.py</code></pre>
-<p>La même application se trouve en principe dans le répertoire <code>correction</code>. Et voilà ! Le prototype est terminé !</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Click to view a hint">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Click to view a hint
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Use <code>mlflow.set_tags()</code> with a dictionary. Tags are free-form strings and are useful for filtering runs in the UI. You can pass any key-value pairs that describe the run context.</p>
 </div>
 </div>
 </div>
-<p>Dans la section suivante, nous allons voir comment déployer notre application Dash sur le SSP Cloud et la rendre accessible depuis Internet.</p>
+<div id="b8eb6913" class="cell" data-execution_count="3">
+<details class="code-fold">
+<summary>See the solution</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>    mlflow.set_tags({</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>        <span class="st">"model_type"</span>: <span class="st">"RandomForestRegressor"</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">"task"</span>: <span class="st">"regression"</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">"data_path"</span>: <span class="st">"s3://..."</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">"target_col"</span>: y.name,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">"framework"</span>: <span class="st">"scikit-learn"</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<ol start="4" type="1">
+<li>Log the training configuration parameters: dataset split ratio, model hyperparameters, dataset size and statistics.</li>
+</ol>
+<div class="callout callout-style-default callout-tip callout-titled" title="Click to view a hint">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Click to view a hint
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Use <code>mlflow.log_params()</code> with a dictionary. Parameters are meant for scalar values that configure the run (integers, floats, strings). Here you should log: <code>test_size</code>, <code>max_depth</code>, <code>min_samples_split</code>, <code>random_state</code>, <code>n_train</code>, <code>n_test</code>, <code>n_features</code>, <code>target_mean</code>, <code>target_std</code>, <code>oob_score</code>, <code>n_jobs</code>.</p>
+</div>
+</div>
+</div>
+<div id="8da40f85" class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>See the solution</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>    mlflow.log_params({</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>        <span class="st">"test_size"</span>: <span class="fl">0.2</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">"max_depth"</span>: <span class="dv">5</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">"min_samples_split"</span>: <span class="dv">2</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">"random_state"</span>: RANDOM_STATE,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_train"</span>: <span class="bu">len</span>(X_train),</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_test"</span>: <span class="bu">len</span>(X_test),</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_features"</span>: X.shape[<span class="dv">1</span>],</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"target_mean"</span>: <span class="bu">round</span>(<span class="bu">float</span>(y.mean()), <span class="dv">4</span>),</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">"target_std"</span>: <span class="bu">round</span>(<span class="bu">float</span>(y.std()), <span class="dv">4</span>),</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">"oob_score"</span>: <span class="va">True</span>,</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_jobs"</span>: <span class="op">-</span><span class="dv">1</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<ol start="5" type="1">
+<li>Log the OOB convergence figure produced in Exercise 5, which shows how the OOB error evolves as the number of trees increases.</li>
+</ol>
+<div class="callout callout-style-default callout-tip callout-titled" title="Click to view a hint">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Click to view a hint
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Use <code>mlflow.log_figure()</code>, which takes a matplotlib figure object and a filename (used as the artifact path in MLflow). The figure was returned by the <code>rf_error_oob_plot()</code> function called in the previous exercise.</p>
+</div>
+</div>
+</div>
+<div id="1240cd02" class="cell" data-execution_count="5">
+<details class="code-fold">
+<summary>See the solution</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>    mlflow.log_figure(oob_error_ntrees, <span class="st">"convergence_ntrees_oob_error.png"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<ol start="6" type="1">
+<li>Log the best hyperparameters found by the cross-validation grid search.</li>
+</ol>
+<div class="callout callout-style-default callout-tip callout-titled" title="Click to view a hint">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Click to view a hint
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The <code>GridSearchCV</code> object exposes the best hyperparameter combination via <code>grid_search.best_params_</code>, which is already a dictionary compatible with <code>mlflow.log_params()</code>.</p>
+</div>
+</div>
+</div>
+<div id="e3214c5f" class="cell" data-execution_count="6">
+<details class="code-fold">
+<summary>See the solution</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>    mlflow.log_params(grid_search.best_params_)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<ol start="7" type="1">
+<li>Compute and log the evaluation metrics on the test set: RMSE, MAE and R².</li>
+</ol>
+<div class="callout callout-style-default callout-tip callout-titled" title="Click to view a hint">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Click to view a hint
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>First generate predictions with <code>rf_best.predict(X_test)</code>, then compute the three metrics using <code>root_mean_squared_error</code>, <code>mean_absolute_error</code> and <code>r2_score</code> from <code>sklearn.metrics</code>. Build a dictionary and pass it on to <code>mlflow.log_metrics()</code>.</p>
+</div>
+</div>
+</div>
+<div id="2f37eb07" class="cell" data-execution_count="7">
+<details class="code-fold">
+<summary>See the solution</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>    <span class="im">from</span> sklearn.metrics <span class="im">import</span> root_mean_squared_error, r2_score, mean_absolute_error</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    y_pred <span class="op">=</span> rf_best.predict(X_test)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    residuals <span class="op">=</span> y_test <span class="op">-</span> y_pred</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    metrics <span class="op">=</span> {</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"neg_root_mean_squared_error"</span>: root_mean_squared_error(y_test, y_pred),</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"neg_mean_absolute_error"</span>: mean_absolute_error(y_test, y_pred),</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"r2"</span>: r2_score(y_test, y_pred),</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    mlflow.log_metrics(metrics)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<ol start="8" type="1">
+<li>Log all diagnostic figures seen in <em>Metrics</em> section: residuals distribution, QQ plot, target distribution for the test set, target distribution for the predictions and the permutation feature importance plot.</li>
+</ol>
+<div class="callout callout-style-default callout-tip callout-titled" title="Click to view a hint">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Click to view a hint
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Use <code>mlflow.log_figure()</code> for each figure. The figures are generated by functions created in last section <em>Metrics</em></p>
+<ul>
+<li><code>residuals_distribution(residuals, score)</code> — distribution of residuals;</li>
+<li><code>QQplot(y_test, y_pred)</code> — quantile-quantile plot;</li>
+<li><code>target_distribution(y_test)</code> and <code>target_distribution(y_pred)</code> — distributions of actual and predicted values;</li>
+<li><code>permutation_importance(calculate_importance(...))</code> — ranked feature importances based on permutation.</li>
+</ul>
+<p>Each call to <code>mlflow.log_figure()</code> requires a figure object and a destination filename (artifact path).</p>
+</div>
+</div>
+</div>
+<div id="dac1f6e0" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>    mlflow.log_figure(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>        residuals_distribution(residuals, metrics[<span class="st">"r2"</span>]),</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">"residuals_distrib.png"</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    mlflow.log_figure(QQplot(y_test, y_pred), <span class="st">"qqplot.png"</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    mlflow.log_figure(target_distribution(y_test), <span class="st">"y_test_distrib.png"</span>)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    mlflow.log_figure(target_distribution(y_pred), <span class="st">"y_pred_distrib.png"</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    mlflow.log_figure(</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>        permutation_importance(</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>            calculate_importance(X_test, y_test, RANDOM_STATE, rf_best, <span class="st">"r2"</span>)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">"importance.png"</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ol start="9" type="1">
+<li>Log the trained model as a scikit-learn artifact, together with its input/output signature and an input example. Register it with a version name.</li>
+</ol>
+<blockquote class="blockquote">
+<p>Note: The model signature describes the expected schema for model inputs and outputs. It is inferred from a sample of training data and predictions and enables MLflow to validate inputs at serving time.</p>
+</blockquote>
+<div class="callout callout-style-default callout-tip callout-titled" title="Click to view a hint">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Click to view a hint
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Use <code>mlflow.sklearn.log_model()</code> with the following arguments:</p>
+<ul>
+<li><code>sk_model</code>: the fitted model object (<code>rf_best</code>);</li>
+<li><code>name</code>: the artifact subdirectory name <code>RF</code>;</li>
+<li><code>signature</code>: inferred using <code>infer_signature(X_train, rf_best.predict(X_train))</code>;</li>
+<li><code>input_example</code>: a few rows of training data (e.g.&nbsp;<code>X_train.head(5)</code>) that illustrate the expected input format;</li>
+<li><code>registered_model_name</code>: a versioned name in the MLflow model registry, e.g.&nbsp;<code>"rf-run"</code>.</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="98604335" class="cell" data-execution_count="9">
+<details class="code-fold">
+<summary>See the solution</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> mlflow.sklearn</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="im">from</span> mlflow.models.signature <span class="im">import</span> infer_signature</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    signature <span class="op">=</span> infer_signature(X_train, rf_best.predict(X_train))</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    mlflow.sklearn.log_model(</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>        sk_model<span class="op">=</span>rf_best,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>        name<span class="op">=</span><span class="st">"RF"</span>,</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>        signature<span class="op">=</span>signature,</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>        input_example<span class="op">=</span>X_train.head(<span class="dv">5</span>),</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>        registered_model_name<span class="op">=</span><span class="st">"rf-run"</span>,</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<ol start="10" type="1">
+<li>Retrieve and print the run ID at the end of the logging block to confirm that the run was registered successfully.</li>
+</ol>
+<div class="callout callout-style-default callout-tip callout-titled" title="Click to view a hint">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Click to view a hint
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Inside an active <code>mlflow.start_run()</code> block, you can access the current run via <code>mlflow.active_run()</code>. The run ID is available at <code>mlflow.active_run().info.run_id</code>.</p>
+</div>
+</div>
+</div>
+<div id="7029419d" class="cell" data-execution_count="10">
+<details class="code-fold">
+<summary>See the solution</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Run ID : </span><span class="sc">{</span>mlflow<span class="sc">.</span>active_run()<span class="sc">.</span>info<span class="sc">.</span>run_id<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<p>Congrats 🎉! You have logged a complete ML experiment in MLflow: configuration tags, hyperparameters, evaluation metrics, diagnostic figures and the model artifact with its signature. You can now open the MLflow UI to inspect and compare your runs.</p>
+</div>
+</div>
 
 
 
@@ -426,12 +568,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       // flash "checked"
       button.classList.add('code-copy-button-checked');
       var currentTitle = button.getAttribute("title");
-      button.setAttribute("title", "Copié");
+      button.setAttribute("title", "Copied!");
       let tooltip;
       if (window.bootstrap) {
         button.setAttribute("data-bs-toggle", "tooltip");
         button.setAttribute("data-bs-placement", "left");
-        button.setAttribute("data-bs-title", "Copié");
+        button.setAttribute("data-bs-title", "Copied!");
         tooltip = new bootstrap.Tooltip(button, 
           { trigger: "manual", 
             customClass: "code-copy-button-tooltip",
@@ -809,7 +951,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions"><ul><li><a href="https://github.com/AIML4OS/funathon-project1/edit/main/4-logging.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/AIML4OS/funathon-project1/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></div>
+    <div class="toc-actions"><ul><li><a href="https://github.com/AIML4OS/funathon-project1/edit/main/4-logging.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/AIML4OS/funathon-project1/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item">
