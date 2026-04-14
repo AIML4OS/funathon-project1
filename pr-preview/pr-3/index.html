@@ -139,10 +139,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="nav-link" href="./1-preprocessing.html"> 
 <span class="menu-text">Preprocessing</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./2-model.qmd"> 
-<span class="menu-text">Modelling</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-modelling" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Modelling</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-modelling">    
+        <li>
+    <a class="dropdown-item" href="./2-RF_model.html">
+ <span class="dropdown-text">with a random forest</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="./2-GB_model.html">
+ <span class="dropdown-text">with a gradient boosting</span></a>
+  </li>  
+    </ul>
+  </li>
   <li class="nav-item">
     <a class="nav-link" href="./3-metrics.html"> 
 <span class="menu-text">Model evaluation</span></a>

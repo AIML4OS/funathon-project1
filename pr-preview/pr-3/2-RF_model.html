@@ -132,10 +132,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="nav-link" href="./1-preprocessing.html"> 
 <span class="menu-text">Preprocessing</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./2-model.qmd"> 
-<span class="menu-text">Modelling</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-modelling" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Modelling</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-modelling">    
+        <li>
+    <a class="dropdown-item" href="./2-RF_model.html">
+ <span class="dropdown-text">with a random forest</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="./2-GB_model.html">
+ <span class="dropdown-text">with a gradient boosting</span></a>
+  </li>  
+    </ul>
+  </li>
   <li class="nav-item">
     <a class="nav-link" href="./3-metrics.html"> 
 <span class="menu-text">Model evaluation</span></a>
@@ -244,7 +255,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Remember : in the <a href="./1-preprocessing.html">Preprocessing section</a>, we created the training sets <code>X_train</code> and <code>y_train</code>.</p>
 </details></li>
 </ol>
-<div id="64f80f47" class="cell" data-execution_count="1">
+<div id="d28670e2" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> RandomForestRegressor</span>
@@ -286,7 +297,7 @@ Important
 <p>Scikit-learn distinguishes <strong>parameters</strong> from <strong>fitted attributes</strong>. Here, to access the attributes sent back by the training phase listed in the documentation, we need to search for the <code>oob_score_</code> attributes of the random forest.</p>
 </div>
 </div>
-<div id="c0d2fb18" class="cell" data-execution_count="2">
+<div id="88069d33" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>rf.oob_score_</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -305,7 +316,7 @@ Important
 <p>Remember to use the test set for the evaluation, not the training set.</p>
 </details></li>
 </ol>
-<div id="6e3ce2fc" class="cell" data-execution_count="3">
+<div id="cc70d6b1" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_squared_error</span>
@@ -360,7 +371,7 @@ Note
 <ol type="1">
 <li>Subsample a fraction ( <code>0.1</code> ) of the <code>df</code> dataset to reduce computation time and define X_sub and y_sub. To stick to the characteristics of the target, stratify the sampling to the target’s distribution thanks to <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.qcut.html#pandas.qcut">pandas’ <code>qcut</code> function</a>.</li>
 </ol>
-<div id="c52244a2" class="cell" data-execution_count="4">
+<div id="d4ff59f7" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sample the train dataset using Pandas' index</span></span>
@@ -388,7 +399,7 @@ Note
 <div class="callout-body-container callout-body">
 <p>As a hint, you can go to the documentation page on OOB error <a href="https://scikit-learn.org/stable/auto_examples/ensemble/plot_ensemble_oob.html">here</a>.</p>
 <p>If you need, here is the code to calculate and store the OOB score.</p>
-<div id="64fa50c8" class="cell" data-execution_count="5">
+<div id="5e94c8b8" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>oob_scores <span class="op">=</span> []</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>warnings.filterwarnings(<span class="st">"ignore"</span>, message<span class="op">=</span><span class="st">"Some inputs do not have OOB scores"</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># filterwarnings remove some warnings messages</span></span>
@@ -409,7 +420,7 @@ Note
 </div>
 </div></li>
 </ol>
-<div id="4a6920c3" class="cell" data-execution_count="6">
+<div id="57ab61da" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings </span>
@@ -456,7 +467,7 @@ Note
 </ul>
 </details></li>
 </ol>
-<div id="a1aba0e0" class="cell" data-execution_count="7">
+<div id="61344b0c" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -532,7 +543,7 @@ Note
 </details>
 </div>
 <p>You can select the number of trees (<code>n_estimators</code>) now, with the OOB error plot. Which number do you choose ?</p>
-<div id="d134e483" class="cell" data-execution_count="8">
+<div id="b991c775" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>oob_error_ntrees <span class="op">=</span> rf_error_oob_plot(X_train<span class="op">=</span>X_train,</span>
@@ -554,7 +565,7 @@ Note
 <ol start="0" type="1">
 <li>For convenience, we dropped the features <code>prop_type</code>, <code>dtemut</code> and trained our model on absolute prices and not on the transformed ones. Get them back and define the new training and testing datasets <code>X_train, X_test, y_train, y_test</code>.</li>
 </ol>
-<div id="3cf64206" class="cell" data-execution_count="9">
+<div id="63eba336" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Split features / target</span></span>
@@ -583,7 +594,7 @@ Note
 <p>More details on <a href="https://scikit-learn.org/stable/modules/compose.html#access-to-nested-parameters">scikit learn’s documentation</a></p>
 </details></li>
 </ol>
-<div id="e4d5b2ef" class="cell" data-execution_count="10">
+<div id="301b954d" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>param_grid <span class="op">=</span> {</span>
@@ -596,7 +607,7 @@ Note
 <ol start="2" type="1">
 <li>Using the <a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html">Grid Search documentation</a>, write the code to set up and run cross-validated hyperparameter tuning for the RF model. Note that training the model should last around 10 minutes.</li>
 </ol>
-<div id="2b9f957d" class="cell" data-execution_count="11">
+<div id="056fb51b" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> GridSearchCV</span>
@@ -618,7 +629,7 @@ Note
 <ol start="3" type="1">
 <li>From the fitted <code>grid_search</code> object, retrieve the best hyperparameters found for the model.</li>
 </ol>
-<div id="bee60658" class="cell" data-execution_count="12">
+<div id="b33d0aef" class="cell" data-execution_count="12">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(grid_search.best_params_)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -644,7 +655,7 @@ Important
 <blockquote class="blockquote">
 <p>Note : Which type is <code>best_estimator_</code> attribute ?</p>
 </blockquote>
-<div id="ccf438b3" class="cell" data-execution_count="13">
+<div id="2af019a7" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>rf_best <span class="op">=</span> grid_search.best_estimator_</span>
@@ -676,7 +687,7 @@ Important
 <ol type="1">
 <li>Compute predictions on the test set using the best model retrieved from the previous exercise.</li>
 </ol>
-<div id="35db9464" class="cell" data-execution_count="14">
+<div id="bce85487" class="cell" data-execution_count="14">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> rf_best.predict(X_test)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -691,7 +702,7 @@ Click to view a hint
 </summary>
 <p>You can use <code>mean_squared_error</code>, <code>mean_absolute_error</code>, and <code>r2_score</code> from <code>sklearn.metrics</code>. To obtain <strong>RMSE</strong> from <strong>MSE</strong>, apply <code>np.sqrt()</code>.</p>
 </details>
-<div id="53156560" class="cell" data-execution_count="15">
+<div id="c136abef" class="cell" data-execution_count="15">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_squared_error, mean_absolute_error, r2_score</span>
@@ -715,7 +726,7 @@ Click to view a hint
 </summary>
 <p>Use <code>matplotlib.pyplot</code> to create a scatter plot of <code>y_test</code> against <code>y_pred</code>. Add a reference diagonal line (representing perfect predictions) using <code>ax.plot([min, max], [min, max])</code>.</p>
 </details>
-<div id="29baebb4" class="cell" data-execution_count="16">
+<div id="d56de9bf" class="cell" data-execution_count="16">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="dv">7</span>))</span>
