@@ -89,6 +89,55 @@ trans = con.sql(
         SELECT * FROM read_parquet('s3://confpns/synthetic-transactions/rawdata/transactions/transactions_flats_final.parquet')
     """).to_df()
 
+trans = trans.rename({
+  "idmutation":"trans_id",
+  "datemut":"trans_date",
+  "anneemut":"trans_year",
+  "moismut":"trans_month",
+  "idnatmut":"trans_type_code",
+  "libnatmut":"trans_type_label",
+  "valeurfonc":"price",
+  "dteloc":"prop_type",
+  "jannath":"prop_year_harm",
+  "ccodep":"prop_loc_dep",
+  "depcom":"prop_loc_",
+  "x":"prop_loc_x",
+  "y":"prop_loc_y",
+  "distance_ltm":"dist_tosea",
+  "distance_ltm_corr":"dist_tosea_corr",
+  "dnbniv":"n_floors",
+  "dnbbai":"n_bath",
+  "dnbdou":"n_show",
+  "dnblav":"n_sink",
+  "dnbwc":"n_wc",
+  "dnbppr":"n_mrooms",
+  "dnbsam":"n_eatr",
+  "dnbcha":"n_slr",
+  "dnbcu8":"n_kit8",
+  "dnbcu9":"n_kit9",
+  "dnbsea":"n_washr",
+  "dnbann":"n_ancrooms",
+  "dnbpdc":"n_rooms",
+  "dsupdc":"farea",
+  "geaulc":"has_water",
+  "gelelc":"has_elec",
+  "gesclc":"stair",
+  "ggazlc":"has_gas",
+  "gasclc":"has_elevator",
+  "gchclc":"has_cheating",
+  "gvorlc":"has_rchute",
+  "gteglc":"has_mdrainage",
+  "dniv":"nth_floor",
+  "dcntsol":"s_land_artif",
+  "dcntagri":"s_land_agri",
+  "dcntnat":"s_land_nat",
+  "nb_garages":"n_garage",
+  "nb_piscines":"n_pool",
+  "nb_terrasses":"n_terrace",
+  "nb_greniers":"n_attic",
+  "nb_caves":"n_basmt",
+  "nb_autresdep":"n_otherannex"})
+
 ```
 
 ::: {.callout-note title="Another way to load the data"}
@@ -136,7 +185,7 @@ df.notnull().all() # column with no NaN?
 
 <summary>View a hint</summary>
 
-You need to filter with the feature `ccodep`, with the following department codes for Paris area : \["75", "77", "78", "91", "92", "93", "94", "95"\]
+You need to filter with the feature `prop_loc_dep`, with the following department codes for Paris area : \["75", "77", "78", "91", "92", "93", "94", "95"\]
 
 </details>
 
@@ -146,7 +195,7 @@ You need to filter with the feature `ccodep`, with the following department code
 #| code-overflow: scroll
 import pandas as pd
 
-trans = trans[trans["ccodep"].isin(["75", "77", "78", "91", "92", "93", "94", "95"])]
+trans = trans[trans["prop_loc_dep"].isin(["75", "77", "78", "91", "92", "93", "94", "95"])]
 ```
 ::::
 
@@ -171,7 +220,7 @@ We will transform a few features for the training part. It will enhance the qual
 
     <summary>Click to view a hint</summary>
 
-    You need to create a new target `valfonc_m2` with features `valeurfonc` (housing price) and `dsupdc`
+    You need to create a new target `price_sqm` with features `price` (housing price) and `farea`
 
     </details>
 
@@ -180,7 +229,7 @@ We will transform a few features for the training part. It will enhance the qual
     #| code-summary: See the solution
     #| code-overflow: scroll
 
-    trans["valfonc_m2"] = trans["valeurfonc"] / trans["dsupdc"]
+    trans["price_sqm"] = trans["price"] / trans["farea"]
     ```
 
 2.  **Check if the target must be transformed by plots**
@@ -204,7 +253,7 @@ We will transform a few features for the training part. It will enhance the qual
     import matplotlib.pyplot as plt
 
     # --- Update with your target ---
-    y = trans["valfonc_m2"]
+    y = trans["price_sqm"]
     p = np.percentile(y, 99.5)
 
     fig, axes = plt.subplots(4, 1, figsize=(12, 15))
@@ -281,7 +330,7 @@ n0 = trans.shape[0]
 print(f"{n0} rows before filtering")
 
 # Apply some deterministic threshold on the dataframe
-trans = trans[(trans["valfonc_m2"] < 200000) & (trans["valfonc_m2"] > 100)]
+trans = trans[(trans["price_sqm"] < 200000) & (trans["price_sqm"] > 100)]
 
 print(f"{trans.shape[0]} rows after deterministic filtering")
 
@@ -302,7 +351,7 @@ def outlier_transform(y, lower=0.1, upper=0.9):
     mask = (y >= Q_lower - 1.5 * IQR) & (y <= Q_upper + 1.5 * IQR)
     return mask
 
-mask = outlier_transform(trans["valfonc_m2"])
+mask = outlier_transform(trans["price_sqm"])
 trans = trans[mask].reset_index(drop=True)
 
 n1 = trans.shape[0]
@@ -327,7 +376,7 @@ For our project, we will delete all observations with a missing target value. Yo
 #| code-summary: See the solution
 #| code-overflow: scroll
 
-trans = trans.dropna(subset = "valfonc_m2")
+trans = trans.dropna(subset = "price_sqm")
 ```
 
 ## Preparation of the features (variables X of the ML model)
@@ -382,7 +431,7 @@ You will see in the section {#sec-scikit-learn-pipeline} how preprocessing can b
 
     <summary>Click to view a hint</summary>
 
-    We chose to drop the following variables : `idmutation` (meaningless), `idnatmut` (meaningless), `libnatmut` (always equal to the same value), `valeurfonc` (already taken care of with our target), `ccodep` (geographical information is comprised in geographical coordinates x and y), `depcom` (geographical information is comprised in geographical coordinates x and y), `distance_ltm` and `distance_ltm_corr` have no meaningful information in the Paris area, far from the sea.
+    We chose to drop the following variables : `trans_id` (meaningless), `trans_type_code` (meaningless), `trans_type_label` (always equal to the same value), `price` (already taken care of with our target), `prop_loc_dep` (geographical information is comprised in geographical coordinates prop_loc_x and prop_loc_y), `prop_loc_citycode` (geographical information is comprised in geographical coordinates prop_loc_x and prop_loc_y), `dist_tosea` and `dist_tosea_corr` have no meaningful information in the Paris area, far from the sea.
 
     </details>
 
@@ -392,8 +441,8 @@ You will see in the section {#sec-scikit-learn-pipeline} how preprocessing can b
 #| code-overflow: scroll
 
 df = trans.drop(columns=[
-    'idmutation', "idnatmut", "libnatmut", 
-    "valeurfonc", "ccodep", "depcom", "distance_ltm", "distance_ltm_corr"
+    'trans_id', "trans_type_code", "trans_type_label", 
+    "price", "prop_loc_dep", "prop_loc_citycode", "dist_tosea", "dist_tosea_corr"
 ])
 
 ```
@@ -408,41 +457,41 @@ print(df[df.isna().any(axis=1)])
 df = df.dropna()
 ```
 
-3.  For convenience, we want to update the modalities of the `dteloc` variable : `1` means it's a house and `2` it's a flat. You can check pandas's Categorical function on [their documentation](https://pandas.pydata.org/docs/reference/api/pandas.Categorical.html#pandas.Categorical).
+3.  For convenience, we want to update the modalities of the `prop_type` variable : `1` means it's a house and `2` it's a flat. You can check pandas's Categorical function on [their documentation](https://pandas.pydata.org/docs/reference/api/pandas.Categorical.html#pandas.Categorical).
 
 ```{python}
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
 
-df["dteloc"] = pd.Categorical(
-    df["dteloc"],
+df["prop_type"] = pd.Categorical(
+    df["prop_type"],
     categories=["1", "2"],
     ordered=False
 ).rename_categories({"1": "House", "2": "Flat"})
 ```
 
 
-4.  The codification of categorical variable can be computational intensive. `dteloc` has only two modalities but check the number of modalities of `jannath`. To speed-up the computation, can we regroup modalities together ?  Does it make sense given how the variable has been transformed (see the [presentation of the data](index.qmd)) ? How can we do it ? 
+4.  The codification of categorical variable can be computational intensive. `prop_type` has only two modalities but check the number of modalities of `prop_year_harm`. To speed-up the computation, can we regroup modalities together ?  Does it make sense given how the variable has been transformed (see the [presentation of the data](index.qmd)) ? How can we do it ? 
 
 ```{python}
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
 
-counts = df.value_counts("jannath").reset_index()
-counts[counts["jannath"] < 1850].describe() # there more than 400 different years of construction, going from 13th century to now. Maybe we can bundle together years before 1850 and group them by decade
+counts = df.value_counts("prop_year_harm").reset_index()
+counts[counts["prop_year_harm"] < 1850].describe() # there more than 400 different years of construction, going from 13th century to now. Maybe we can bundle together years before 1850 and group them by decade
 
-counts_10 = ((df["jannath"] // 10)*10).value_counts().reset_index()  # 76 modalities
-counts_10[counts_10["jannath"] < 1850].describe()  # years before 1850 represent 58 modalities with maximal class of about twenty thousands operations - ok
-counts_10[counts_10["jannath"] < 1850]["count"].sum()  
+counts_10 = ((df["prop_year_harm"] // 10)*10).value_counts().reset_index()  # 76 modalities
+counts_10[counts_10["prop_year_harm"] < 1850].describe()  # years before 1850 represent 58 modalities with maximal class of about twenty thousands operations - ok
+counts_10[counts_10["prop_year_harm"] < 1850]["count"].sum()  
 
 # Replacing year of construction by decade and merging together all years before 1850
-df['jannath_10'] = (df['jannath'] // 10)*10
-df['jannath_10'] = df['jannath_10'].where(df['jannath_10'] >= 1850, 1840)
+df['prop_year_harm_10'] = (df['prop_year_harm'] // 10)*10
+df['prop_year_harm_10'] = df['prop_year_harm_10'].where(df['prop_year_harm_10'] >= 1850, 1840)
 
 # Dropping old column
-df = df.drop(columns=["jannath"])
+df = df.drop(columns=["prop_year_harm"])
 ```
 
 5.  Split the dataframe in train and test set.
@@ -463,8 +512,8 @@ df = df.drop(columns=["jannath"])
 from sklearn.model_selection import train_test_split
 
 # Split features / target
-X = df.drop(columns="valfonc_m2")  # X must contain only the features we'll learn from
-y = df["valfonc_m2"]  # target must be a dataframe with 1 column
+X = df.drop(columns="price_sqm")  # X must contain only the features we'll learn from
+y = df["price_sqm"]  # target must be a dataframe with 1 column
 
 # Split train / test set
 X_train, X_test, y_train, y_test = train_test_split(
@@ -543,7 +592,7 @@ cols_num = selector(dtype_include="number")  # Defines numerical features as col
 
 preprocessor = ColumnTransformer([
     ("num", StandardScaler(), cols_num), # scaling can be useful for some model but not for our project
-    ("cat", OneHotEncoder(), ["region", "job_type", "jannath_10"])
+    ("cat", OneHotEncoder(), ["region", "job_type", "prop_year_harm_10"])
     ],
     remainder="passthrough" # the remainder parameter tells what to do with features not transformed. By default, non transformed data is dropped. Specifying "passthrough" passes on the data unchanged to the model. 
 )
@@ -566,7 +615,7 @@ We will now create our first pipeline to transform the data for the training pha
 
     For the preprocessing step, you have to :
 
-    -   transform the `datemut` variable, a `Timestamp` feature to a elapsed feature (`ref_date = '2010-01-01 00:00'`). You can create a new function `date_to_days`, and apply it with [scikit-learn's `FunctionTransformer`](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.FunctionTransformer.html). Note that the output of your `date_to_days` function should be a Python array and that `.to_numpy().reshape(-1, 1)` applied to a Pandas Series will transform it to the correct type ;
+    -   transform the `trans_date` variable, a `Timestamp` feature to a elapsed feature (`ref_date = '2010-01-01 00:00'`). You can create a new function `date_to_days`, and apply it with [scikit-learn's `FunctionTransformer`](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.FunctionTransformer.html). Note that the output of your `date_to_days` function should be a Python array and that `.to_numpy().reshape(-1, 1)` applied to a Pandas Series will transform it to the correct type ;
     -   apply the chosen encoding method (OneHotEncoder) on categorical features.
 
     </details>
@@ -596,8 +645,8 @@ date_transformer = FunctionTransformer(
 
 preprocessor = ColumnTransformer(
     transformers=[
-        ("cat", OneHotEncoder(handle_unknown="ignore"), ["dteloc", "jannath_10"]),  # one-hot encoder on feature
-        ("dat", date_transformer, "datemut") # feature time since 01-01-2010
+        ("cat", OneHotEncoder(handle_unknown="ignore"), ["prop_type", "prop_year_harm_10"]),  # one-hot encoder on feature
+        ("dat", date_transformer, "trans_date") # feature time since 01-01-2010
     ],
     remainder="passthrough"  # to keep features not transformed
 ) 

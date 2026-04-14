@@ -25,8 +25,8 @@ trans = pl.concat(
     ]
     ).to_pandas()
 
-trans = trans[trans["ccodep"].isin(["75", "77", "78", "91", "92", "93", "94", "95"])]
-trans["valfonc_m2"] = trans["valeurfonc"] / trans["dsupdc"]
+trans = trans[trans["prop_loc_dep"].isin(["75", "77", "78", "91", "92", "93", "94", "95"])]
+trans["price_sqm"] = trans["price"] / trans["farea"]
 
 
 
@@ -38,7 +38,7 @@ trans["valfonc_m2"] = trans["valeurfonc"] / trans["dsupdc"]
 #   - One-hot encoding
 # ============================================
 # Apply some deterministic threshold on the dataframe
-trans = trans[(trans["valfonc_m2"] < 200000) & (trans["valfonc_m2"] > 100)]
+trans = trans[(trans["price_sqm"] < 200000) & (trans["price_sqm"] > 100)]
 
 # Apply IQR methods for the outlier removal
 def outlier_transform(y, lower=0.1, upper=0.9):
@@ -57,26 +57,26 @@ def outlier_transform(y, lower=0.1, upper=0.9):
     mask = (y >= Q_lower - 1.5 * IQR) & (y <= Q_upper + 1.5 * IQR)
     return mask
 
-mask = outlier_transform(trans["valfonc_m2"])
+mask = outlier_transform(trans["price_sqm"])
 trans = trans[mask].reset_index(drop=True)
 
-trans = trans.dropna(subset = "valfonc_m2")
+trans = trans.dropna(subset = "price_sqm")
 df = trans.drop(columns=[
-    'idmutation', "idnatmut", "libnatmut", 
-    "valeurfonc", "ccodep", "depcom", "distance_ltm", "distance_ltm_corr"
+    'trans_id', "trans_type_code", "trans_type_label", 
+    "price", "prop_loc_dep", "prop_loc_citycode", "dist_tosea", "dist_tosea_corr"
 ])
 df = df.dropna()
-df["dteloc"] = pd.Categorical(
-    df["dteloc"],
+df["prop_type"] = pd.Categorical(
+    df["prop_type"],
     categories=["1", "2"],
     ordered=False
 ).rename_categories({"1": "House", "2": "Flat"})
 
-df['jannath_10'] = (df['jannath'] // 10)*10
-df['jannath_10'] = df['jannath_10'].where(df['jannath_10'] >= 1850, 1840)
+df['prop_year_harm_10'] = (df['prop_year_harm'] // 10)*10
+df['prop_year_harm_10'] = df['prop_year_harm_10'].where(df['prop_year_harm_10'] >= 1850, 1840)
 
 # Dropping old column
-df = df.drop(columns=["jannath"])
+df = df.drop(columns=["prop_year_harm"])
 
 
 def date_to_days(X: pd.Series, ref_date:pd.Timestamp):
@@ -96,8 +96,8 @@ date_transformer = FunctionTransformer(
 
 preprocessor = ColumnTransformer(
     transformers=[
-        ("cat", OneHotEncoder(handle_unknown="ignore"), ["dteloc", "jannath_10"]),  # one-hot encoder on feature
-        ("dat", date_transformer, "datemut") # feature time since 01-01-2010
+        ("cat", OneHotEncoder(handle_unknown="ignore"), ["prop_type", "prop_year_harm_10"]),  # one-hot encoder on feature
+        ("dat", date_transformer, "trans_date") # feature time since 01-01-2010
     ],
     remainder="passthrough"  # to keep features not transformed
 ) 
@@ -120,8 +120,8 @@ y_transformer = FunctionTransformer(
 # ============================================
 
 # Split features / target
-X = df.drop(columns="valfonc_m2")  # X must contain only the features we'll learn from
-y = df["valfonc_m2"]  # target must be a dataframe with 1 column
+X = df.drop(columns="price_sqm")  # X must contain only the features we'll learn from
+y = df["price_sqm"]  # target must be a dataframe with 1 column
 
 # Split train / test set
 X_train, X_test, y_train, y_test = train_test_split(
@@ -152,11 +152,11 @@ def rf_error_oob_plot(X_train,
 
 # --- Stratified sampling of training set ---
     y_train_df = pd.DataFrame(y_train)
-    y_train_df["quantile"] = pd.qcut(y_train_df["valfonc_m2"], q=100, labels=False) ## allows to discretly cut along quantiles
+    y_train_df["quantile"] = pd.qcut(y_train_df["price_sqm"], q=100, labels=False) ## allows to discretly cut along quantiles
     y_sub = y_train_df.groupby("quantile").sample(frac=0.1, random_state= RANDOM_STATE)  # sampling by quantile 
 
-    y_sub = y_sub["valfonc_m2"] # converting to pandas.series
-    X_sub = X_train.filter(items=y_sub.index, axis=0).drop(columns=["datemut", "dteloc"])    # sampling X_train
+    y_sub = y_sub["price_sqm"] # converting to pandas.series
+    X_sub = X_train.filter(items=y_sub.index, axis=0).drop(columns=["trans_date", "prop_type"])    # sampling X_train
 
 
     rf = RandomForestRegressor(

@@ -27,10 +27,10 @@ if data.columns == data_h.columns:
 #| label: paris_transactions_all_plot
 (
     p9.ggplot(
-        data.select(["ccodep", "x", "y", "valeurfonc"]).with_columns(
-                valeurfonc_log=pl.col("valeurfonc").log(base=10)
-            ).filter(pl.col("ccodep")=="75"),
-        p9.aes("x","y", colour="valeurfonc_log")
+        data.select(["prop_loc_dep", "x", "y", "price"]).with_columns(
+                price_log=pl.col("price").log(base=10)
+            ).filter(pl.col("prop_loc_dep")=="75"),
+        p9.aes("x","y", colour="price_log")
     ) +
     p9.geom_point(size=0.05)+
     p9.theme_matplotlib() +
@@ -70,7 +70,7 @@ if data.columns == data_h.columns:
 # %%
 # Retrouver la mutation 
 # data_h.filter(
-#             pl.col("idmutation")=="DVF+_6242255"
+#             pl.col("trans_id")=="DVF+_6242255"
 #             ).glimpse()
 
 
@@ -192,8 +192,8 @@ descr_df_long = (
     .filter(
         pl.col("colonne") != "x",
         pl.col("colonne") != "y",
-        pl.col("colonne") != "idnatmut",
-        pl.col("colonne") != "moismut"
+        pl.col("colonne") != "trans_type_code",
+        pl.col("colonne") != "trans_month"
     )
 )
 # %%
@@ -252,15 +252,15 @@ descr_df_long = (
 # Variable to keep
 col_to_keep = (
     pl.from_dicts(
-        [{"idmutation":0,"datemut":0,"anneemut":0,"moismut":0,"idnatmut":0,
-        "libnatmut":0,"valeurfonc":0,"dteloc":0,"jannath":0,"ccodep":0,
-        "depcom":0,"x":0,"y":0,"distance_ltm":0,"distance_ltm_corr":0,
-        "dnbniv":1,"dnbbai":1,"dnbdou":1,"dnblav":1,"dnbwc":1,"dnbppr":1,
-        "dnbsam":1,"dnbcha":1,"dnbcu8":1,"dnbcu9":1,"dnbsea":1,"dnbann":1,
-        "dnbpdc":1,"dsupdc":1,"geaulc":0,"gelelc":0,"gesclc":0,"ggazlc":0,
-        "gasclc":0,"gchclc":0,"gvorlc":0,"gteglc":0,"dniv":1,"dcntsol":1,
-        "dcntagri":1,"dcntnat":1,"nb_garages":1,"nb_piscines":1,
-        "nb_terrasses":1,"nb_greniers":1,"nb_caves":1,"nb_autresdep":1}]
+        [{"trans_id":0,"trans_date":0,"trans_year":0,"trans_month":0,"trans_type_code":0,
+        "trans_type_label":0,"price":0,"prop_type":0,"prop_year_harm":0,"prop_loc_dep":0,
+        "prop_loc_citycode":0,"prop_loc_x":0,"prop_loc_y":0,"dist_tosea":0,"dist_tosea_corr":0,
+        "n_floors":1,"n_bath":1,"n_show":1,"n_sink":1,"n_wc":1,"n_mrooms":1,
+        "n_eatr":1,"n_slr":1,"n_kit8":1,"n_kit9":1,"n_washr":1,"n_ancrooms":1,
+        "n_rooms":1,"farea":1,"has_water":0,"has_elec":0,"stair":0,"has_gas":0,
+        "has_elevator":0,"has_cheating":0,"has_rchute":0,"has_mdrainage":0,"nth_floor":1,"s_land_artif":1,
+        "s_land_agri":1,"s_land_nat":1,"n_garage":1,"n_pool":1,
+        "n_terrace":1,"n_attic":1,"n_basmt":1,"n_otherannex":1}]
     )
     .unpivot()
     .filter(pl.col("value") == 1)
@@ -292,9 +292,9 @@ col_to_keep
 # (
 #     data
 #         .select([
-#             "dcntsol",
-#             "dcntnat",
-#             "dcntagri"
+#             "s_land_artif",
+#             "s_land_nat",
+#             "s_land_agri"
 #         ])
 #         .unpivot()
 #         .group_by("variable", "value")
@@ -309,9 +309,9 @@ col_to_keep
     p9.ggplot(
         data
         .select([
-            "dcntsol",
-            "dcntnat",
-            "dcntagri"
+            "s_land_artif",
+            "s_land_nat",
+            "s_land_agri"
         ])
         .unpivot()
         .filter(pl.col("value")>0),
@@ -327,8 +327,8 @@ col_to_keep
 # Plot price (log) - seems ok 
 (
     p9.ggplot(data.with_columns(
-                valeurfonc_log=pl.col("valeurfonc").log(base=10)
-            ).select(["valeurfonc_log"]).unpivot(value_name="log_price"), 
+                price_log=pl.col("price").log(base=10)
+            ).select(["price_log"]).unpivot(value_name="log_price"), 
             p9.aes(x='log_price')
     ) +
     p9.geom_histogram(bins = 100, fill='skyblue', color='black') +
@@ -338,9 +338,9 @@ col_to_keep
 # %%
 #|: label : stat_des_some_vars_pairplot
 sns.pairplot(
-    data=data_all.sample(1000).select(["dteloc", "dnbppr", "dsupdc", "dnbcha", pl.col("valeurfonc").log().floor(), "nb_piscines"]).cast({"dteloc":pl.Int32}).to_pandas(),
-    vars=["dteloc", "dnbppr", "dsupdc", "dnbcha","nb_piscines"],
-    hue="valeurfonc",
+    data=data_all.sample(1000).select(["prop_type", "n_mrooms", "farea", "n_slr", pl.col("price").log().floor(), "n_pool"]).cast({"prop_type":pl.Int32}).to_pandas(),
+    vars=["prop_type", "n_mrooms", "farea", "n_slr","n_pool"],
+    hue="price",
 )
 matplotlib.pyplot.show()
 # %%

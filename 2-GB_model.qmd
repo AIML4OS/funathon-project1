@@ -41,7 +41,7 @@ For more information, you can read the detailed presentation of the gradient boo
 
 ## Training a baseline Gradient Boosting model
 
-To allow for comparison with the random forest section, we chose to use the same conditions : dropping the `datemut` and `dteloc` features and working with the **non transformed target** (i.e.price per square meter) and not use the transformed target (i.e. log of the price per square meter) defined at the end of the pre-processing. We will come back to this later on and chain it with the preprocessing steps.
+To allow for comparison with the random forest section, we chose to use the same conditions : dropping the `trans_date` and `prop_type` features and working with the **non transformed target** (i.e.price per square meter) and not use the transformed target (i.e. log of the price per square meter) defined at the end of the pre-processing. We will come back to this later on and chain it with the preprocessing steps.
 
 ::: {.callout-tip collapse="false" icon="false"}
 ## <i class="bi bi-book"></i> Exercice 7: Train your first Gradient Boosting model
@@ -57,8 +57,8 @@ To allow for comparison with the random forest section, we chose to use the same
 #| eval: false
 from sklearn.ensemble import HistGradientBoostingRegressor
 
-X = df.drop(columns=["valfonc_m2", "datemut", "dteloc"]) 
-y = df["valfonc_m2"]
+X = df.drop(columns=["price_sqm", "trans_date", "prop_type"]) 
+y = df["price_sqm"]
 X_train, X_test, y_train, y_test = train_test_split(
     X, y,
     test_size=0.2,
@@ -154,7 +154,7 @@ We use the same `X_train`, `X_test`, `y_train`, `y_test` splits defined in the p
 ## <i class="bi bi-book"></i> Exercice 8: Tuning Gradient Boosting hyperparameters
 
 0.  For convenience, we prepare the data and pipeline with the following instructions :
-    -   Drop the features `dteloc`, `datemut` of the dataframe;
+    -   Drop the features `prop_type`, `trans_date` of the dataframe;
 
     -   Create `X` dataframe and `y` Pandas Serie for training our model on prices per square meters.
 
@@ -171,8 +171,8 @@ We use the same `X_train`, `X_test`, `y_train`, `y_test` splits defined in the p
 #| eval: false
 
 # Split features / target
-X = df.drop(columns="valfonc_m2")
-y = df["valfonc_m2"]
+X = df.drop(columns="price_sqm")
+y = df["price_sqm"]
 
 # Split train / test set
 X_train, X_test, y_train, y_test = train_test_split(
@@ -459,8 +459,8 @@ gb_final = HistGradientBoostingRegressor(
     random_state=RANDOM_STATE,
 )
 
-X = df.drop(columns=["valfonc_m2"])
-y = df["valfonc_m2"] 
+X = df.drop(columns=["price_sqm"])
+y = df["price_sqm"] 
 X_train, X_test, y_train, y_test = train_test_split(
     X, y,
     test_size=0.2,

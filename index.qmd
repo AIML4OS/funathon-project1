@@ -128,7 +128,7 @@ Note that the variable year of the building has been harmonized to correct for t
 | 1120 ≤ prop_year ≤ 1199 | Replace the second 1 with 9 | 1155 → 1955 |
 | 1200 ≤ prop_year ≤ 2022 | Pas de modification | 1200 → 1200 |
 
-More information about this transformation is available [online](https://doc-datafoncier.cerema.fr/doc/ff/pb40_pevprincipale/jannath) (in French).
+More information about this transformation is available [online](https://doc-datafoncier.cerema.fr/doc/ff/pb40_pevprincipale/prop_year_harm) (in French).
 
 # Initialization of the project
 

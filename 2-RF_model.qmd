@@ -41,7 +41,7 @@ For more information, you can read the paragraph on RF hyperparameters [here](ht
 
     Train the model with the remaining non transformed target (it should take about 5 minutes to train).
 
-    As it's only a first step we chose to simplify the exercise. First, we will drop the `datemut` and `dteloc` features. Secondly, we will work with the **non transformed target** (i.e.price per square meter) and not use the transformed target (i.e. log of the price per square meter) defined at the end of the pre-processing.
+    As it's only a first step we chose to simplify the exercise. First, we will drop the `trans_date` and `prop_type` features. Secondly, we will work with the **non transformed target** (i.e.price per square meter) and not use the transformed target (i.e. log of the price per square meter) defined at the end of the pre-processing.
 
     We will come back to this later on and chain it with the preprocessing steps.
 
@@ -71,8 +71,8 @@ rf = RandomForestRegressor(
 )
 
 # Defining train and test sets
-X = df.drop(columns=["valfonc_m2", "datemut", "dteloc"])  
-y = df["valfonc_m2"]  
+X = df.drop(columns=["price_sqm", "trans_date", "prop_type"])  
+y = df["price_sqm"]  
 X_train, X_test, y_train, y_test = train_test_split(
     X, y,
     test_size=0.2,
@@ -163,10 +163,10 @@ For convenience and pedagogical reasons, we are still working on a subset of the
 
 # Sample the train dataset using Pandas' index
 y_train_df = pd.DataFrame(y_train)
-y_train_df["quantile"] = pd.qcut(y_train_df["valfonc_m2"], q=100, labels=False) ## allows to discretly cut along quantiles
+y_train_df["quantile"] = pd.qcut(y_train_df["price_sqm"], q=100, labels=False) ## allows to discretly cut along quantiles
 y_sub = y_train_df.groupby("quantile").sample(frac=0.1, random_state= RANDOM_STATE)  # sampling by quantile 
 
-y_sub = y_sub["valfonc_m2"] # converting to pandas.series
+y_sub = y_sub["price_sqm"] # converting to pandas.series
 X_sub = X_train.filter(items=y_sub.index, axis=0 )  # sampling X_train
 
 ```
@@ -282,10 +282,10 @@ def rf_error_oob_plot(X_train,
 
     # --- Stratified sampling of training set ---
     y_train_df = pd.DataFrame(y_train)
-    y_train_df["quantile"] = pd.qcut(y_train_df["valfonc_m2"], q=100, labels=False) ## allows to discretly cut along quantiles
+    y_train_df["quantile"] = pd.qcut(y_train_df["price_sqm"], q=100, labels=False) ## allows to discretly cut along quantiles
     y_sub = y_train_df.groupby("quantile").sample(frac=0.1, random_state= RANDOM_STATE)  # sampling by quantile 
 
-    y_sub = y_sub["valfonc_m2"] # converting to pandas.series
+    y_sub = y_sub["price_sqm"] # converting to pandas.series
     X_sub = X_train.filter(items=y_sub.index, axis=0 )  # sampling X_train
 
     # --- Training with warm start ---
@@ -346,7 +346,7 @@ oob_error_ntrees
 
 > Note : In the Preprocessing section, you saw how to build a Pipeline. In this exercise, we will use a Pipeline again. The first exercise didn't use it to let you practice scikit-learn tools documented [here](https://scikit-learn.org/stable/modules/compose.html#pipelines-and-composite-estimators).
 
-0.  For convenience, we dropped the features `dteloc`, `dtemut` and trained our model on absolute prices and not on the transformed ones. Get them back and define the new training and testing datasets `X_train, X_test, y_train, y_test`.
+0.  For convenience, we dropped the features `prop_type`, `dtemut` and trained our model on absolute prices and not on the transformed ones. Get them back and define the new training and testing datasets `X_train, X_test, y_train, y_test`.
 
 ```{python}
 #| code-fold: true
@@ -355,8 +355,8 @@ oob_error_ntrees
 #| eval: false
 
 # Split features / target
-X = df.drop(columns="valfonc_m2")  
-y = df["valfonc_m2"]  
+X = df.drop(columns="price_sqm")  
+y = df["price_sqm"]  
 
 # Split train / test set
 X_train, X_test, y_train, y_test = train_test_split(
