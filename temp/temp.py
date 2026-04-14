@@ -13,7 +13,7 @@ dict_fr_en = {
   'dteloc':['prop_type','Type of property',  '1 represents a flat and 2 a house'],
   'jannath':['prop_year_harm','Year of contruction of the property', 'This variable has been harmonized to correct for typing mistakes. More details is available in the introduction.'],
   'ccodep':['prop_loc_dep','Department code where the property is located', "Data doesn't cover the whole French territory - overseas territory are included but Alsace-Moselle (Eastern part of France) isn't"],  # list of departments in France  - overseas yes but Alsace Moselle nope
-  'depcom':['prop_loc_',"Official city's code where the property is located", 'see remarks above'],  # COG : official geographical code https://www.insee.fr/en/metadonnees/source/serie/s2084
+  'depcom':['prop_loc_citycode',"Official city's code where the property is located", 'see remarks above'],  # COG : official geographical code https://www.insee.fr/en/metadonnees/source/serie/s2084
   'x':['prop_loc_x','Longitude where the property is located', 'see remarks above'],  # Type of projection ?
   'y':['prop_loc_y','Latitude where the property is located', 'see remarks above'],  # Type of projection ?
   'distance_ltm (calculated)':['dist_tosea','Distance of the property to the nearest seashore - capped at 10km', 'This variable has been calculated'],
