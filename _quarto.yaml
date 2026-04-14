@@ -33,6 +33,7 @@ website:
       - text: "Preprocessing"
         href: 1-preprocessing.qmd
       - text: "Modelling"
+        menu: 
         - text: "with a random forest"
           href: 2-RF_model.qmd
         - text: "with a gradient boosting"
