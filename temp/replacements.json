@@ -12,8 +12,6 @@
   "depcom":"prop_loc_citycode",
   " x ":" prop_loc_x ",
   " x)":" prop_loc_x)",
-  " y ":" prop_loc_y ",
-  " y)":" prop_loc_y)",
   "distance_ltm":"dist_tosea",
   "distance_ltm_corr":"dist_tosea_corr",
   "dnbniv":"n_floors",
