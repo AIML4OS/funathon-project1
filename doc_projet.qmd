@@ -6,8 +6,7 @@ The topic focuses on developing a fine-grained housing price prediction model.
 The main objective is to present the different components of the end-to-end process implemented to produce these predictions, including project structuring for production deployment.
 The project is organized into five parts:
 
-- 1. **Vizualisation of the input data** (optionnal - with an interactive map)
-    - optionnal - *Tools* : [geopandas](https://geopandas.org/en/stable/docs/user_guide.html), [folium](https://python-visualization.github.io/folium/latest/user_guide.html) 
+- 1. **Description of the input data**
 - 2. **Pre-processing**: cleaning inconsistent input data, including the treatment of outliers and dataset preparation
     - *Tools* : [pandas](https://pandas.pydata.org/docs/user_guide/index.html) 
 - 3. **Training a ML model to predict housing prices** : 
@@ -16,7 +15,7 @@ The project is organized into five parts:
         - [Insee working document](https://inseefrlab.github.io/DT_methodes_ensemblistes/) on bagging and boosting methods 
         - python package crospint
     - *Goals* : 
-        - create both training and test sets and train standard gradient boosting ML models with [scikit-learn](https://scikit-learn.org/stable/modules/ensemble.html#) ; _optional_: train ML model with **`crospint`** or `lightgbm`;
+        - create both training and test sets and train standard gradient boosting ML models with [scikit-learn](https://scikit-learn.org/stable/modules/ensemble.html#) ;
         - Explore the various ways to account for location (OHE, native support);
         - Hyperparameter optimization: cross-validation (grid search, random search, optional: Optuna);
         - Advanced training techniques: early stopping, metric logging;
@@ -28,6 +27,4 @@ The project is organized into five parts:
     - *Tools*:
         - **MLFlow**
         - **FastAPI**
-        - **geopandas**
-        - **Argo WorkFlow** ?
 - 5. *very optional* - generate the **synthetic data** that were used to train the model and consideration when creating synthetic data (how to be sure data represent real data but how to be sure that they are still synthetic, with QQPlot and others tools)
