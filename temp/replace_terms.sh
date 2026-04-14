@@ -37,7 +37,7 @@ while IFS= read -r path; do
     # Find all files in the path (recursively if it's a directory)
     find "$path" -type f | while read -r file; do
         # Backup the file
-        cp "$file" "$file.bak"
+        # cp "$file" "$file.bak"
 
         # Apply all replacements
         while IFS='|' read -r term replacement; do
