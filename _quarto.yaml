@@ -40,8 +40,7 @@ website:
         href: 4-logging.qmd
       - text: "Deployment"
         href: 5-deployment.qmd
-      - text: "Application démo"
-        href: "https://flightradar-ui-demo.lab.sspcloud.fr"
+
 
 format:
   html:
@@ -53,6 +52,6 @@ format:
     code-overflow: wrap
 
 execute: 
-  eval: true
+  eval: false
   cache: true
   warning: false
