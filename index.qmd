@@ -103,7 +103,7 @@ For example, the city of Paris is identified by the department code **75**, the 
 
 ## General presentation of the data
 
-Data prepared for this project gathers all of the housing transactions in France between 2014 and 2021 and details about the property sold.\
+Data prepared for this project gathers all of the housing transactions in France between 2014 and 2021 and details about the property sold.
 Because the characteristics of the property sold isn't open source, the data you'll be working with are **synthetic data**. It has been generated to mirror the original data.
 
 If you want to have a closer look at the data, CEREMA publishes on [its website](%5D(https://doc-datafoncier.cerema.fr/doc/ff/pb0010_local)) an extensive documentation of the different datasets, the variables, their modalities and the overall quality of variable.

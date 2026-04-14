@@ -74,7 +74,7 @@ The aim of this part is to manipulate new database and understand features in or
     RANDOM_STATE=202605
     ```
 
-2.  **Load, with DuckDB, all data inputs in a DataFrame `trans`**(for transactions).\*\*
+2.  **Load, with DuckDB, all data inputs in a DataFrame `trans`** (for transactions).
 
 ```{python}
 #| code-fold: true
@@ -185,7 +185,7 @@ df.notnull().all() # column with no NaN?
 
 <summary>View a hint</summary>
 
-You need to filter with the feature `prop_loc_dep`, with the following department codes for Paris area : \["75", "77", "78", "91", "92", "93", "94", "95"\]
+You need to filter with the feature `prop_loc_dep`, with the following department codes for Paris area : ["75", "77", "78", "91", "92", "93", "94", "95"]
 
 </details>
 
@@ -311,15 +311,15 @@ It may indicate an issue with data around these points.
 By looking at this phenomena closer, we can see that a threshold of €100, €200 or €300 would filter out these issues.
 
 The second step is to apply some statistic methods.
-For example, we can use the \*\*Interquartile Range (IQR)\*\*\* \*to remove outlier target values\*.
+For example, we can use the **Interquartile Range (IQR)** *to remove outlier target values*.
 
-\<details\>
+<details>
 
-\<summary\>Click to view a hint\</summary\>
+<summary>Click to view a hint</summary>
 
-\*\*Interquartile Range\*\* method can keep all observations with target value between \`Q1-1.5\*(Q9-Q1)\` and \`Q9+1.5\*(Q9-Q1)\` .
+**Interquartile Range** method can keep all observations with target value between `Q1-1.5*(Q9-Q1)` and `Q9+1.5*(Q9-Q1)` .
 
-\</details\>
+</details>
 
 ```{python}
 #| code-fold: true

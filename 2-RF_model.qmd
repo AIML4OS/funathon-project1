@@ -375,7 +375,7 @@ X_train, X_test, y_train, y_test = train_test_split(
     Pay attention to hyperparameter names : when using `Pipeline` and `TransformedTargetRegressor` objects, theses names are more complex than plain `RandomForestRegressor` parameters names. In the previous section, we used two objects for training :
 
     -   `TransformedTargetRegressor` to apply log transformation on the target - the corresponding parameter prefix is `regressor`
-    -   `Pipeline` to apply all preprocessing transformations and fit the model : you need to refer to the name of the random forest step (it was `'RF'`)\
+    -   `Pipeline` to apply all preprocessing transformations and fit the model : you need to refer to the name of the random forest step (it was `'RF'`)
         For example, for the hyperparameter `n_estimators`, the key in the parameter dictionary must be `regressor__RF__n_estimators`
 
     More details on [scikit learn's documentation](https://scikit-learn.org/stable/modules/compose.html#access-to-nested-parameters)
@@ -430,7 +430,7 @@ print(grid_search.best_params_)
 ```
 
 ::: callout-important
-Scikit-learn distinguishes **original parameters** from \*\*fitted attributes with a trailing \_\*\*. The `_` suffix is a consistent scikit-learn convention: any attribute that only exists after fitting ends with `_` (e.g., `coef_`, `n_features_in_`, `classes_`). It signals "this was learned from data."
+Scikit-learn distinguishes **original parameters** from **fitted attributes with a trailing _**. The `_` suffix is a consistent scikit-learn convention: any attribute that only exists after fitting ends with `_` (e.g., `coef_`, `n_features_in_`, `classes_`). It signals "this was learned from data."
 
 ``` python
 grid_search.myfittedparam_  
