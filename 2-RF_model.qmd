@@ -13,7 +13,7 @@ In the first part of this project, we prepared the data to train the model. We r
 
 An Insee working document on ensemble methods is available [here](https://inseefrlab.github.io/DT_methodes_ensemblistes/chapters/chapter2/3-random_forest.html). If you are unfamiliar with ensemble methods, we recommend reading this document before processing.
 
-## Concepts of Random Forests
+# Concepts of Random Forests
 
 **RF** extend [bagging](https://inseefrlab.github.io/DT_methodes_ensemblistes/chapters/chapter2/2-bagging.html) by introducing an additional level of randomness: at each node, the splitting rule is determined using only a **randomly selected subset of features**. This further **reduces correlation between trees**, thereby **lowering the variance of the aggregated model's predictions**.
 
@@ -28,8 +28,7 @@ So, RF rely on four key elements : building **aggregated regression or classific
 
 For more information, you can read the paragraph on RF hyperparameters [here](https://inseefrlab.github.io/DT_methodes_ensemblistes/chapters/chapter3/2-guide_usage_RF.html#sec-hyperparam-rf)
 
-:::: {.callout-tip collapse="false" icon="false"}
-## <i class="bi bi-book"></i> Exercice 4: Train your first Random Forest model
+# Exercice 4: Train your first Random Forest model
 
 1.  Using the `RandomForestRegressor` class and its [scikit-learn documentation page](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html), define a basic model with the following hyperparameters :
 
@@ -128,10 +127,9 @@ print(mean_squared_error(y_test, y_pred))
 ```
 
 Congrats 🥳! You have trained your first RF model. Now, try to find the best hyperparameters to minimize the final predicted error of the model.
-::::
 
-:::::: {.callout-tip collapse="false" icon="false"}
-## <i class="bi bi-book"></i> Exercice 5: Tuning a random forest's hyperparameters
+
+# Exercice 5: Tuning a random forest's hyperparameters
 
 Now that you understand what a random forest is, we will tune its hyperparameters for training. In this exercise, your aim is to train the best model for the prediction of price per square meter.
 
@@ -455,8 +453,7 @@ rf_best.fit(X_train, y_train)
 
 Congrats ! You have optimized your RF model. Now, you need to evaluate its accuracy — that is, how close the model's predictions are to the actual values..
 
-::: {.callout-tip collapse="false"}
-## <i class="bi bi-book"></i> Exercice 6: Model evaluation
+# Exercice 6: Model evaluation
 
 Now that your model has been optimized, it is time to rigorously evaluate its performance on the test set — data the model has never seen during training. This step is essential to assess how well your model generalizes to new observations.
 
@@ -536,5 +533,4 @@ plt.show()
 ```
 
 Congrats 🎉! You have successfully trained, optimized, and evaluated a Random Forest model for price per square meter prediction.
-:::
-::::::
+
