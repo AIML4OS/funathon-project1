@@ -1,282 +1,142 @@
-# funathon-project1
-Repository of the 1st funathon project (tabular data)
+# Funathon Project 1 – Applying Machine Learning to Tabular Data
 
-# Dictionnaire des variables
+> An end-to-end machine learning pipeline for **fine-grained housing price prediction** in France, from raw data preprocessing to production deployment.
 
-1.	idlocal : identifiant cadastral unique ;
-2.	ccodep : département ;
-3.	ccocom : commune ;
-4.	dteloc : type de logement (1 : maison,
- 2 : appartement) ;
-5.	anneemut : année de mutation ;
-6.	datemut : date de mutation ;
-7.	libnatmut : type de transaction (vente ou VEFA) ;
-8.	valeurfonc : montant de la transaction ;
-9.	dsupdc : surface du logement ;
-10.	jannath : année d’achèvement ;
-11.	nb_garages : nombre de garages ;
-12.	nb_piscines
-13.	nb_terrasses
-14.	nb_greniers
-15.	nb_caves
-16.	nb_autresdep : nombre d’autres dépendances ;
-17.	dnbbai : nombre de baignoires ;
-18.	dnbdou : nombre de douches ;
-19.	dnblav : nombre de lavabos ;
-20.	dnbwc : nombre de WC ;
-21.	dnbppr : nombre de pièces principales ;
-22.	dnbsam : nombre de salles à manger ;
-23.	dnbcha : nombre de chambres ;
-24.	dnbcu8 : nombre de cuisines < 9m² ;
-25.	dnbcu9 : nombre de cuisines > 9m² ;
-26.	dnbsea : nombre de salles d’eau ;
-27.	dnbann : nombre de pièces annexes ;
-28.	dnbpdc : nombre de pièces ;
-29.	x,
- y : coordonnées géo.
-30. dnbniv : prend en compte le rdc
-geaulc	gelelc	gesclc	ggazlc	gasclc	gchclc	gvorlc	gteglc	dniv	dcntsol	dcntagri	dcntnat   : caractéristiques des équipements (gaz,
- électricité,
- eau,
- escalier,
- ascenceur)
+📖 **Full documentation:** [aiml4os.github.io/funathon-project1](https://aiml4os.github.io/funathon-project1/)
+
+## Overview
+
+This project walks through the complete lifecycle of a machine learning application applied to real estate tabular data. Using synthetic data reproducing the French **DVF+ (Demandes de Valeurs Foncières)** and land registry dataset, the goal is to build a model that predicts housing prices at a fine geographic level, and then deploy it as a production-ready API.
+
+The project is structured as a progressive, hands-on tutorial organized in five parts:
+
+1. **Data description** — understanding the input variables
+2. **Pre-processing** — cleaning and preparing the dataset
+3. **ML model training** — training and comparing gradient boosting models
+4. **Model logging** — loggingt.
+4. **Model deployment** — API deployment.
 
 
-10/02:
-quelles sont les déf de geaulc	gelelc	gesclc	ggazlc	gasclc	gchclc	gvorlc	gteglc	dniv	dcntsol	dcntagri	dcntnat  ??
+## Project Structure
 
-Fait : 
-- retrouver des transactions connues pour regarder les variables
-x,
- y : coordonnées géographiques semblent ok 
+```
+.
+├── starting_point/          # Notebooks with exercises (to be completed)
+├── intermediate_solutions/  # Step-by-step partial solutions
+├── solution/                # Full reference solutions
+├── 1-preprocessing.qmd      # Part 1: Data preprocessing
+├── 2-GB_model.qmd           # Part 2: Gradient Boosting model
+├── 2-RF_model.qmd           # Part 2: Random Forest model
+├── 3-metrics.qmd            # Part 3: Model evaluation
+├── 4-logging.qmd            # Part 4: MLFlow experiment tracking
+├── 5-deployment.qmd         # Part 5: FastAPI deployment
+├── pyproject.toml           # Python dependencies (managed with uv)
+└── _quarto.yaml             # Quarto site configuration
+```
 
-Questions : 
-- pourquoi deux fichiers flat et houses ?
-- sélectionner un subset de variables parmi les 47 ?
-- les données au moment de la transaction ? Comment sont elles mises à jour ? 
-- comment détecter les ventes partielles de bien ? 
-- 1 ligne par vente ? 
+---
 
-11/02 : 
-stats des
-| colonne           | type    |   total |   nulles |   NaN |   valides | médiane/mode       | min                 | max               |
-|:------------------|:--------|--------:|---------:|------:|----------:|:-------------------|:--------------------|:------------------|
-| idmutation        | String  | 4695874 |        0 |     0 |   4695874 | DVF+_9979682       | DV3F_10332875       | DVF+_9999998      |
-| datemut           | Date    | 4695874 |        0 |     0 |   4695874 | 2017-12-30         | 2010-01-02          | 2024-12-31        |
-| anneemut          | Int32   | 4695874 |        0 |     0 |   4695874 | 2018.0             | 2010                | 2024              |
-| moismut           | Int32   | 4695874 |        0 |     0 |   4695874 | 7.0                | 1                   | 12                |
-| idnatmut          | Int32   | 4695874 |        0 |     0 |   4695874 | 1.0                | 1                   | 1                 |
-| libnatmut         | String  | 4695874 |        0 |     0 |   4695874 | Vente              | Vente               | Vente             |
-| valeurfonc        | Float64 | 4695874 |        0 |     0 |   4695874 | 150000.0           | 1000.0              | 66500000.0        |
-| dteloc            | String  | 4695874 |        0 |     0 |   4695874 | 2                  | 2                   | 2                 |
-| jannath           | Int32   | 4695874 |      873 |     0 |   4695001 | 1974.0             | 1200                | 2024              |
-| ccodep            | String  | 4695874 |        0 |     0 |   4695874 | 75                 | 01                  | 974               |
-| depcom            | String  | 4695874 |        0 |     0 |   4695874 | 06088              | 01004               | 97424             |
-| x                 | Float64 | 4695874 |        0 |     0 |   4695874 | 2.4807198092161706 | -63.11504016285567  | 55.72081546449435 |
-| y                 | Float64 | 4695874 |        0 |     0 |   4695874 | 46.78311095709862  | -21.381146550197524 | 51.0820594859233  |
-| distance_ltm      | Float64 | 4695874 |        0 |     0 |   4695874 | 10000.0            | 0.10997415915499446 | 10000.0           |
-| distance_ltm_corr | Float64 | 4695874 |        0 |     0 |   4695874 | 10000.0            | 0.07971292253454423 | 10000.0           |
-| dnbniv            | Int32   | 4695874 |        0 |     0 |   4695874 | 3.0                | 0                   | 99                |
-| dnbbai            | Int32   | 4695874 |        0 |     0 |   4695874 | 1.0                | 0                   | 21                |
-| dnbdou            | Int32   | 4695874 |        0 |     0 |   4695874 | 0.0                | 0                   | 22                |
-| dnblav            | Int32   | 4695874 |        0 |     0 |   4695874 | 1.0                | 0                   | 63                |
-| dnbwc             | Int32   | 4695874 |        0 |     0 |   4695874 | 1.0                | 0                   | 51                |
-| dnbppr            | Int32   | 4695874 |        0 |     0 |   4695874 | 5.0                | 0                   | 92                |
-| dnbsam            | Int32   | 4695874 |        0 |     0 |   4695874 | 1.0                | 0                   | 87                |
-| dnbcha            | Int32   | 4695874 |        0 |     0 |   4695874 | 2.0                | 0                   | 67                |
-| dnbcu8            | Int32   | 4695874 |        0 |     0 |   4695874 | 1.0                | 0                   | 84                |
-| dnbcu9            | Int32   | 4695874 |        0 |     0 |   4695874 | 0.0                | 0                   | 62                |
-| dnbsea            | Int32   | 4695874 |        0 |     0 |   4695874 | 1.0                | 0                   | 83                |
-| dnbann            | Int32   | 4695874 |        0 |     0 |   4695874 | 1.0                | 0                   | 95                |
-| dnbpdc            | Int32   | 4695874 |        0 |     0 |   4695874 | 5.0                | 1                   | 99                |
-| dsupdc            | Int32   | 4695874 |        0 |     0 |   4695874 | 56.0               | 15                  | 1500              |
-| geaulc            | Int32   | 4695874 |        0 |     0 |   4695874 | 2.0                | 0                   | 2                 |
-| gelelc            | Int32   | 4695874 |        0 |     0 |   4695874 | 2.0                | 0                   | 2                 |
-| gesclc            | Int32   | 4695874 |        0 |     0 |   4695874 | 0.0                | 0                   | 2                 |
-| ggazlc            | Int32   | 4695874 |        0 |     0 |   4695874 | 2.0                | 0                   | 2                 |
-| gasclc            | Int32   | 4695874 |        0 |     0 |   4695874 | 1.0                | 0                   | 2                 |
-| gchclc            | Int32   | 4695874 |        0 |     0 |   4695874 | 2.0                | 0                   | 2                 |
-| gvorlc            | Int32   | 4695874 |        0 |     0 |   4695874 | 1.0                | 0                   | 2                 |
-| gteglc            | Int32   | 4695874 |        0 |     0 |   4695874 | 2.0                | 0                   | 2                 |
-| dniv              | Int32   | 4695874 |        0 |     0 |   4695874 | 2.0                | 0                   | 99                |
-| dcntsol           | Int32   | 4695874 |        0 |     0 |   4695874 | 0.0                | 0                   | 69891             |
-| dcntagri          | Int32   | 4695874 |        0 |     0 |   4695874 | 0.0                | 0                   | 1114552           |
-| dcntnat           | Int32   | 4695874 |        0 |     0 |   4695874 | 0.0                | 0                   | 851235            |
-| nb_garages        | Int32   | 4695874 |        0 |     0 |   4695874 | 0.0                | 0                   | 215               |
-| nb_piscines       | Int32   | 4695874 |        0 |     0 |   4695874 | 0.0                | 0                   | 2                 |
-| nb_terrasses      | Int32   | 4695874 |        0 |     0 |   4695874 | 0.0                | 0                   | 5                 |
-| nb_greniers       | Int32   | 4695874 |        0 |     0 |   4695874 | 0.0                | 0                   | 13                |
-| nb_caves          | Int32   | 4695874 |        0 |     0 |   4695874 | 0.0                | 0                   | 22                |
-| nb_autresdep      | Int32   | 4695874 |        0 |     0 |   4695874 | 0.0                | 0                   | 91                |
+## The Five Parts
 
-idnatmut = 1 tout le temps,
- pq ? 
-que les vente dans le data set
-répartition valeurfonc pour détecter valeurs aberrantes/ Max est à 66,
-5M€. A été filtré avant ? 
-distance_ltm,
- distance_ltm_corr : distance au littoral
-dataset a bien été cleané avant. 99 is missing value ? 
-comprend les transactions en DOM (St Martin,
- Guadeloupe,
- mais pas celles en Alsace Moselle cf. all_transactions_plot)
+### 1. Data Description
+
+The dataset is based on synthetic data mimicking the **DVF+** (French land registry transactions) and land registry. Each row represents a single real estate sale and contains ~47 variables describing the property, the transaction, and its geographic location.
+
+Key variables include:
+
+| Variable | Description |
+|---|---|
+| `valeurfonc` | Transaction value (target) |
+| `dsupdc` | Floor area (m²) |
+| `dteloc` | Property type (1 = house, 2 = flat) |
+| `depcom` | Municipality code |
+| `x`, `y` | Geographic coordinates |
+| `dnbppr` | Number of main rooms |
+| `dnbcha` | Number of bedrooms |
+| `jannath` | Year of construction |
+| `anneemut` | Year of transaction |
+| `distance_ltm` | Distance to the coastline |
+| `nb_garages`, `nb_piscines`, `nb_terrasses`, ... | Outbuildings and amenities |
+
+> See the full variable dictionary in [the dedicated page](intro_data.Qmd).
+
+### 2. Pre-processing
+
+**Tools:** [`pandas`](https://pandas.pydata.org/docs/user_guide/index.html)
+
+This step covers:
+- Handling missing values and outliers (e.g. filtering extreme `price_per_sqm` values)
+- Selecting a relevant feature subset from the 47 available variables
+- Computing derived features such as `price_per_sqm`
+- Exploratory data analysis with `seaborn.pairplot` and `pandas.DataFrame.hist`
 
 
-12/02
-stat des de répartition des valeurs descriptives cf. stat_des_details_flat
-Quasiment que des 0 pour les flat cf. stat_des_details_surf_flat_num et stat_des_details_surf_flat_plot
-"dcntsol",
+### 3. Training a ML Model
 
-"dcntnat",
+**Tools:** [`scikit-learn`](https://scikit-learn.org/stable/user_guide.html)
 
-"dcntagri"
-with plot of repartition for various var stat_des_details_surf_flat_num
+Reference: [INSEE working document on bagging and boosting methods](https://inseefrlab.github.io/DT_methodes_ensemblistes/), [`crospint`](https://pypi.org/project/crospint/)
 
-13/02 : 
-- s'inspirer des MOOC de scikit-learn qui sont top : https://inria.github.io/scikit-learn-mooc/
-- have a baseline dummy model to compare to ?
-- need to scale data ? 
-- impact of encoder ? 
-- première regression simple : 
-    - filtrer sur 1 année
-    - features : depcom (question encoding ?),
- dteloc (boolean apt),
- dnbppr,
- dnbcha,
- dsupdc
-- do stat des with data samples to ease computation time
-    - use seaborn.pairplot to plot correlation graph
-    - use pandas dataframe.hist to plot histogram easily
-
-pairplot with log_price : cf. stat_des_some_vars_pairplot
-
-16/02
-- stat des on depcom (question encoding ?),
- dteloc (boolean apt),
- dnbppr,
- dnbcha,
- dsupdc
-- calculating price_sqm
-- fitter a first RFregressor on 100 000 and 150 000 obs with depcom (question encoding ?),
- dteloc (boolean apt),
- dnbppr,
- dnbcha,
- dsupdc
-
-|N_obs | price | price per sqm |
-| -- | --- | --- |
-|100 000|  5 CV ; <br> - Mean cross validation accuracy is : 0.551 +- 0.011 with an elapsed time of 129.945s <br> - Mean cross validation accuracy is : 0.495 +- 0.046 with an elapsed time of 184.692s | |
-
-- Stay on a region and do not filter on years. Have price per sqm and not price. 
-
-19/02 : 
-- feature selection : cf. nb_features_accuracy
-    keep all paris (75) transactions. 
-    Add ccordinates (x,
- y)
-    Target = price per sqm
-    2 sets of feature : 
-        - a minimal : CV score = 9%  
-        - all features : CV score = 22%
-    Impact of outlier ? 
-    Removes all prices_sqm below quantile 0.9 and above quantile 0.1. Impact : 
-        - a minimal : CV score = 13% +-3%  
-        - all features : CV score = 38% +-2%
-    Removes all prices_sqm below quantile 0.8 and above quantile 0.2. Impact : 
-        - a minimal : CV score = 6% +-1%  
-        - all features : CV score = 25% +-2%
-
-Cf features_plus_model_selection
-Data set : 
-   - 7 col (['depcom',
- 'x',
- 'y',
- 'dteloc',
- 'dnbppr',
- 'dnbcha',
- 'dsupdc'])
-   - n_ops : 322805 
-
-= Model is : GradientBoostingRegressor 
-  Metrics are : 
-   - MAPE : 0.151 
-   - R2 : 0.172 
-  with an elapsed time of 28.503s
-= Model is : HistGradientBoostingRegressor 
-  Metrics are : 
-   - MAPE : 0.149 
-   - R2 : 0.189 
-  with an elapsed time of 1.353s
-= Model is : RandomForestRegressor 
-  Metrics are : 
-   - MAPE : 0.161 
-   - R2 : 0.027 
-  with an elapsed time of 108.227s
-Data set : 
-   - 27 col (['anneemut',
- 'dteloc',
- 'jannath',
- 'ccodep',
- 'depcom',
- 'x',
- 'y',
- 'distance_ltm',
- 'dnbniv',
- 'dnbbai',
- 'dnbdou',
- 'dnblav',
- 'dnbwc',
- 'dnbppr',
- 'dnbsam',
- 'dnbcha',
- 'dnbcu8',
- 'dnbcu9',
- 'dnbsea',
- 'dnbann',
- 'dnbpdc',
- 'dsupdc',
- 'dniv',
- 'nb_terrasses',
- 'nb_greniers',
- 'nb_caves',
- 'nb_autresdep'])
-   - n_ops : 322805 
-
-= Model is : GradientBoostingRegressor 
-  Metrics are : 
-   - MAPE : 0.119 
-   - R2 : 0.427 
-  with an elapsed time of 63.356s
-= Model is : HistGradientBoostingRegressor 
-  Metrics are : 
-   - MAPE : 0.113 
-   - R2 : 0.469 
-  with an elapsed time of 2.295s
-= Model is : RandomForestRegressor 
-  Metrics are : 
-   - MAPE : 0.113 
-   - R2 : 0.463 
-  with an elapsed time of 242.980s
-
-HistGradientBoostingRegressor => far better model
-
-dummyregressor :
-- score is 0 so model performs much better
-
-Hyperparameter tuning
- => impact of hyperparams on MAPE is residual. cf. hyperparams_tuning and cf. hyperparams_plot
-
-add dniv / dnbniv as dnivrel : no impact,
- cf nb_features_accuracy. 
-
-Add distance to Seine ? 
-
-Plot the results ? 
-
-stat des with pandas to select variables : cf. stat_des75_pandas
+Goals:
+- Split data into training and test sets
+- Train and compare three models: `GradientBoostingRegressor`, `HistGradientBoostingRegressor`, `RandomForestRegressor`
+- Explore location encoding strategies (One-Hot Encoding, native categorical support)
+- Hyperparameter tuning via cross-validation (grid search, random search, optionally Optuna)
+- Apply early stopping and metric logging during training
+- Evaluate models using **MAPE** and **R²**
 
 
+### 4. & 5. Model logging and deployment
 
- - que veulent dire   'gchclc',  'gvorlc',  'gteglc'
- - codification des variables : maximisées ? 
+**Tools:** [`MLFlow`](https://mlflow.org/docs/latest/ml/), [`FastAPI`](https://fastapi.tiangolo.com/tutorial/)
 
+This part covers:
+- **Experiment tracking** with MLFlow: saving all runs, models, and associated metrics
+- **API deployment** with FastAPI: expose a prediction endpoint that takes property attributes (surface, location, number of rooms, etc.) and returns a predicted price
+
+
+## Getting Started
+
+### Prerequisites
+
+- Python >= 3.13
+- [`uv`](https://docs.astral.sh/uv/)
+- [SSPCloud account](https://datalab.sspcloud.fr/)  (recommended)
+- GitHub account (recommended)
+
+### Installation of this repo
+
+```bash
+# Fork the repository
+git clone https://github.com/AIML4OS/funathon-project1.git
+cd funathon-project1
+
+# Install dependencies with uv
+uv sync
+```
+
+### Running the notebooks
+
+```bash
+# Render the full Quarto website locally
+uv run quarto render
+
+# Or preview it
+uv run quarto preview
+```
+
+## Contributing
+
+Contributions are welcome! Whether you spotted a bug, a typo, an outdated dependency, or have an idea to improve the tutorial, here's how to get involved:
+
+1. **Open an issue** — head to the [Issues tab](https://github.com/AIML4OS/funathon-project1/issues) and describe what you found or what you'd like to see. Please check that a similar issue doesn't already exist before opening a new one.
+2. **Submit a Pull Request** — fork the repository, make your changes on a dedicated branch, and open a PR against `main`. Briefly describe what you changed and why. Linking the PR to the relevant issue is appreciated.
+
+No contribution is too small — fixing a broken link or clarifying a comment is just as valuable as adding a new feature.
+
+
+## About
+
+This project was developed as part of the **AIML4OS Funathon** — a collaborative hackathon focused on applying AI and machine learning methods to open statistical data.
+
+🔗 [AIML4OS Organization](https://github.com/AIML4OS)
