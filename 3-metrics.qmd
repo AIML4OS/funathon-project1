@@ -36,7 +36,7 @@ The key trade-off between RMSE and MAE:
 - **Choose RMSE** when large errors are particularly costly and you want the metric to reflect this (e.g. a prediction off by 2000 €/m² is much worse than being off by 200 €/m² twice);
 - **Choose MAE** when you want a robust, interpretable measure of typical error that is less dominated by a few extreme observations.
 
-> Note : Be careful : you can compare different models based on their MAE, MSE and RMSE metrics but only **if the metrics are calculated on exactly the same test set**. 
+Be careful when you can compare different models : you can compare them based on their MAE, MSE and RMSE metrics but only **if the metrics are calculated on exactly the same test set**. 
 
 
 **Mean Absolute Percentage Error (MAPE)** :  $$\text{MAPE} = \frac{1}{n}\sum_{i=1}^{n}\left|\frac{y_i - \hat{y}_i}{y_i}\right| \times 100$$
@@ -386,7 +386,7 @@ plt.show()
 
 7. (Only for RF model) Write a `calculate_importance(X_test, y_test, RANDOM_STATE, rf_best, SCORING)` function, which returns a sorted Series of importance scores with features name as index. The parameters are the test set (`X_test` and `y_test`), the RF model `rf_best` trained in last section and the scoring chosen for the impurity reduction.
 
-> Note: Permutation importance is computationally expensive on a large test set. The `calculate_importance()` function automatically subsamples up to 100,000 observations before computing importance scores. This subsample does not change the result.
+Note that permutation importance is computationally expensive on a large test set. The `calculate_importance()` function automatically subsamples up to 100,000 observations before computing importance scores. This subsample does not change the result.
 
 ::: {.callout-tip collapse="true" title="Hint"}
 

@@ -97,7 +97,7 @@ rf.oob_score_
 
 3.  Now, calculate the accuracy of the model on the test set - that is, how far off the prediction are from the actual values.
 
-    > Note : This is just an illustration of the evaluation process. More details on metrics will be covered in the [dedicated section](3-metrics.qmd).
+    Note that this is just an illustration of the evaluation process. More details on metrics will be covered in the [dedicated section](3-metrics.qmd).
 
     ::: {.callout-tip collapse="true" title="Hint"}
 
@@ -336,7 +336,7 @@ oob_error_ntrees
 
 **Cross-validation** is a key step in model training : it is a technique used to evaluate the model's ability to generalize to unseendata, by splitting the dataset into multiple folds (typically 5) and iteratively using each fold as a validation set while the remaining folds are used for training. It also allows you to compare different set of hyperparameters and select the configuration that yields the best predictive performance.
 
-> Note : In the Preprocessing section, you saw how to build a Pipeline. In this exercise, we will use a Pipeline again. The first exercise didn't use it to let you practice scikit-learn tools documented [here](https://scikit-learn.org/stable/modules/compose.html#pipelines-and-composite-estimators).
+Note that in the Preprocessing section, you saw how to build a Pipeline. In this exercise, we will use a Pipeline again. The first exercise didn't use it to let you practice scikit-learn tools documented [here](https://scikit-learn.org/stable/modules/compose.html#pipelines-and-composite-estimators).
 
 0.  For convenience, we dropped the features `prop_type`, `dtemut` and trained our model on absolute prices and not on the transformed ones. Get them back and define the new training and testing datasets `X_train, X_test, y_train, y_test`.
 
@@ -427,9 +427,7 @@ grid_search.myfittedparam_
 ```
 :::
 
-4.  From the fitted `grid_search` object, retrieve the best model. As it has only been trained on a fraction of the training set, retrain it on the full training set.
-
-> Note : Which type is `best_estimator_` attribute ?
+4.  From the fitted `grid_search` object, retrieve the best model. As it has only been trained on a fraction of the training set, retrain it on the full training set. Which type is `best_estimator_` attribute ?
 
 ```{python}
 #| code-fold: true

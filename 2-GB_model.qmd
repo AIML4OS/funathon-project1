@@ -70,7 +70,7 @@ gb_baseline.fit(X_train, y_train)
 
 2.  Compute the three evaluation metrics — **RMSE**, **MAE** and **R²** — on both the **training set** and the **test set**. Compare both sets of scores: what do you observe?
 
-    > Note: Computing metrics on the training set alongside the test set is important with gradient boosting because it reveals whether the model is overfitting.
+Note that computing metrics on the training set alongside the test set is important with gradient boosting because it reveals whether the model is overfitting.
 
 ```{python}
 #| code-fold: true
@@ -160,7 +160,7 @@ We use the same `X_train`, `X_test`, `y_train`, `y_test` splits defined in the p
 
     -   Update the definition of our previous pipeline structure (with `TransformedTargetRegressor`) with a Gradient Boosting model with `random state` and `early stopping` parameters.
 
-> Note : We will tune the hyperparameters using the whole pipeline and this set of training and test sets.
+Note that we will tune the hyperparameters using the whole pipeline and this set of training and test sets.
 
 ```{python}
 #| code-fold: true
