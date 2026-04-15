@@ -1,37 +1,357 @@
 ---
 lang: en-US
-title: Déploiement de l'application
+title: "Deploying the model with a local API"
 
 format:
   html:
     number-sections: true
 ---
 
-Dans cette partie on propose de déployer l'application sur le SSP Cloud et de la rendre accessible depuis Internet. L'exercice constitue une introduction à la mise en production d'applications dans un environnement Cloud. Pour aller plus loin, n'hésitez pas à consulter [cet excellent cours](https://ensae-reproductibilite.github.io/website/).
 
-# Exercice 7: Déploiement de l'application Dash
+## Introduction
 
-1. Pour déployer son application, la première étape consiste à la [conteneuriser](https://ensae-reproductibilite.github.io/website/chapters/portability.html#les-conteneurs), ce qui signifie la mettre dans une sorte de boîte virtuelle contenant tout ce dont l'application a besoin pour fonctionner. Le conteneur sépare l'application de son environnement extérieur, ce qui permet d'éviter les conflits avec d'autres applications ou dépendances sur le même système. Puisque le conteneur contient tout ce dont l'application a besoin (comme les bibliothèques et les dépendances), l'application peut être déplacée et exécutée sur n'importe quel système qui supporte les conteneurs, sans se soucier des différences entre ces systèmes.
+So far, we have trained and evaluated a housing price prediction model, and tracked our experiments with MLFlow. The final step of a machine learning pipeline is to make the model **available to end users**, so that it can produce predictions on new data without requiring anyone to re-run training code.
 
-    Ainsi, conteneuriser une application permet de la rendre plus facile à déployer, plus fiable et plus portable (en utilisant efficacement les ressources du système). Docker est un outil populaire pour créer et gérer des conteneurs. Le fichier `Dockerfile` contient le code nécessaire pour construire l'image Docker de l'application finale située dans le répertoire `correction`. Vous pouvez consulter la [documentation Docker](https://docs.docker.com/build/building/packaging/) pour tenter de comprendre comment l'image est construite.
+In this chapter, we build a local **REST API** using [FastAPI](https://fastapi.tiangolo.com/) that wraps our trained model. A user (or another service) will be able to send a POST request describing a property — floor area, location, number of rooms, etc. — and receive a predicted price in return.
 
-    Nous ne vous demandons pas de construire l'image vous-même, l'image du répertoire `correction` est déjà publique sur [Dockerhub](https://hub.docker.com/r/inseefrlab/funathon2024-sujet3/) et peut-être utilisée pour déployer l'application.
+The overall architecture we are aiming for:
 
-2. L'image peut à présent être récupérée et déployée. Dans notre cas, on va la déployer sur un cluster Kubernetes, l'infrastructure sous-jacente du SSP Cloud. Le fonctionnement de Kubernetes est technique et nous ne rentrerons pas dans les détails ici. Les fichiers nécessaires au déploiement se trouvent dans le répertoire `kubernetes`.
+```
+Client (browser / script)
+        │
+        │  HTTP POST  /predict
+        ▼
+  ┌─────────────┐
+  │  FastAPI    │  ← loads model once at startup
+  │  (uvicorn)  │
+  └──────┬──────┘
+         │  calls
+         ▼
+  scikit-learn pipeline
+  (HistGradientBoostingRegressor)
+         │
+         ▼
+    predicted price (€)
+```
 
-    Afin de déployer l'application, suivre les instructions suivantes:
+::: {.callout-note}
+**Tools used in this chapter**
 
-    - Inspecter les fichiers `kubernetes/deployment.yml`, `kubernetes/service.yml` et `kubernetes/ingress.yml` et repérer les éléments suivants:
-        - L'emplacement où est spécifié l'image à déployer ;
-        - L'emplacement où est spécifié les ressources computationnelles allouées ;
-        - L'emplacement où est spécifié l'URL à laquelle sera exposée l'application sur Internet. La modifier (à 2 reprises) pour y indiquer une adresse personalisée pour le déploiement. Seule contrainte, elle doit être de la forme `*.lab.sspcloud.fr` ;
-    - Ouvrir un Terminal ;
-    - Se placer à la racine du projet ;
-    - Appliquer les contrats Kubernetes avec la commande `kubectl apply -f kubernetes/` ;
-    - Vérifier le lancement du conteneur avec la commande `watch kubectl get pods`. Le nom associé devrait être de la forme `flightradar-ui-*`. Vous pouvez sortir de cet écran avec `Ctrl + C` ;
-    - Attendre que le conteneur obtienne le statut `Running`.
+- [`FastAPI`](https://fastapi.tiangolo.com/tutorial/) — modern, fast web framework for building APIs with Python
+- [`uvicorn`](https://www.uvicorn.org/) — ASGI server used to run the FastAPI application locally
+- [`pydantic`](https://docs.pydantic.dev/) — data validation library used by FastAPI to define request/response schemas
+- [`mlflow`](https://mlflow.org/docs/latest/ml/) — to retrieve the model logged in Part 4
+:::
 
-3. Entrer dans un navigateur l'URL spécifiée dans le fichier `kubernetes/ingress.yaml`, et vérifier que l'application fonctionne correctement !
 
-4. Dernier point important : il ne faut pas oublier de supprimer l'application pour ne pas occuper inutilement les ressources du SSP Cloud. Pour fermer l'application, exécuter `kubectl delete -f kubernetes/`.
+## Step 1 – Installing the dependencies
 
+Make sure the following packages are available in your environment:
+
+```{.bash}
+#| eval: false
+uv add fastapi uvicorn mlflow pydantic
+```
+
+## Step 2 – Understanding the FastAPI basics
+
+FastAPI allows you to define an HTTP endpoint in just a few lines of Python. Here is a minimal working example:
+
+```{.python}
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/")
+def read_root():
+    return {"message": "Housing price prediction API is running"}
+```
+
+Save this as `api.py` and run it with:
+
+```bash
+uvicorn api:app --reload
+```
+
+Then open [http://localhost:8000](http://localhost:8000) in your browser. You should see the JSON response `"Housing price prediction API is running"`.
+
+FastAPI also automatically generates interactive documentation at [http://localhost:8000/docs](http://localhost:8000/docs) — very useful for testing your endpoints.
+
+
+## Step 3 – Defining the input schema
+
+Our prediction endpoint needs to receive a description of a property. We use a **Pydantic model** to define and validate the expected input.
+
+Based on the 27 features used in our trained model (see [the data introduction](intro_data.qmd) for full variable definitions):
+
+```{python}
+#| eval: false
+from pydantic import BaseModel
+
+class PropertyFeatures(BaseModel):
+    trans_year: int         # Year of the transaction
+    prop_type: int          # Property type: 1 = flat, 2 = house
+    prop_year_harm: int     # Year of construction (harmonized)
+    prop_loc_dep: str       # Department code (e.g. "75")
+    prop_loc_citycode: str  # Municipality code (e.g. "75056")
+    prop_loc_x: float       # Longitude
+    prop_loc_y: float       # Latitude
+    dist_tosea: float       # Distance to the nearest seashore, capped at 10km (m)
+    n_floors: int           # Number of floors in the property
+    n_bath: int             # Number of bathtubs
+    n_show: int             # Number of showers
+    n_sink: int             # Number of sinks
+    n_wc: int               # Number of toilets
+    n_mrooms: int           # Number of main rooms
+    n_eatr: int             # Number of eating rooms
+    n_slr: int              # Number of sleeping rooms
+    n_kit8: int             # Number of kitchens < 8m²
+    n_kit9: int             # Number of kitchens ≥ 9m²
+    n_washr: int            # Number of washing rooms
+    n_ancrooms: int         # Number of ancillary rooms
+    n_rooms: int            # Total number of rooms
+    farea: int              # Reported floor area (m²)
+    nth_floor: int          # Floor of the property
+    n_terrace: int          # Number of terraces
+    n_attic: int            # Number of attics
+    n_basmt: int            # Number of basements
+    n_otherannex: int       # Number of other annexes
+```
+
+::: {.callout-tip}
+Pydantic validates the data types automatically. If a client sends a string where an integer is expected, FastAPI will return a clear `422 Unprocessable Entity` error with an explanation — without any extra code on your part.
+:::
+
+
+
+## Step 4 – Loading the trained model
+
+We load the model **once at startup**, so that it does not need to be reloaded on every request. We retrieve it from MLFlow using the run ID saved in Part 4.
+
+```{python}
+#| eval: false
+import mlflow.sklearn
+
+# Replace with your actual MLFlow run ID
+MODEL_URI = "runs:/<your_run_id>/model"
+
+model = mlflow.sklearn.load_model(MODEL_URI)
+```
+
+::: {.callout-note}
+If you did not complete Part 4, you can also load the model directly from a serialized file using `joblib`:
+
+```python
+import joblib
+model = joblib.load("solution/model.joblib")
+```
+:::
+
+
+
+## Step 5 – Writing the prediction endpoint
+
+We now combine the input schema and the loaded model into a `/predict` endpoint.
+
+Create a file `api.py` with the following content:
+
+```{python}
+#| eval: false
+import pandas as pd
+import mlflow.sklearn
+from fastapi import FastAPI
+from pydantic import BaseModel
+
+
+# ── App initialization ──────────────────────────────────────────────────────
+
+app = FastAPI(
+    title="Housing Price Prediction API",
+    description="Predicts the price and price per m² of a French residential property.",
+    version="1.0.0",
+)
+
+
+# ── Model loading (done once at startup) ────────────────────────────────────
+
+MODEL_URI = "runs:/<your_run_id>/model"
+model = mlflow.sklearn.load_model(MODEL_URI)
+
+
+# ── Input schema ────────────────────────────────────────────────────────────
+
+class PropertyFeatures(BaseModel):
+    trans_year: int
+    prop_type: int
+    prop_year_harm: int
+    prop_loc_dep: str
+    prop_loc_citycode: str
+    prop_loc_x: float
+    prop_loc_y: float
+    dist_tosea: float
+    n_floors: int
+    n_bath: int
+    n_show: int
+    n_sink: int
+    n_wc: int
+    n_mrooms: int
+    n_eatr: int
+    n_slr: int
+    n_kit8: int
+    n_kit9: int
+    n_washr: int
+    n_ancrooms: int
+    n_rooms: int
+    farea: int
+    nth_floor: int
+    n_terrace: int
+    n_attic: int
+    n_basmt: int
+    n_otherannex: int
+
+
+# ── Endpoints ────────────────────────────────────────────────────────────────
+
+@app.get("/")
+def root():
+    return {"message": "Housing Price Prediction API is running. Go to /docs for usage."}
+
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
+
+@app.post("/predict")
+def predict(features: PropertyFeatures):
+    """
+    Accepts a JSON description of a property and returns the predicted price per m²
+    and the estimated total price.
+    """
+    input_df = pd.DataFrame([features.model_dump()])
+    price_sqm = model.predict(input_df)[0]
+    predicted_price = price_sqm * features.farea
+
+    return {
+        "price_sqm": round(float(price_sqm), 2),
+        "predicted_price": round(float(predicted_price), 2),
+        "farea": features.farea,
+    }
+```
+
+
+
+## Step 6 – Running the API locally
+
+Start the server with:
+
+```bash
+uvicorn api:app --reload --port 8000
+```
+
+The `--reload` flag restarts the server automatically whenever you save changes to `api.py`, which is very convenient during development.
+
+You can now query your API in three ways:
+
+**Option A — Interactive docs (Swagger UI)**
+
+Open [http://localhost:8000/docs](http://localhost:8000/docs) to use the interface generated automatically by FastAPI. You can fill in the fields and send requests directly from the browser.
+
+**Option B — `curl` from the terminal**
+
+```bash
+curl -X POST "http://localhost:8000/predict" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "trans_year": 2020,
+    "prop_type": 1,
+    "prop_year_harm": 1985,
+    "prop_loc_dep": "75",
+    "prop_loc_citycode": "75056",
+    "prop_loc_x": 2.347,
+    "prop_loc_y": 48.859,
+    "dist_tosea": 10000,
+    "n_floors": 7,
+    "n_bath": 1,
+    "n_show": 1,
+    "n_sink": 1,
+    "n_wc": 1,
+    "n_mrooms": 3,
+    "n_eatr": 1,
+    "n_slr": 2,
+    "n_kit8": 1,
+    "n_kit9": 0,
+    "n_washr": 1,
+    "n_ancrooms": 0,
+    "n_rooms": 4,
+    "farea": 65,
+    "nth_floor": 2,
+    "n_terrace": 0,
+    "n_attic": 0,
+    "n_basmt": 1,
+    "n_otherannex": 0
+  }'
+```
+
+**Option C — Python `requests`**
+
+```{python}
+#| eval: false
+import requests
+
+payload = {
+    "trans_year": 2020,
+    "prop_type": 1,
+    "prop_year_harm": 1985,
+    "prop_loc_dep": "75",
+    "prop_loc_citycode": "75056",
+    "prop_loc_x": 2.347,
+    "prop_loc_y": 48.859,
+    "dist_tosea": 10000,
+    "n_floors": 7,
+    "n_bath": 1,
+    "n_show": 1,
+    "n_sink": 1,
+    "n_wc": 1,
+    "n_mrooms": 3,
+    "n_eatr": 1,
+    "n_slr": 2,
+    "n_kit8": 1,
+    "n_kit9": 0,
+    "n_washr": 1,
+    "n_ancrooms": 0,
+    "n_rooms": 4,
+    "farea": 65,
+    "nth_floor": 2,
+    "n_terrace": 0,
+    "n_attic": 0,
+    "n_basmt": 1,
+    "n_otherannex": 0,
+}
+
+response = requests.post("http://localhost:8000/predict", json=payload)
+print(response.json())
+```
+
+Expected output:
+
+```json
+{
+  "price_sqm": 9842.15,
+  "predicted_price": 639739.75,
+  "farea": 65
+}
+```
+
+
+
+## Summary
+
+In this chapter, we have:
+
+- Built a **FastAPI** application that wraps our trained scikit-learn model,
+- Defined a **Pydantic schema** using the updated variable names from the dataset (see [the data introduction](intro_data.qmd)),
+- Exposed a `/predict` endpoint that returns a predicted `price_sqm` and total `predicted_price`,
+- Tested the API locally via `curl`, `requests`, and the auto-generated Swagger UI.
+
+The next natural step — beyond the scope of this tutorial — would be to containerize this API with Docker and deploy it on a cloud platform so it becomes accessible to external users.
