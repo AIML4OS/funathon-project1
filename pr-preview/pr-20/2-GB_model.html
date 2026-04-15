@@ -225,15 +225,16 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#concepts-of-gradient-boosting" id="toc-concepts-of-gradient-boosting" class="nav-link active" data-scroll-target="#concepts-of-gradient-boosting"><span class="header-section-number">1</span> Concepts of Gradient Boosting</a></li>
-  <li><a href="#training-a-baseline-gradient-boosting-model" id="toc-training-a-baseline-gradient-boosting-model" class="nav-link" data-scroll-target="#training-a-baseline-gradient-boosting-model"><span class="header-section-number">2</span> Training a baseline Gradient Boosting model</a>
+  <li><a href="#concepts-of-gradient-boosting" id="toc-concepts-of-gradient-boosting" class="nav-link active" data-scroll-target="#concepts-of-gradient-boosting"><span class="header-section-number">0.1</span> Concepts of Gradient Boosting</a></li>
+  <li><a href="#training-a-baseline-gradient-boosting-model" id="toc-training-a-baseline-gradient-boosting-model" class="nav-link" data-scroll-target="#training-a-baseline-gradient-boosting-model"><span class="header-section-number">0.2</span> Training a baseline Gradient Boosting model</a>
   <ul class="collapse">
-  <li><a href="#exercice-7-train-your-first-gradient-boosting-model" id="toc-exercice-7-train-your-first-gradient-boosting-model" class="nav-link" data-scroll-target="#exercice-7-train-your-first-gradient-boosting-model"><span class="header-section-number">2.1</span> Exercice 7: Train your first Gradient Boosting model</a></li>
-  <li><a href="#key-hyperparameters-of-gradient-boosting" id="toc-key-hyperparameters-of-gradient-boosting" class="nav-link" data-scroll-target="#key-hyperparameters-of-gradient-boosting"><span class="header-section-number">2.2</span> Key Hyperparameters of Gradient Boosting</a></li>
-  <li><a href="#tuning-gradient-boosting-hyperparameters" id="toc-tuning-gradient-boosting-hyperparameters" class="nav-link" data-scroll-target="#tuning-gradient-boosting-hyperparameters"><span class="header-section-number">2.3</span> Tuning Gradient Boosting Hyperparameters</a></li>
-  <li><a href="#exercice-8-tuning-gradient-boosting-hyperparameters" id="toc-exercice-8-tuning-gradient-boosting-hyperparameters" class="nav-link" data-scroll-target="#exercice-8-tuning-gradient-boosting-hyperparameters"><span class="header-section-number">2.4</span> Exercice 8: Tuning Gradient Boosting hyperparameters</a></li>
+  <li><a href="#exercice-7-train-your-first-gradient-boosting-model" id="toc-exercice-7-train-your-first-gradient-boosting-model" class="nav-link" data-scroll-target="#exercice-7-train-your-first-gradient-boosting-model"><span class="header-section-number">0.2.1</span> Exercice 7: Train your first Gradient Boosting model</a></li>
+  <li><a href="#key-hyperparameters-of-gradient-boosting" id="toc-key-hyperparameters-of-gradient-boosting" class="nav-link" data-scroll-target="#key-hyperparameters-of-gradient-boosting"><span class="header-section-number">0.2.2</span> Key Hyperparameters of Gradient Boosting</a></li>
+  <li><a href="#tuning-gradient-boosting-hyperparameters" id="toc-tuning-gradient-boosting-hyperparameters" class="nav-link" data-scroll-target="#tuning-gradient-boosting-hyperparameters"><span class="header-section-number">0.2.3</span> Tuning Gradient Boosting Hyperparameters</a></li>
+  <li><a href="#exercice-8-tuning-gradient-boosting-hyperparameters" id="toc-exercice-8-tuning-gradient-boosting-hyperparameters" class="nav-link" data-scroll-target="#exercice-8-tuning-gradient-boosting-hyperparameters"><span class="header-section-number">0.2.4</span> Exercice 8: Tuning Gradient Boosting hyperparameters</a></li>
   </ul></li>
-  <li><a href="#exercice-9-evaluate-the-final-gradient-boosting-model" id="toc-exercice-9-evaluate-the-final-gradient-boosting-model" class="nav-link" data-scroll-target="#exercice-9-evaluate-the-final-gradient-boosting-model"><span class="header-section-number">3</span> Exercice 9: Evaluate the final Gradient Boosting model</a></li>
+  <li><a href="#exercice-9-evaluate-the-final-gradient-boosting-model" id="toc-exercice-9-evaluate-the-final-gradient-boosting-model" class="nav-link" data-scroll-target="#exercice-9-evaluate-the-final-gradient-boosting-model"><span class="header-section-number">0.3</span> Exercice 9: Evaluate the final Gradient Boosting model</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">1</span> Summary</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/AIML4OS/funathon-project1/edit/main/2-GB_model.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/AIML4OS/funathon-project1/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -261,8 +262,8 @@ window.Quarto = {
 
 <p>Now that we have trained and evaluated a Random Forest model, we will train a <strong>Gradient Boosting</strong> model on the same data. We will cover the theoretical background, train a baseline model, understand the key hyperparameters, and tune them following a simple validation procedure.</p>
 <p>An Insee working document on ensemble methods is available <a href="https://inseefrlab.github.io/DT_methodes_ensemblistes/chapters/chapter2/4-boosting.html">here</a>. If you are unfamiliar with gradient boosting, we recommend reading it before proceeding.</p>
-<section id="concepts-of-gradient-boosting" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="concepts-of-gradient-boosting"><span class="header-section-number">1</span> Concepts of Gradient Boosting</h2>
+<section id="concepts-of-gradient-boosting" class="level2" data-number="0.1">
+<h2 data-number="0.1" class="anchored" data-anchor-id="concepts-of-gradient-boosting"><span class="header-section-number">0.1</span> Concepts of Gradient Boosting</h2>
 <p>Like Random Forests, <strong>Gradient Boosting</strong> is an ensemble method that combines many decision trees. However, the two methods differ fundamentally in how those trees are built and combined.</p>
 <ul>
 <li><p><strong>Random Forests</strong> build trees <strong>independently and in parallel</strong>, then average their predictions. Their strength comes from reducing variance through aggregation of decorrelated trees. By construction, they are quite robust to overfitting.</p></li>
@@ -294,16 +295,16 @@ window.Quarto = {
 <p><strong>scikit-learn’s <code>HistGradientBoostingRegressor</code></strong> is a histogram-based implementation, similar in spirit to LightGBM. It discretises continuous features into bins before constructing trees, making it significantly faster than the classic <code>GradientBoostingRegressor</code>, especially on large datasets. It also natively handles missing values without any imputation step.</p>
 <p>For more information, you can read the detailed presentation of the gradient boosting algorithm <a href="https://inseefrlab.github.io/DT_methodes_ensemblistes/chapters/chapter2/4-boosting.html">here</a> and the usage guide <a href="https://inseefrlab.github.io/DT_methodes_ensemblistes/chapters/chapter3/3-guide_usage_GB.html">here</a>.</p>
 </section>
-<section id="training-a-baseline-gradient-boosting-model" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="training-a-baseline-gradient-boosting-model"><span class="header-section-number">2</span> Training a baseline Gradient Boosting model</h2>
+<section id="training-a-baseline-gradient-boosting-model" class="level2" data-number="0.2">
+<h2 data-number="0.2" class="anchored" data-anchor-id="training-a-baseline-gradient-boosting-model"><span class="header-section-number">0.2</span> Training a baseline Gradient Boosting model</h2>
 <p>To allow for comparison with the random forest section, we chose to use the same conditions : dropping the <code>trans_date</code> and <code>prop_type</code> features and working with the <strong>non transformed target</strong> (i.e.price per square meter) and not use the transformed target (i.e.&nbsp;log of the price per square meter) defined at the end of the pre-processing. We will come back to this later on and chain it with the preprocessing steps.</p>
-<section id="exercice-7-train-your-first-gradient-boosting-model" class="level3" data-number="2.1">
-<h3 data-number="2.1" class="anchored" data-anchor-id="exercice-7-train-your-first-gradient-boosting-model"><span class="header-section-number">2.1</span> Exercice 7: Train your first Gradient Boosting model</h3>
+<section id="exercice-7-train-your-first-gradient-boosting-model" class="level3" data-number="0.2.1">
+<h3 data-number="0.2.1" class="anchored" data-anchor-id="exercice-7-train-your-first-gradient-boosting-model"><span class="header-section-number">0.2.1</span> Exercice 7: Train your first Gradient Boosting model</h3>
 <ol type="1">
 <li>Using the <code>HistGradientBoostingRegressor</code> class and its <a href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html">scikit-learn documentation page</a>, define and train a baseline model with <strong>default hyperparameters</strong> using the same training set <code>X_train</code> and <code>y_train</code> defined in the preprocessing section.</li>
 </ol>
 <p><strong>Note that just like for <code>RandomForestRegressor</code>, all parameters have default values — you do not need to pass any argument to get a working model.</strong></p>
-<div id="b053008b" class="cell" data-execution_count="1">
+<div id="3abf5b1d" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> HistGradientBoostingRegressor</span>
@@ -324,7 +325,7 @@ window.Quarto = {
 <li>Compute the three evaluation metrics — <strong>RMSE</strong>, <strong>MAE</strong> and <strong>R²</strong> — on both the <strong>training set</strong> and the <strong>test set</strong>. Compare both sets of scores: what do you observe?</li>
 </ol>
 <p>Note that computing metrics on the training set alongside the test set is important with gradient boosting because it reveals whether the model is overfitting.</p>
-<div id="3094b7b6" class="cell" data-execution_count="2">
+<div id="3b94ba3d" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> root_mean_squared_error, mean_absolute_error, r2_score</span>
@@ -350,8 +351,8 @@ window.Quarto = {
 <li>How does the default Gradient Boosting model compare with the best Random Forest model from Exercise 6?</li>
 </ol>
 </section>
-<section id="key-hyperparameters-of-gradient-boosting" class="level3" data-number="2.2">
-<h3 data-number="2.2" class="anchored" data-anchor-id="key-hyperparameters-of-gradient-boosting"><span class="header-section-number">2.2</span> Key Hyperparameters of Gradient Boosting</h3>
+<section id="key-hyperparameters-of-gradient-boosting" class="level3" data-number="0.2.2">
+<h3 data-number="0.2.2" class="anchored" data-anchor-id="key-hyperparameters-of-gradient-boosting"><span class="header-section-number">0.2.2</span> Key Hyperparameters of Gradient Boosting</h3>
 <p>The gradient boosting algorithm has many hyperparameters, but the literature identifies a small set that most strongly influence model performance. Gradient-boosting hyperparameters are also coupled, so we cannot set them one after the other anymore. The important hyperparameters are <code>max_iter</code>, <code>learning_rate</code>, and <code>max_depth</code> or <code>max_leaf_nodes</code> (as previously discussed random forest). We recommend reading the scikit-learn MOOC on tuning <a href="https://inria.github.io/scikit-learn-mooc/python_scripts/ensemble_hyperparameters.html#histogram-gradient-boosting-decision-trees">here</a> for more details. Here for this tutorial, we focus on these four groups:</p>
 <p><strong>1. Number of trees (<code>max_iter</code>)</strong></p>
 <p><code>max_iter</code>, similarly to the <code>n_estimators</code> hyperparameter in random forests, controls the number of trees in the final estimator. <strong>With gradient boosting, if you add a tree, you will get closer to the target.</strong> Unlike a random forest, the performance of a gradient boosting model on the <strong>training set grows continuously</strong> as more trees are added — it never plateaus. But if the number of trees is too large, the model will overfit : your score on the training set will get close to 100% but the score on the test set will not increase. If the number of trees is too small, the model will underfit. The optimal number of trees therefore depends on the learning rate: a lower learning rate requires more trees to achieve equivalent performance.</p>
@@ -374,8 +375,8 @@ window.Quarto = {
 <p>In <code>HistGradientBoostingRegressor</code>, default value is <code>20</code>.</p>
 <p>For more information, you can read the detailed description of these hyperparameters <a href="https://inseefrlab.github.io/DT_methodes_ensemblistes/chapters/chapter3/3-guide_usage_GB.html#sec-hyperparam-gb">here</a> or on scikit learn’s documentation (for the <a href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html"><code>HistGradientBoostingRegressor</code> function</a> or the <a href="https://inria.github.io/scikit-learn-mooc/python_scripts/ensemble_hyperparameters.html">MOOC material</a>).</p>
 </section>
-<section id="tuning-gradient-boosting-hyperparameters" class="level3" data-number="2.3">
-<h3 data-number="2.3" class="anchored" data-anchor-id="tuning-gradient-boosting-hyperparameters"><span class="header-section-number">2.3</span> Tuning Gradient Boosting Hyperparameters</h3>
+<section id="tuning-gradient-boosting-hyperparameters" class="level3" data-number="0.2.3">
+<h3 data-number="0.2.3" class="anchored" data-anchor-id="tuning-gradient-boosting-hyperparameters"><span class="header-section-number">0.2.3</span> Tuning Gradient Boosting Hyperparameters</h3>
 <p>We follow the <strong>iterative simple validation procedure</strong> described in the <a href="https://inseefrlab.github.io/DT_methodes_ensemblistes/chapters/chapter3/3-guide_usage_GB.html#approche-2-approche-it%C3%A9rative-par-validation-simple">usage guide</a>. Rather than using cross-validation (which would require training many models), we evaluate each hyperparameter configuration once on the test set and proceed in three sequential steps:</p>
 <ol type="1">
 <li><strong>Jointly optimise the number of trees and the learning rate</strong> — these two hyperparameters are tightly linked and must be tuned together.</li>
@@ -397,8 +398,8 @@ Note
 </div>
 </div>
 </section>
-<section id="exercice-8-tuning-gradient-boosting-hyperparameters" class="level3" data-number="2.4">
-<h3 data-number="2.4" class="anchored" data-anchor-id="exercice-8-tuning-gradient-boosting-hyperparameters"><span class="header-section-number">2.4</span> Exercice 8: Tuning Gradient Boosting hyperparameters</h3>
+<section id="exercice-8-tuning-gradient-boosting-hyperparameters" class="level3" data-number="0.2.4">
+<h3 data-number="0.2.4" class="anchored" data-anchor-id="exercice-8-tuning-gradient-boosting-hyperparameters"><span class="header-section-number">0.2.4</span> Exercice 8: Tuning Gradient Boosting hyperparameters</h3>
 <ol start="0" type="1">
 <li>For convenience, we prepare the data and pipeline with the following instructions :
 <ul>
@@ -409,7 +410,7 @@ Note
 </ul></li>
 </ol>
 <p>Note that we will tune the hyperparameters using the whole pipeline and this set of training and test sets.</p>
-<div id="1c4ef568" class="cell" data-execution_count="3">
+<div id="58f654fb" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Split features / target</span></span>
@@ -436,8 +437,8 @@ Note
 <span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<section id="step-1-jointly-optimise-the-number-of-trees-and-the-learning-rate" class="level4" data-number="2.4.1">
-<h4 data-number="2.4.1" class="anchored" data-anchor-id="step-1-jointly-optimise-the-number-of-trees-and-the-learning-rate"><span class="header-section-number">2.4.1</span> Step 1 — Jointly optimise the number of trees and the learning rate</h4>
+<section id="step-1-jointly-optimise-the-number-of-trees-and-the-learning-rate" class="level4" data-number="0.2.4.1">
+<h4 data-number="0.2.4.1" class="anchored" data-anchor-id="step-1-jointly-optimise-the-number-of-trees-and-the-learning-rate"><span class="header-section-number">0.2.4.1</span> Step 1 — Jointly optimise the number of trees and the learning rate</h4>
 <ol type="1">
 <li>Define the parameter grid for <code>max_iter</code> and <code>learning_rate</code>, then run a <code>GridSearchCV</code> with 2 folds (to speed-up training time), <code>scoring="r2"</code> and <code>return_train_score=True</code>. Use <code>n_jobs=-1</code> to parallelise the search.</li>
 </ol>
@@ -459,7 +460,7 @@ Note
 </div>
 </div>
 </div>
-<div id="c38c1f95" class="cell" data-execution_count="4">
+<div id="c9afcaad" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>param_grid_step1 <span class="op">=</span> {</span>
@@ -505,7 +506,7 @@ Note
 </div>
 </div>
 </div>
-<div id="b1f09527" class="cell" data-execution_count="5">
+<div id="91ce39d1" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> results_to_df(results_: <span class="bu">dict</span>):</span>
@@ -542,7 +543,7 @@ Important
 <p>What do you observe about the interplay between the two hyperparameters?</p>
 <p>What value for the learning rate and the number of tree do you chose, taking into consideration computation efficiency ?</p></li>
 </ol>
-<div id="f2205e90" class="cell" data-execution_count="6">
+<div id="5459a4fd" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -571,7 +572,7 @@ Important
 </details>
 </div>
 <p>If the best value of <code>max_iter</code> is the largest value tested (1000), consider extending the grid before moving to the next step.</p>
-<div id="adaa6c21" class="cell" data-execution_count="7">
+<div id="d3c93102" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>BEST_ITER <span class="op">=</span> <span class="dv">500</span>  <span class="co"># to automatically catch the best hyperparameter, set to : gs_step1.best_params_["regressor__GB__max_iter"]</span></span>
@@ -579,12 +580,12 @@ Important
 </details>
 </div>
 </section>
-<section id="step-2-jointly-optimise-the-tree-structure" class="level4" data-number="2.4.2">
-<h4 data-number="2.4.2" class="anchored" data-anchor-id="step-2-jointly-optimise-the-tree-structure"><span class="header-section-number">2.4.2</span> Step 2 — Jointly optimise the tree structure</h4>
+<section id="step-2-jointly-optimise-the-tree-structure" class="level4" data-number="0.2.4.2">
+<h4 data-number="0.2.4.2" class="anchored" data-anchor-id="step-2-jointly-optimise-the-tree-structure"><span class="header-section-number">0.2.4.2</span> Step 2 — Jointly optimise the tree structure</h4>
 <ol start="4" type="1">
 <li>Fix <code>max_iter</code> and <code>learning_rate</code> to the best values found in step 1, then run a second <code>GridSearchCV</code> over <code>max_depth</code> and <code>min_samples_leaf</code> with other settings unchanged.</li>
 </ol>
-<div id="5c9dad1b" class="cell" data-execution_count="8">
+<div id="fa13655a" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>param_grid_step2 <span class="op">=</span> {</span>
@@ -627,7 +628,7 @@ Important
 <li><p>Using our pre-defined functions, retrieve the cross-validation results as a DataFrame and plot the mean train and validation R² for each combination.</p>
 <p>Which combinations show signs of overfitting?</p></li>
 </ol>
-<div id="c5da2d17" class="cell" data-execution_count="9">
+<div id="4340798f" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -641,13 +642,13 @@ Important
 </details>
 </div>
 </section>
-<section id="step-3-optimise-the-regularisation-parameters" class="level4" data-number="2.4.3">
-<h4 data-number="2.4.3" class="anchored" data-anchor-id="step-3-optimise-the-regularisation-parameters"><span class="header-section-number">2.4.3</span> Step 3 — Optimise the regularisation parameters</h4>
+<section id="step-3-optimise-the-regularisation-parameters" class="level4" data-number="0.2.4.3">
+<h4 data-number="0.2.4.3" class="anchored" data-anchor-id="step-3-optimise-the-regularisation-parameters"><span class="header-section-number">0.2.4.3</span> Step 3 — Optimise the regularisation parameters</h4>
 <ol start="6" type="1">
 <li><p>Using the best hyperparameters found in steps 1 and 2, train one model for each value of <code>l2_regularization</code> in <code>[0.0, 0.1, 0.3, 0.5, 1.0]</code>. To use our predefined function, make it as if it was a cross validation with <code>max_iter</code> set to the above chosen value. Using our pre-defined function, plot the result.</p>
 <p>Does regularisation help reduce the gap between train and test performance?</p></li>
 </ol>
-<div id="9281f6f6" class="cell" data-execution_count="10">
+<div id="73531ffd" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>param_grid_step3 <span class="op">=</span> {</span>
@@ -695,12 +696,12 @@ Important
 </details>
 </div>
 </section>
-<section id="step-4-train-the-final-model" class="level4" data-number="2.4.4">
-<h4 data-number="2.4.4" class="anchored" data-anchor-id="step-4-train-the-final-model"><span class="header-section-number">2.4.4</span> Step 4 — Train the final model</h4>
+<section id="step-4-train-the-final-model" class="level4" data-number="0.2.4.4">
+<h4 data-number="0.2.4.4" class="anchored" data-anchor-id="step-4-train-the-final-model"><span class="header-section-number">0.2.4.4</span> Step 4 — Train the final model</h4>
 <ol start="7" type="1">
 <li>Train the final <code>HistGradientBoostingRegressor</code> using all the best hyperparameters identified in the previous steps. Then re-train it on the full training set.</li>
 </ol>
-<div id="cfa4891a" class="cell" data-execution_count="11">
+<div id="65a2f56e" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>gb_final <span class="op">=</span> HistGradientBoostingRegressor(</span>
@@ -738,13 +739,13 @@ Important
 </section>
 </section>
 </section>
-<section id="exercice-9-evaluate-the-final-gradient-boosting-model" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="exercice-9-evaluate-the-final-gradient-boosting-model"><span class="header-section-number">3</span> Exercice 9: Evaluate the final Gradient Boosting model</h2>
+<section id="exercice-9-evaluate-the-final-gradient-boosting-model" class="level2" data-number="0.3">
+<h2 data-number="0.3" class="anchored" data-anchor-id="exercice-9-evaluate-the-final-gradient-boosting-model"><span class="header-section-number">0.3</span> Exercice 9: Evaluate the final Gradient Boosting model</h2>
 <p>Now that the model has been tuned, evaluate its performance on the test set and compare it to the Random Forest baseline.</p>
 <ol type="1">
 <li>Compute <strong>RMSE</strong>, <strong>MAE</strong> and <strong>R²</strong> on both the training and test sets for the final gradient boosting model using our <code>print_metrics</code> function.</li>
 </ol>
-<div id="7b5b3096" class="cell" data-execution_count="12">
+<div id="b3856dc6" class="cell" data-execution_count="12">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> gb_model_best</span>
@@ -757,7 +758,7 @@ Important
 <ol start="2" type="1">
 <li>Plot predicted values against actual values on the test set.</li>
 </ol>
-<div id="c29f8138" class="cell" data-execution_count="13">
+<div id="f35c6e76" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -780,7 +781,17 @@ Important
 <span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<p>Congrats 🎉! You have successfully trained, tuned, and evaluated a Gradient Boosting model and compared it to the Random Forest baseline.</p>
+</section>
+<section id="summary" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Summary</h1>
+<p>Congrats 🎉! In this section, you have successfully</p>
+<ul>
+<li>seen the foundations of goosting models,</li>
+<li>trained a <code>HistGradientBoostingRegressor</code> with scikit-learn,</li>
+<li>optimized the <code>HistGradientBoostingRegressor</code> parameters through a gridsearch,</li>
+<li>and finally, evaluated the best gradient boosting model for price per square meter predictions with the RMSE and MAE metrics.</li>
+</ul>
+<p>You can now have a look at how to train a <a href="2-RF_model.Qmd">random forest model</a>. Once you have trained both model, you can have a closer look at metrics with the <a href="3-metrics.Qmd">metrics section</a>.</p>
 
 
 </section>
