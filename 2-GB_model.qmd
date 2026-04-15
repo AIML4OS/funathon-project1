@@ -201,7 +201,7 @@ model = TransformedTargetRegressor(
 >
 > **Be careful : usually, you have to choose more than 2 folds for the cross validation (often 5)**
 
-::: {.callout-tip collapse="true" title="Click to view a hint"}
+::: {.callout-tip collapse="true" title="Hint"}
 When using `GridSearchCV`, the parameter names must match those of the estimator passed to it. Here we pass a `HistGradientBoostingRegressor` directly, so names are simply `max_iter` and `learning_rate`.
 
 To retrieve all fold scores after fitting, use `cv_results_` — it is a dict that contains `mean_train_score`, `mean_test_score`, and the corresponding parameter values.
@@ -238,7 +238,7 @@ print(f"Best CV R² : {gs_step1.best_score_:.4f}")
 
     -   Display the mean train and validation R² for each combination, sorted by descending validation R².
 
-::: {.callout-tip collapse="true" title="Click to view a hint"}
+::: {.callout-tip collapse="true" title="Hint"}
 The cross-validation results are available through the model's `cv_results_` attribute.
 All parameters names are prefixed with `param_regressor__GB__`.
 The metrics we are looking for are suffixed `mean_train_score` and `mean_test_score`.

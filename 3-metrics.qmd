@@ -138,7 +138,7 @@ GB_residuals = y_test - y_pred_GB
 
 2.  Compute RMSE, MAE and R² using scikit-learn's metrics module for the comparison of RF and GB models.
 
-::: {.callout-tip collapse="true" title="Click to view a hint"}
+::: {.callout-tip collapse="true" title="Hint"}
 
 Import `root_mean_squared_error`, `mean_absolute_error` and `r2_score` from `sklearn.metrics`. You can see the documentation of `sklearn.metrics` [here](https://scikit-learn.org/stable/api/sklearn.metrics.html).
 
@@ -174,7 +174,7 @@ for name, model in models:
 
 3.  (Optional) Compute the MAPE to express the average prediction error as a percentage of the actual price.
 
-::: {.callout-tip collapse="true" title="Click to view a hint"}
+::: {.callout-tip collapse="true" title="Hint"}
 
 Use `mean_absolute_percentage_error` from `sklearn.metrics`. Make sure y_test contains no zero values before dividing. You can see the documentation [here](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_absolute_percentage_error.html).
 
@@ -201,7 +201,7 @@ In this exercise, you will produce four diagnostic plots: a residuals distributi
 
 1.  Write a `residuals_distribution(residuals, rmse)` function to plot the histogram of the residuals. It takes `residuals` (a pandas Series) and `rmse` (a float), along with `ax`, `label` and `color` parameters for overlay plotting. 
 
-::: {.callout-tip collapse="true" title="Click to view a hint"}
+::: {.callout-tip collapse="true" title="Hint"}
 
 Use `matplotlib.pyplot` module to plot the distribution. You can read the documentation [here](https://matplotlib.org/stable/tutorials/pyplot.html).
 
@@ -228,7 +228,7 @@ def residuals_distribution(residuals: pd.Series, rmse: float, ax=None, label=Non
 
 2.  Plot the residuals distribution of the RF and GB models. Look at whether the histogram is centered around zero and whether it is approximately symmetric.
 
-::: {.callout-tip collapse="true" title="Click to view a hint"}
+::: {.callout-tip collapse="true" title="Hint"}
 
 Pass the residuals series and the RMSE value computed in Exercise 8. The RMSE value is needed in the plot title. Call `plt.show()` to display the figure.
 
@@ -281,7 +281,7 @@ def QQplot(y_test: pd.Series, y_pred: pd.Series, ax=None, label=None, color=None
 
 4.  Plot the QQ plot comparing the quantiles of the actual and predicted distributions for RF and GB models. Check whether the points align closely along the diagonal, especially in the tails.
 
-::: {.callout-tip collapse="true" title="Click to view a hint"}
+::: {.callout-tip collapse="true" title="Hint"}
 
 Points well above the diagonal in the upper tail indicate that the model underestimates high prices.
 
@@ -324,7 +324,7 @@ def target_distribution(y: pd.Series):
 
 6.  Plot and compare the target distributions for the actual test values and the predicted values side by side.
 
-::: {.callout-tip collapse="true" title="Click to view a hint"}
+::: {.callout-tip collapse="true" title="Hint"}
 
 Call it twice — once for `y_test` and once for `y_pred`. Display both figures. Compare the shapes: a compressed predicted distribution indicates regression to the mean, while a systematic vertical shift indicates a constant bias.
 
@@ -388,7 +388,7 @@ plt.show()
 
 > Note: Permutation importance is computationally expensive on a large test set. The `calculate_importance()` function automatically subsamples up to 100,000 observations before computing importance scores. This subsample does not change the result.
 
-::: {.callout-tip collapse="true" title="Click to view a hint"}
+::: {.callout-tip collapse="true" title="Hint"}
 
 Use `permutation_importance` function from scikit-learn. See [here](https://scikit-learn.org/stable/modules/generated/sklearn.inspection.permutation_importance.html) for the documentation.
 
@@ -446,7 +446,7 @@ def importance_plot(importances):
 
 9.  Compute the permutation importance and plot the top 20 most important features.
 
-::: {.callout-tip collapse="true" title="Click to view a hint"}
+::: {.callout-tip collapse="true" title="Hint"}
 
 Calculate the importance with the train set and the final RF model. The `SCORING` argument should match the metric used during training (e.g. `"r2"`).
 

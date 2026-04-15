@@ -36,13 +36,11 @@ The aim of this part is to manipulate new database and understand features in or
 
 1.  **Initialiaze a DuckDB connection.**
 
-    <details>
-
-    <summary>Click to view a hint</summary>
+    ::: {.callout-tip collapse="true" title="Hint"}
 
     First, you need to open a connection in the memory. Second, you need to create a secret table with S3 credentials
 
-    </details>
+    :::
 
     ```{python}
     #| code-fold: true
@@ -180,13 +178,11 @@ df.notnull().all() # column with no NaN?
 
 4.  **Filter the dataframe to keep only housing transactions made inside the Paris area (the region called *Île de France*)**
 
-<details>
-
-<summary>View a hint</summary>
+::: {.callout-tip collapse="true" title="Hint"}
 
 You need to filter with the feature `prop_loc_dep`, with the following department codes for Paris area : ["75", "77", "78", "91", "92", "93", "94", "95"]
 
-</details>
+:::
 
 ```{python}
 #| code-fold: true
@@ -214,13 +210,11 @@ We will transform a few features for the training part. It will enhance the qual
     -   when size is no longer the dominant source of variance in the target, splits are driven by economivally meaningful features rather than a mechanical size effect ;
     -   Feature importance scores are less distorted when size no longer absorbs a disproportionate share of variance reduction across splits ;
 
-    <details>
-
-    <summary>Click to view a hint</summary>
+    ::: {.callout-tip collapse="true" title="Hint"}
 
     You need to create a new target `price_sqm` with features `price` (housing price) and `farea`
 
-    </details>
+    :::
 
     ```{python}
     #| code-fold: true
@@ -311,13 +305,11 @@ By looking at this phenomena closer, we can see that a threshold of €100, €2
 The second step is to apply some statistic methods.
 For example, we can use the **Interquartile Range (IQR)** *to remove outlier target values*.
 
-<details>
-
-<summary>Click to view a hint</summary>
+::: {.callout-tip collapse="true" title="Hint"}
 
 **Interquartile Range** method can keep all observations with target value between `Q1-1.5*(Q9-Q1)` and `Q9+1.5*(Q9-Q1)` .
 
-</details>
+:::
 
 ```{python}
 #| code-fold: true
@@ -425,13 +417,11 @@ You will see in the section {#sec-scikit-learn-pipeline} how preprocessing can b
 
 1.  Have a look at the list of variables available. Which ones do not bear any additionnal information and can be dropped ?
 
-    <details>
-
-    <summary>Click to view a hint</summary>
+    ::: {.callout-tip collapse="true" title="Hint"}
 
     We chose to drop the following variables : `trans_id` (meaningless), `trans_type_code` (meaningless), `trans_type_label` (always equal to the same value), `price` (already taken care of with our target), `prop_loc_dep` (geographical information is comprised in geographical coordinates prop_loc_x and prop_loc_y), `prop_loc_citycode` (geographical information is comprised in geographical coordinates prop_loc_x and prop_loc_y), `dist_tosea` and `dist_tosea_corr` have no meaningful information in the Paris area, far from the sea.
 
-    </details>
+    :::
 
 ```{python}
 #| code-fold: true
@@ -494,13 +484,11 @@ df = df.drop(columns=["prop_year_harm"])
 
 5.  Split the dataframe in train and test set.
 
-    <details>
-
-    <summary>Click to view a hint</summary>
+    ::: {.callout-tip collapse="true" title="Hint"}
 
     you can use the function `train_test_split` from the module `sklearn.model_selection` and its [documentation](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split).
 
-    </details>
+    :::
 
 ```{python}
 #| code-fold: true
@@ -606,16 +594,14 @@ We will now create our first pipeline to transform the data for the training pha
 
 1.  Create the `ColumnTransformer` instance for the preprocessing step. Go and check [scikit-learn's documentation](https://scikit-learn.org/stable/modules/generated/sklearn.compose.ColumnTransformer.html).
 
-    <details>
-
-    <summary>Click to view a hint</summary>
+    ::: {.callout-tip collapse="true" title="Hint"}
 
     For the preprocessing step, you have to :
 
     -   transform the `trans_date` variable, a `Timestamp` feature to a elapsed feature (`ref_date = '2010-01-01 00:00'`). You can create a new function `date_to_days`, and apply it with [scikit-learn's `FunctionTransformer`](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.FunctionTransformer.html). Note that the output of your `date_to_days` function should be a Python array and that `.to_numpy().reshape(-1, 1)` applied to a Pandas Series will transform it to the correct type ;
     -   apply the chosen encoding method (OneHotEncoder) on categorical features.
 
-    </details>
+    :::
 
 ```{python}
 #| code-fold: true
@@ -651,9 +637,7 @@ preprocessor = ColumnTransformer(
 
 2.  Create the Pipeline for training a RandomForestRegressor model. Go to the [scikit-learn's documentation](https://scikit-learn.org/stable/modules/compose.html#pipelines-and-composite-estimators) on the matter to understand how it works. 
 
-    <details>
-
-    <summary>Click to view a hint</summary>
+    ::: {.callout-tip collapse="true" title="Hint"}
 
     For the pipeline steps, you have to :
 
@@ -662,7 +646,7 @@ preprocessor = ColumnTransformer(
     -   Write all hyperparameters you want to use for the `RandomForestRegressor` instance - have a tour on [the documentation](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html) ;
     -   apply this target transformation to the pipeline with [`TransformedTargetRegressor`](https://scikit-learn.org/stable/modules/generated/sklearn.compose.TransformedTargetRegressor.html#sklearn.compose.TransformedTargetRegressor).
 
-    </details>
+    :::
 
 ```{python}
 #| code-fold: true
