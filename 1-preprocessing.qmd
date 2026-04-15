@@ -30,8 +30,7 @@ You have to load two different files :
 TO BE CHECKED - à refaire avec les données synthétiques finales - une seule base
 :::
 
-:::: {.callout-tip collapse="false" icon="false"}
-## <i class="bi bi-book"></i> Exercice 1: Understanding data inputs
+## Exercice 1: Understanding data inputs
 
 The aim of this part is to manipulate new database and understand features in order to prepare the preprocessing steps: it's an important step in ML pipeline.
 
@@ -197,16 +196,15 @@ import pandas as pd
 
 trans = trans[trans["prop_loc_dep"].isin(["75", "77", "78", "91", "92", "93", "94", "95"])]
 ```
-::::
+
 
 # 2 - Which transformations must you apply to the data ?
 
-::: {.callout-tip collapse="false" icon="false"}
-## <i class="bi bi-book"></i> Exercice 2: Analyzing data inputs
+## Exercice 2: Analyzing data inputs
 
 We will transform a few features for the training part. It will enhance the quality of our model.
 
-## Analyze the expected target (variable `y` in ML models)
+### Analyze the expected target (variable `y` in ML models)
 
 1.  **Create the final target**
 
@@ -379,7 +377,7 @@ For our project, we will delete all observations with a missing target value. Yo
 trans = trans.dropna(subset = "price_sqm")
 ```
 
-## Preparation of the features (variables X of the ML model)
+### Preparation of the features (variables X of the ML model)
 
 Before transforming features, you have to keep in mind **two essential points when working with trees** :
 
@@ -387,7 +385,7 @@ Before transforming features, you have to keep in mind **two essential points wh
 
 -   **No need to remove correlated features, gradient boosting and random forests are robust to multicollinearity.** However, you can remove them if you want to accelerate the training phase but it isn't an issue for this project.
 
-### Categorical features
+#### Categorical features
 
 This part is the most delicate and complex point when you use random forests and gradient boosting. Indeed, you need to **transform categorical features to use them** in the training phase.
 
@@ -403,17 +401,17 @@ You have also another method (not an encoding), namely the **native support for 
 
 What is the list of variable that are categorical ? Which encoding should we use ? Do not write any code for now, we will do so later.
 
-### Numerical features
+#### Numerical features
 
 For tree-based ensemble methods, most preprocessing steps applied to numerical features are unnecessary. Since splits rely solely on the relative order of values, monotonic transformations (e.g. `log(x)`, `x²`) and scaling (e.g. standardisation, normalisation) have no effect on the model's behaviour.
 
 Keep it in mind when you work on ensemble methods !
 
-### Missing values
+#### Missing values
 
 Ensemble methods handle missing values natively, so pre-treatment is technically optional — but still advisable for safety. The key practical point is always to verify that missing values are actually coded as `NaN` (or whatever the implementation expects) and not disguised behind another modality, such as `0`, `-999`, or a string placeholder, otherwise the native support won't work as intended. Here, the number of missing value is minimal and focused on some variable. We will filter out these elements.
 
-### Time features
+#### Time features
 
 All datetime features must be preprocessed — you cannot use the `Timestamp` type as-is for training. In this project, we will handle these features as follows:
 
@@ -423,7 +421,7 @@ All datetime features must be preprocessed — you cannot use the `Timestamp` ty
 
 You will see in the section {#sec-scikit-learn-pipeline} how preprocessing can be performed with scikit-learn.
 
-## Now let's go : prepare the dataframe for the training
+### Now let's go : prepare the dataframe for the training
 
 1.  Have a look at the list of variables available. Which ones do not bear any additionnal information and can be dropped ?
 
@@ -526,12 +524,11 @@ X_train, X_test, y_train, y_test = train_test_split(
 Now that you are familiar with the main mechanisms of pre-processing for model training, we will move on to using scikit-learn modules to prepare for training.
 
 Scikit-learn has a very well crafted documentation, so please do not hesitate to go and have a look on [their website](https://scikit-learn.org/stable/api/index.html).
-:::
+
 
 # 3 - How do you prepare your data with scikit-learn?
 
-::: {.callout-tip collapse="false" icon="false"}
-## <i class="bi bi-book"></i> Exercice 3: The scikit-learn pipeline
+## Exercice 3: The scikit-learn pipeline
 
 You are going to made your first scikit-learn pipeline. To begin, you can go to the [scikit-learn quickstart page](https://scikit-learn.org/stable/getting_started.html) for an overview.
 
@@ -603,7 +600,7 @@ pipeline = Pipeline([
 ]) 
 ```
 
-## Now let's go : prepare the pipeline for the training
+### Now let's go : prepare the pipeline for the training
 
 We will now create our first pipeline to transform the data for the training phase. We will first use a Random Forest model and then compare with a gradient boosting model.
 
@@ -713,7 +710,7 @@ model = TransformedTargetRegressor(
 )
 
 ```
-:::
+
 
 Congrats ! You have completed the data preparation exercises. Now you can choose one of the two model you'll want to train - or do both ! 💪
 
