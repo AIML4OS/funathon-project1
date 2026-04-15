@@ -294,7 +294,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="0de627b8" class="cell" data-execution_count="1">
+<div id="cceda2fd" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> duckdb</span>
@@ -323,7 +323,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div></li>
 <li><p><strong>Load, with DuckDB, all data inputs in a DataFrame <code>trans</code></strong> (for transactions).</p></li>
 </ol>
-<div id="951d5a10" class="cell" data-execution_count="2">
+<div id="3928c0f9" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We load all transactions made in France between 2010 and 2022</span></span>
@@ -445,7 +445,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="334a87bc" class="cell" data-execution_count="3">
+<div id="bc9ca5d3" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -486,7 +486,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="9e1f9e16" class="cell" data-execution_count="4">
+<div id="f548bcaa" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>trans[<span class="st">"price_sqm"</span>] <span class="op">=</span> trans[<span class="st">"price"</span>] <span class="op">/</span> trans[<span class="st">"farea"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -503,7 +503,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>For Random Forest (random forests), the final prediction is the mean value of Y across all observations contained in the leaf. Since the mean is not a robust statistic, extreme values can strongly influence the final prediction associated with that leaf.</li>
 <li>For Gradient Boosting (gradient boosting), extreme values can lead to overfitting. Since gradient boosting iteratively reduces residuals by adding new trees, observations with very large residuals - often caused by extreme values - can have a disproportionate influence on the model.</li>
 </ul>
-<div id="bb350225" class="cell" data-execution_count="5">
+<div id="4cd288c4" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -541,7 +541,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>We will therefore apply first a deterministic method. For example, we can set a threshold when analyzing housing price distribution (see previous plots and the describe methode). If the price per square meter of the transaction exceeds €200.000 for example, the value can be considered erroneous.</p>
 <p>In the same way, we can have a look at the lower dristribution to see if there is an issue with the left part of the distribution.</p></li>
 </ol>
-<div id="8a419cfc" class="cell" data-execution_count="6">
+<div id="9f177962" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">15</span>))</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, (data, label) <span class="kw">in</span> <span class="bu">zip</span>(axes, [(y[y <span class="op">&lt;=</span> <span class="dv">2000</span>], <span class="st">"Y below 2000€ per sqm"</span>), (y[y <span class="op">&lt;=</span> <span class="dv">500</span>], <span class="st">"Y below 500€ per sqm"</span>)]):</span>
@@ -571,7 +571,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="763eac7c" class="cell" data-execution_count="7">
+<div id="ccac50be" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>n0 <span class="op">=</span> trans.shape[<span class="dv">0</span>]</span>
@@ -612,7 +612,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ol>
 <p>The target variable should not contain missing values when using machine learning algorithms. They should therefore be either dropped or imputed if you have reliable information to support the imputation.</p>
 <p>For our project, we will delete all observations with a missing target value. You can see <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.dropna.html#pandas.DataFrame.dropna">pandas documentation</a> for help.</p>
-<div id="770780dd" class="cell" data-execution_count="9">
+<div id="d29e7d80" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>trans <span class="op">=</span> trans.dropna(subset <span class="op">=</span> <span class="st">"price_sqm"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -680,7 +680,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div></li>
 </ol>
-<div id="bfa03db6" class="cell" data-execution_count="10">
+<div id="2f0f0b63" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> trans.drop(columns<span class="op">=</span>[</span>
@@ -692,7 +692,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ol start="2" type="1">
 <li>For convenience, filter the rows containing at least one missing value. You can check pandas’s <code>dropna</code> function on <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.dropna.html#pandas.DataFrame.dropna">their documentation</a>. Check before filtering the number of rows concerned.</li>
 </ol>
-<div id="dcfa6066" class="cell" data-execution_count="11">
+<div id="e8b6a5b4" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Printing all rows containing at least one NA</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df[df.isna().<span class="bu">any</span>(axis<span class="op">=</span><span class="dv">1</span>)])</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -702,7 +702,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ol start="3" type="1">
 <li>For convenience, we want to update the modalities of the <code>prop_type</code> variable : <code>1</code> means it’s a house and <code>2</code> it’s a flat. You can check pandas’s Categorical function on <a href="https://pandas.pydata.org/docs/reference/api/pandas.Categorical.html#pandas.Categorical">their documentation</a>.</li>
 </ol>
-<div id="d3ffffe4" class="cell" data-execution_count="12">
+<div id="939365d9" class="cell" data-execution_count="12">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"prop_type"</span>] <span class="op">=</span> pd.Categorical(</span>
@@ -715,7 +715,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ol start="4" type="1">
 <li>The codification of categorical variable can be computational intensive. <code>prop_type</code> has only two modalities but check the number of modalities of <code>prop_year_harm</code>. To speed-up the computation, can we regroup modalities together ? Does it make sense given how the variable has been transformed (see the <a href="./index.html">presentation of the data</a>) ? How can we do it ?</li>
 </ol>
-<div id="6a252fef" class="cell" data-execution_count="13">
+<div id="2d9dacd3" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>counts <span class="op">=</span> df.value_counts(<span class="st">"prop_year_harm"</span>).reset_index()</span>
@@ -752,7 +752,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div></li>
 </ol>
-<div id="28e1e5ee" class="cell" data-execution_count="14">
+<div id="5f687eb2" class="cell" data-execution_count="14">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
@@ -860,7 +860,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div></li>
 </ol>
-<div id="893f7a99" class="cell" data-execution_count="15">
+<div id="2d028a86" class="cell" data-execution_count="15">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.compose <span class="im">import</span> ColumnTransformer</span>
@@ -916,7 +916,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div></li>
 </ol>
-<div id="4f691d4a" class="cell" data-execution_count="16">
+<div id="9a6959b4" class="cell" data-execution_count="16">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OneHotEncoder, FunctionTransformer</span>
