@@ -29,7 +29,11 @@ website:
 
     left:
       - text: "Introduction"
-        href: index.qmd
+        menu: 
+        - text: "Presentation"
+          href: index.qmd
+        - text: "Data presentation"
+          href: intro_data.qmd
       - text: "Preprocessing"
         href: 1-preprocessing.qmd
       - text: "Modelling"

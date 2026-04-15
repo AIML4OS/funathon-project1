@@ -29,21 +29,13 @@ editor_options:
   <tbody>
     <tr>
       <td><span class="level-button level-beginner">Beginner</span></td>
-      <td>Doing the exercises of steps 1 to 3, relying on clues and solutions if needed.</td>
-    </tr>
-    <tr>
-      <td><span class="level-button level-intermediate">Intermediate</span></td>
-      <td>Doing the exercises of steps 1 to 3, without relying on clues and solutions.</td>
-    </tr>
-    <tr>
-      <td><span class="level-button level-expert">Expert</span></td>
-      <td>Doing the exercises of steps 1 to 3, without relying on clues and solutions, and completing steps 4 (logging) and 5 (deployment).</td>
+      <td>The whole project is written for beginners, relying on clues and solutions if needed.</td>
     </tr>
   </tbody>
 </table>
 ```
 
-# Introduction {.unnumbered}
+# Introduction
 
 The project focuses on predicting housing prices in the Paris area (Île-de-France region). We will explore how to perform inference using only a limited number of data sources, specifically transaction records and cadastral data. The reason for this choice is that data sources are widely available across many countries. At the end of this project, you will be able to :
 
@@ -64,17 +56,15 @@ This project includes five steps (listed in the banner at the top of the page):
 
 Every step is independent from the other : one will be able to start from the next step if a step is too difficult.
 
-# Presentation of the data
+# Generalities about housing market in France
 
-## Opening remarks
-
-### How to buy a property in France ?
+## How to buy a property in France ?
 
 A housing transaction is always formalized in front of a **notary** in France, who acts as a legal intermediary to ensure the transaction’s validity and compliance with civil law. The notary checks among other things that the property effectively belongs to the seller, calculates and collects the **transfer taxes** (such as *droits de mutation*) based on the transaction’s details and the property’s characteristics.
 
 After collecting these taxes, the notary forwards the details of the transaction to the **fiscal administration**, including the sale price, the identities of the buyer and seller, the property’s cadastral reference and the notarized document. The fiscal administration then records this information in its databases and updates the **land registry** to reflect the new ownership.
 
-### Specificity of the data set
+## Specificity of the data set
 
 Since 2019, the fiscal administration publishes **all real estate transactions** twice a year in open data format on data.gouv.fr. You can access and download the original datasets (*Demande de Valeurs Foncières - DVF* or request for property values) directly here (in French only - sadly 😞): [data.gouv.fr/datasets/demandes-de-valeurs-foncieres](https://www.data.gouv.fr/datasets/demandes-de-valeurs-foncieres).
 
@@ -101,34 +91,7 @@ It means that if you search for a city with its Insee code on Google maps for ex
 
 For example, the city of Paris is identified by the department code **75**, the Insee code **75056** (Paris itself), and is associated with multiple zip codes (e.g., **75001**, **75002**, etc.). Montrouge's Insee code is 92049 and 92 is the department code of Hauts-de-Seine, where Montrouge is located.
 
-## General presentation of the data
-
-Data prepared for this project gathers all of the housing transactions in France between 2014 and 2021 and details about the property sold.
-Because the characteristics of the property sold isn't open source, the data you'll be working with are **synthetic data**. It has been generated to mirror the original data.
-
-If you want to have a closer look at the data, CEREMA publishes on [its website](%5D(https://doc-datafoncier.cerema.fr/doc/ff/pb0010_local)) an extensive documentation of the different datasets, the variables, their modalities and the overall quality of variable.
-
-## List of variable and explanations
-
-{{< include "temp/table_dict.qmd" >}}
-
-See [CEREMA's documentation (in French)](https://doc-datafoncier.cerema.fr/doc/ff/pb0010_local) for a more detailled description.
-
-Note that the variable year of the building has been harmonized to correct for typing mistakes. Here are the transformation made from the original data :
-
-| Original modality | Corrections to original modality | Exemple of transformation |
-|------------------------|------------------------|------------------------|
-| 1 ≤ prop_year ≤ 22 | Add 2000 as the first digits were not entered | 8 → 2008 |
-| 23 ≤ prop_year ≤ 99 | Add 1900 as the first digits were not entered | 83 → 1983 |
-| 100 ≤ prop_year ≤ 119 | Set to 0 as it is unknown | 105 → 0 |
-| 120 ≤ prop_year ≤ 200 | Add a 0 at the end as the last digit has not been entered | 187 → 1870 |
-| 201 ≤ prop_year ≤ 299 | Set to 0 as it is unknown | 250 → 0 |
-| 300 ≤ prop_year ≤ 999 | Add 1000 as the first digits have not been entered | 980 → 1980 |
-| 1000 ≤ prop_year ≤ 1120 | Set to 0 as it is unknown | 1005 → 0 |
-| 1120 ≤ prop_year ≤ 1199 | Replace the second 1 with 9 | 1155 → 1955 |
-| 1200 ≤ prop_year ≤ 2022 | No change | 1200 → 1200 |
-
-More information about this transformation is available [online](https://doc-datafoncier.cerema.fr/doc/ff/pb40_pevprincipale/prop_year_harm) (in French).
+In depth details about the data is presented in the [dedicated page](intro_data.qmd).
 
 # Initialization of the project
 
