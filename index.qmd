@@ -2,12 +2,12 @@
 title: "Project 1: predicting housing prices"
 lang: en-US
 author: 
-- name: Daffy Duck
-  email: daffy.duck@insee.fr
+- name: Laura GAIMARD
+  email: laura.gaimard@insee.fr
   affiliations: 
       - name: "[Insee](https://www.insee.fr/fr/accueil)"
-- name: Mickey Mouse
-  email: mickey.mouse@insee.fr
+- name: Nicolas TOULEMONDE
+  email: nicolas.toulemonde@insee.fr
   affiliations: 
       - name: "[Insee](https://www.insee.fr/fr/accueil)"
 format:
