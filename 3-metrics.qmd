@@ -466,4 +466,14 @@ fig_importance = importance_plot(importances)
 plt.show()
 ```
 
-Congrats 🎉! You now have a complete evaluation pipeline: scalar metrics, residual diagnostics, distributional analysis, feature importance and a head-to-head model comparison. These steps form the foundation of any rigorous model validation workflow.
+# Summary
+
+Congrats 🎉! In this section, you have a complete evaluation pipeline: 
+
+- scalar metrics,
+- residual diagnostics,
+- distributional analysis, 
+- feature importance, 
+- and a head-to-head model comparison. 
+
+These steps form the foundations of any rigorous model validation workflow, well done ! You can now have a look at [how to log a model](4-logging.Qmd) to avoid being lost between different models and having to train again a model. 
