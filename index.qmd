@@ -103,7 +103,9 @@ In-depth details about the data is presented in the [dedicated page](intro_data.
 
 -   You also need to have a Github account. Your Github credentials (username, email and token) should be registered in your [Insee's Onyxia](https://datalab.sspcloud.fr/) account in the My account/Git tab.
 
-## Initialize a MLFlow service
+## Initialize your MLFlow service
+
+Launch a MLflow service by clicking on [this URL](https://datalab.sspcloud.fr/launcher/automation/mlflow?autoLaunch=true) with your Onyxia account opened.
 
 ## Fork the project with `Git` {{< fa brands git-alt >}}
 
