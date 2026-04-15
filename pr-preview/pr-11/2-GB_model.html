@@ -294,7 +294,7 @@ window.Quarto = {
 <p><strong>Note: Just like for <code>RandomForestRegressor</code>, all parameters have default values — you do not need to pass any argument to get a working model.</strong></p>
 </blockquote></li>
 </ol>
-<div id="a407fe22" class="cell" data-execution_count="1">
+<div id="eb75d02d" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> HistGradientBoostingRegressor</span>
@@ -317,7 +317,7 @@ window.Quarto = {
 <p>Note: Computing metrics on the training set alongside the test set is important with gradient boosting because it reveals whether the model is overfitting.</p>
 </blockquote></li>
 </ol>
-<div id="beefba45" class="cell" data-execution_count="2">
+<div id="84ed294b" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> root_mean_squared_error, mean_absolute_error, r2_score</span>
@@ -416,7 +416,7 @@ Note
 <blockquote class="blockquote">
 <p>Note : We will tune the hyperparameters using the whole pipeline and this set of training and test sets.</p>
 </blockquote>
-<div id="bd0ad3bd" class="cell" data-execution_count="3">
+<div id="b356884c" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Split features / target</span></span>
@@ -469,7 +469,7 @@ Note
 </div>
 </div>
 </div>
-<div id="cfd2e319" class="cell" data-execution_count="4">
+<div id="785ee741" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>param_grid_step1 <span class="op">=</span> {</span>
@@ -515,7 +515,7 @@ Note
 </div>
 </div>
 </div>
-<div id="e6f51b59" class="cell" data-execution_count="5">
+<div id="c4d0dcf7" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> results_to_df(results_: <span class="bu">dict</span>):</span>
@@ -552,7 +552,7 @@ Important
 <p>What do you observe about the interplay between the two hyperparameters?</p>
 <p>What value for the learning rate and the number of tree do you chose, taking into consideration computation efficiency ?</p></li>
 </ol>
-<div id="ce537cc1" class="cell" data-execution_count="6">
+<div id="20e6bfcc" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -583,7 +583,7 @@ Important
 <blockquote class="blockquote">
 <p>If the best value of <code>max_iter</code> is the largest value tested (1000), consider extending the grid before moving to the next step.</p>
 </blockquote>
-<div id="27d41de3" class="cell" data-execution_count="7">
+<div id="d6bcb18b" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>BEST_ITER <span class="op">=</span> <span class="dv">500</span>  <span class="co"># to automatically catch the best hyperparameter, set to : gs_step1.best_params_["regressor__GB__max_iter"]</span></span>
@@ -596,7 +596,7 @@ Important
 <ol start="4" type="1">
 <li>Fix <code>max_iter</code> and <code>learning_rate</code> to the best values found in step 1, then run a second <code>GridSearchCV</code> over <code>max_depth</code> and <code>min_samples_leaf</code> with other settings unchanged.</li>
 </ol>
-<div id="a2b80b0c" class="cell" data-execution_count="8">
+<div id="ee7ea9b5" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>param_grid_step2 <span class="op">=</span> {</span>
@@ -639,7 +639,7 @@ Important
 <li><p>Using our pre-defined functions, retrieve the cross-validation results as a DataFrame and plot the mean train and validation R² for each combination.</p>
 <p>Which combinations show signs of overfitting?</p></li>
 </ol>
-<div id="99762b12" class="cell" data-execution_count="9">
+<div id="6551a1a3" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -659,7 +659,7 @@ Important
 <li><p>Using the best hyperparameters found in steps 1 and 2, train one model for each value of <code>l2_regularization</code> in <code>[0.0, 0.1, 0.3, 0.5, 1.0]</code>. To use our predefined function, make it as if it was a cross validation with <code>max_iter</code> set to the above chosen value. Using our pre-defined function, plot the result.</p>
 <p>Does regularisation help reduce the gap between train and test performance?</p></li>
 </ol>
-<div id="4b8737e5" class="cell" data-execution_count="10">
+<div id="5a3166d1" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>param_grid_step3 <span class="op">=</span> {</span>
@@ -712,7 +712,7 @@ Important
 <ol start="7" type="1">
 <li>Train the final <code>HistGradientBoostingRegressor</code> using all the best hyperparameters identified in the previous steps. Then re-train it on the full training set.</li>
 </ol>
-<div id="a416faa9" class="cell" data-execution_count="11">
+<div id="60b3dbfb" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>gb_final <span class="op">=</span> HistGradientBoostingRegressor(</span>
@@ -756,7 +756,7 @@ Important
 <ol type="1">
 <li>Compute <strong>RMSE</strong>, <strong>MAE</strong> and <strong>R²</strong> on both the training and test sets for the final gradient boosting model using our <code>print_metrics</code> function.</li>
 </ol>
-<div id="c56ca82b" class="cell" data-execution_count="12">
+<div id="99a72c7b" class="cell" data-execution_count="12">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> gb_model_best</span>
@@ -769,7 +769,7 @@ Important
 <ol start="2" type="1">
 <li>Plot predicted values against actual values on the test set.</li>
 </ol>
-<div id="1fe23707" class="cell" data-execution_count="13">
+<div id="c24df06d" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
