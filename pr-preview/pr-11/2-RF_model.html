@@ -124,10 +124,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
-  <li class="nav-item">
-    <a class="nav-link" href="./index.html"> 
-<span class="menu-text">Introduction</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-introduction" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Introduction</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-introduction">    
+        <li>
+    <a class="dropdown-item" href="./index.html">
+ <span class="dropdown-text">Presentation</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="./intro_data.html">
+ <span class="dropdown-text">Data presentation</span></a>
+  </li>  
+    </ul>
+  </li>
   <li class="nav-item">
     <a class="nav-link" href="./1-preprocessing.html"> 
 <span class="menu-text">Preprocessing</span></a>
@@ -246,14 +257,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <blockquote class="blockquote">
 <p><strong>Note: All parameters of RandomForestRegressor have a default value - you only need to explicitly pass the ones you wish to override.</strong></p>
 </blockquote>
-<details>
-<summary>
-<p>Click to view a hint</p>
-</summary>
+<div class="callout callout-style-default callout-tip callout-titled" title="Hint">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Hint
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <p>Remember : in the <a href="./1-preprocessing.html">Preprocessing section</a>, we created the training sets <code>X_train</code> and <code>y_train</code>.</p>
-</details></li>
+</div>
+</div>
+</div></li>
 </ol>
-<div id="2d413f11" class="cell" data-execution_count="1">
+<div id="2e6bc009" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> RandomForestRegressor</span>
@@ -295,7 +316,7 @@ Important
 <p>Scikit-learn distinguishes <strong>parameters</strong> from <strong>fitted attributes</strong>. Here, to access the attributes sent back by the training phase listed in the documentation, we need to search for the <code>oob_score_</code> attributes of the random forest.</p>
 </div>
 </div>
-<div id="b40f37bb" class="cell" data-execution_count="2">
+<div id="2af41e16" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>rf.oob_score_</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -306,15 +327,25 @@ Important
 <blockquote class="blockquote">
 <p>Note : This is just an illustration of the evaluation process. More details on metrics will be covered in the <a href="./3-metrics.html">dedicated section</a>.</p>
 </blockquote>
-<details>
-<summary>
-<p>Click to view a hint</p>
-</summary>
+<div class="callout callout-style-default callout-tip callout-titled" title="Hint">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Hint
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <p>You can use the <code>mean_squared_error</code> function from the <code>sklearn.metrics</code> module.</p>
 <p>Remember to use the test set for the evaluation, not the training set.</p>
-</details></li>
+</div>
+</div>
+</div></li>
 </ol>
-<div id="299fefb1" class="cell" data-execution_count="3">
+<div id="414a1e79" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_squared_error</span>
@@ -357,7 +388,7 @@ Note
 <ol type="1">
 <li>Subsample a fraction ( <code>0.1</code> ) of the <code>df</code> dataset to reduce computation time and define X_sub and y_sub. To stick to the characteristics of the target, stratify the sampling to the target’s distribution thanks to <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.qcut.html#pandas.qcut">pandas’ <code>qcut</code> function</a>.</li>
 </ol>
-<div id="62e1e258" class="cell" data-execution_count="4">
+<div id="04557022" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sample the train dataset using Pandas' index</span></span>
@@ -371,21 +402,21 @@ Note
 </div>
 <ol start="2" type="1">
 <li><p>Train multiple RF models with varying numbers of trees, using <code>warm_start=True</code> to avoid retraining all trees from scratch at each iteration. Keep the OOB error calculated in a list.</p>
-<div class="callout callout-style-default callout-tip callout-titled" title="Click to view a hint">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout callout-style-default callout-tip callout-titled" title="Hint">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Click to view a hint
+<span class="screen-reader-only">Tip</span>Hint
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>As a hint, you can go to the documentation page on OOB error <a href="https://scikit-learn.org/stable/auto_examples/ensemble/plot_ensemble_oob.html">here</a>.</p>
 <p>If you need, here is the code to calculate and store the OOB score.</p>
-<div id="a6917b84" class="cell" data-execution_count="5">
+<div id="9d3a4437" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>oob_scores <span class="op">=</span> []</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>warnings.filterwarnings(<span class="st">"ignore"</span>, message<span class="op">=</span><span class="st">"Some inputs do not have OOB scores"</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># filterwarnings remove some warnings messages</span></span>
@@ -406,7 +437,7 @@ Note
 </div>
 </div></li>
 </ol>
-<div id="d57724a4" class="cell" data-execution_count="6">
+<div id="7ff9ee9c" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings </span>
@@ -440,10 +471,18 @@ Note
 </div>
 <ol start="3" type="1">
 <li><p>(<em>Optional</em>) Using the <em>Out-of-Bag (OOB) error</em>, try to plot the convergence of the OOB error as a function of the number of trees.</p>
-<details>
-<summary>
-<p>Click to view a hint</p>
-</summary>
+<div class="callout callout-style-default callout-tip callout-titled" title="Hint">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Hint
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <p>You need to :</p>
 <ul>
 <li>subsample the inputs <code>X</code> and <code>y</code>, with a parameter <code>subsample</code> ;</li>
@@ -451,9 +490,11 @@ Note
 <li>select which metric you use to calculate OOB error estimator</li>
 <li>plot the convergence of OOB error as a function of number of trees</li>
 </ul>
-</details></li>
+</div>
+</div>
+</div></li>
 </ol>
-<div id="5448c7e0" class="cell" data-execution_count="7">
+<div id="4b9da4f5" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -529,7 +570,7 @@ Note
 </details>
 </div>
 <p>You can select the number of trees (<code>n_estimators</code>) now, with the OOB error plot. Which number do you choose ?</p>
-<div id="2d26cee6" class="cell" data-execution_count="8">
+<div id="d80f2ee2" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>oob_error_ntrees <span class="op">=</span> rf_error_oob_plot(X_train<span class="op">=</span>X_train,</span>
@@ -551,7 +592,7 @@ Note
 <ol start="0" type="1">
 <li>For convenience, we dropped the features <code>prop_type</code>, <code>dtemut</code> and trained our model on absolute prices and not on the transformed ones. Get them back and define the new training and testing datasets <code>X_train, X_test, y_train, y_test</code>.</li>
 </ol>
-<div id="b9fff3c1" class="cell" data-execution_count="9">
+<div id="01c9bbcb" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Split features / target</span></span>
@@ -568,19 +609,29 @@ Note
 </div>
 <ol type="1">
 <li><p>Create a dictionary with the 3 hyperparameters to test (<code>n_estimators</code>, <code>max_features</code> and <code>min_samples_leaf</code>) for training.</p>
-<details>
-<summary>
-<p>Click to view a hint</p>
-</summary>
+<div class="callout callout-style-default callout-tip callout-titled" title="Hint">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Hint
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <p>Pay attention to hyperparameter names : when using <code>Pipeline</code> and <code>TransformedTargetRegressor</code> objects, theses names are more complex than plain <code>RandomForestRegressor</code> parameters names. In the previous section, we used two objects for training :</p>
 <ul>
 <li><code>TransformedTargetRegressor</code> to apply log transformation on the target - the corresponding parameter prefix is <code>regressor</code></li>
 <li><code>Pipeline</code> to apply all preprocessing transformations and fit the model : you need to refer to the name of the random forest step (it was <code>'RF'</code>) For example, for the hyperparameter <code>n_estimators</code>, the key in the parameter dictionary must be <code>regressor__RF__n_estimators</code></li>
 </ul>
 <p>More details on <a href="https://scikit-learn.org/stable/modules/compose.html#access-to-nested-parameters">scikit learn’s documentation</a></p>
-</details></li>
+</div>
+</div>
+</div></li>
 </ol>
-<div id="195ebd47" class="cell" data-execution_count="10">
+<div id="70dd1455" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>param_grid <span class="op">=</span> {</span>
@@ -593,7 +644,7 @@ Note
 <ol start="2" type="1">
 <li>Using the <a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html">Grid Search documentation</a>, write the code to set up and run cross-validated hyperparameter tuning for the RF model. Note that training the model should last around 10 minutes.</li>
 </ol>
-<div id="a753481e" class="cell" data-execution_count="11">
+<div id="f50405e5" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> GridSearchCV</span>
@@ -615,7 +666,7 @@ Note
 <ol start="3" type="1">
 <li>From the fitted <code>grid_search</code> object, retrieve the best hyperparameters found for the model.</li>
 </ol>
-<div id="a3aaff19" class="cell" data-execution_count="12">
+<div id="7c04e67f" class="cell" data-execution_count="12">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(grid_search.best_params_)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -641,7 +692,7 @@ Important
 <blockquote class="blockquote">
 <p>Note : Which type is <code>best_estimator_</code> attribute ?</p>
 </blockquote>
-<div id="5d9f35ac" class="cell" data-execution_count="13">
+<div id="9c5b6749" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>rf_best <span class="op">=</span> grid_search.best_estimator_</span>
@@ -665,7 +716,7 @@ Important
 <ol type="1">
 <li>Compute predictions on the test set using the best model retrieved from the previous exercise.</li>
 </ol>
-<div id="7be6aaa3" class="cell" data-execution_count="14">
+<div id="c386eee5" class="cell" data-execution_count="14">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> rf_best.predict(X_test)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -674,13 +725,23 @@ Important
 <ol start="2" type="1">
 <li>Calculate the three evaluation metrics on the test set.</li>
 </ol>
-<details>
-<summary>
-Click to view a hint
-</summary>
+<div class="callout callout-style-default callout-tip callout-titled" title="Hint">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Hint
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <p>You can use <code>mean_squared_error</code>, <code>mean_absolute_error</code>, and <code>r2_score</code> from <code>sklearn.metrics</code>. To obtain <strong>RMSE</strong> from <strong>MSE</strong>, apply <code>np.sqrt()</code>.</p>
-</details>
-<div id="a47f7be3" class="cell" data-execution_count="15">
+</div>
+</div>
+</div>
+<div id="c6e3bf6f" class="cell" data-execution_count="15">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_squared_error, mean_absolute_error, r2_score</span>
@@ -698,13 +759,23 @@ Click to view a hint
 <ol start="3" type="1">
 <li>(Optional) Plot predicted values against actual values to visually assess model quality. A well-calibrated model should have points closely aligned along the diagonal.</li>
 </ol>
-<details>
-<summary>
-Click to view a hint
-</summary>
+<div class="callout callout-style-default callout-tip callout-titled" title="Hint">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Hint
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <p>Use <code>matplotlib.pyplot</code> to create a scatter plot of <code>y_test</code> against <code>y_pred</code>. Add a reference diagonal line (representing perfect predictions) using <code>ax.plot([min, max], [min, max])</code>.</p>
-</details>
-<div id="4576492f" class="cell" data-execution_count="16">
+</div>
+</div>
+</div>
+<div id="d653416d" class="cell" data-execution_count="16">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="dv">7</span>))</span>

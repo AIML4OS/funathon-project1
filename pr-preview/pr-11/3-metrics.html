@@ -153,10 +153,21 @@ window.Quarto = {
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
-  <li class="nav-item">
-    <a class="nav-link" href="./index.html"> 
-<span class="menu-text">Introduction</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-introduction" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Introduction</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-introduction">    
+        <li>
+    <a class="dropdown-item" href="./index.html">
+ <span class="dropdown-text">Presentation</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="./intro_data.html">
+ <span class="dropdown-text">Data presentation</span></a>
+  </li>  
+    </ul>
+  </li>
   <li class="nav-item">
     <a class="nav-link" href="./1-preprocessing.html"> 
 <span class="menu-text">Preprocessing</span></a>
@@ -211,12 +222,16 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#i---how-can-you-evaluate-the-models-inference" id="toc-i---how-can-you-evaluate-the-models-inference" class="nav-link active" data-scroll-target="#i---how-can-you-evaluate-the-models-inference"><span class="header-section-number">1</span> I - How can you evaluate the model’s inference ?</a>
+  <li><a href="#how-can-you-evaluate-the-models-inference" id="toc-how-can-you-evaluate-the-models-inference" class="nav-link active" data-scroll-target="#how-can-you-evaluate-the-models-inference"><span class="header-section-number">1</span> How can you evaluate the model’s inference ?</a>
   <ul class="collapse">
-  <li><a href="#a---regression-metrics" id="toc-a---regression-metrics" class="nav-link" data-scroll-target="#a---regression-metrics"><span class="header-section-number">1.1</span> A - Regression metrics</a></li>
-  <li><a href="#b---diagnostic-plots" id="toc-b---diagnostic-plots" class="nav-link" data-scroll-target="#b---diagnostic-plots"><span class="header-section-number">1.2</span> B - Diagnostic plots</a></li>
+  <li><a href="#regression-metrics" id="toc-regression-metrics" class="nav-link" data-scroll-target="#regression-metrics"><span class="header-section-number">1.1</span> Regression metrics</a></li>
+  <li><a href="#diagnostic-plots" id="toc-diagnostic-plots" class="nav-link" data-scroll-target="#diagnostic-plots"><span class="header-section-number">1.2</span> Diagnostic plots</a></li>
   </ul></li>
-  <li><a href="#computing-evaluation-metrics" id="toc-computing-evaluation-metrics" class="nav-link" data-scroll-target="#computing-evaluation-metrics"><span class="header-section-number">2</span> 2 - Computing evaluation metrics</a></li>
+  <li><a href="#computing-evaluation-metrics" id="toc-computing-evaluation-metrics" class="nav-link" data-scroll-target="#computing-evaluation-metrics"><span class="header-section-number">2</span> Computing evaluation metrics</a>
+  <ul class="collapse">
+  <li><a href="#exercice-10-compute-evaluation-metrics" id="toc-exercice-10-compute-evaluation-metrics" class="nav-link" data-scroll-target="#exercice-10-compute-evaluation-metrics"><span class="header-section-number">2.1</span> Exercice 10: Compute evaluation metrics</a></li>
+  <li><a href="#exercice-11-generate-diagnostic-plots" id="toc-exercice-11-generate-diagnostic-plots" class="nav-link" data-scroll-target="#exercice-11-generate-diagnostic-plots"><span class="header-section-number">2.2</span> Exercice 11: Generate diagnostic plots</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/AIML4OS/funathon-project1/edit/main/3-metrics.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/AIML4OS/funathon-project1/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -244,10 +259,10 @@ window.Quarto = {
 
 <p>Training a model is only half the work. Before drawing any conclusions or deploying to production, you need to rigorously assess its quality: how large are the errors, are they evenly distributed, which features drive the predictions and how does the model compare to alternatives? This section covers the full evaluation process for ensemble models, applied to the Random Forest and Gradian Boosting trained in the previous exercises.</p>
 <p>Before evaluating our trained models, you will discover some metrics and plots to measure the quality of the predictions.</p>
-<section id="i---how-can-you-evaluate-the-models-inference" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> I - How can you evaluate the model’s inference ?</h1>
-<section id="a---regression-metrics" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="a---regression-metrics"><span class="header-section-number">1.1</span> A - Regression metrics</h2>
+<section id="how-can-you-evaluate-the-models-inference" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> How can you evaluate the model’s inference ?</h1>
+<section id="regression-metrics" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="regression-metrics"><span class="header-section-number">1.1</span> Regression metrics</h2>
 <p>Regression metrics assess the quality of a model’s predictions by comparing predicted and “observed” values. Each metric offers a different perspective depending on whether the goal is : - to penalize extreme error ; - to obtain an interpretable measure in the target’s unit ; - to quantify the share of variance explained by the model. A metric <strong>depends on what you want to do and your data</strong>. From an organisationnal point of view, it means that the “business team”, with in-depth knowledge of the field, is by far the best placed to decide which are the relevant metrics to use. Decision to use these metrics shouldn’t be the sole responsibility of the data science team.</p>
 <p><strong>Mean Absolute Error (MAE)</strong> : <span class="math display">\[\text{MAE} = \frac{1}{n}\sum_{i=1}^{n}|y_i - \hat{y}_i|\]</span> MAE gives equal weight to all deviations regardless of their magnitude and sign. In the presence of extreme values in the target (as is common in real-estate prices) and in comparison with the following metrics, MAE may be a more representative measure of typical prediction error as they are less affected by extreme errors. Moreover, MAE is easily interpretable. For example, in the prediction of price per square meter in euros, an MAE of 500 means the model’s predictions deviate from actual prices by 500 €/m² on average.</p>
 <p><strong>Mean Squared Error (MSE) :</strong> <span class="math display">\[\text{MSE} = \frac{1}{n}\sum_{i=1}^{n}(y_i - \hat{y}_i)^2\]</span> MSE is the most common evaluation metric used. Because the errors are squared, large deviations contribute disproportionately: an error of 200 weighs 4 times more than an error of 100. This makes MSE sensitive to outliers in the test set. The interpretability of this is limited, because of its units, which are the square of the target units.</p>
@@ -270,8 +285,8 @@ window.Quarto = {
 </ul>
 <p>Unlike RMSE and MAE, R² allows comparison across different datasets and targets. Its main limitation is that it can be inflated by adding features, even irrelevant ones.</p>
 </section>
-<section id="b---diagnostic-plots" class="level2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="b---diagnostic-plots"><span class="header-section-number">1.2</span> B - Diagnostic plots</h2>
+<section id="diagnostic-plots" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="diagnostic-plots"><span class="header-section-number">1.2</span> Diagnostic plots</h2>
 <p>Scalar metrics alone are insufficient: two models can share the same RMSE while exhibiting very different error patterns. Diagnostic plots reveal the structure of residuals and provide insights that numbers cannot. Moreover, they add details to see if the model performs well where you want it to perform. For example, if your aim is to have good results on the center of the distribution, you can live with worse results on extreme values (or the opposite).</p>
 <p><strong>Residuals distribution</strong> : it is a histogram of the residuals <span class="math inline">\(e_i = y_i - \hat{y}_i\)</span>. For a well-behaved regression model, this distribution should be:</p>
 <ul>
@@ -305,22 +320,14 @@ window.Quarto = {
 </section>
 </section>
 <section id="computing-evaluation-metrics" class="level1" data-number="2">
-<h1 data-number="2"><span class="header-section-number">2</span> 2 - Computing evaluation metrics</h1>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span><i class="bi bi-book"></i> Exercice 10: Compute evaluation metrics
-</div>
-</div>
-<div class="callout-body-container callout-body">
+<h1 data-number="2"><span class="header-section-number">2</span> Computing evaluation metrics</h1>
+<section id="exercice-10-compute-evaluation-metrics" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="exercice-10-compute-evaluation-metrics"><span class="header-section-number">2.1</span> Exercice 10: Compute evaluation metrics</h2>
 <p>In this exercise, you will generate predictions from the best RF and GB model and compute all four evaluation metrics on the test set.</p>
 <ol start="0" type="1">
 <li>Load the RF and GB models</li>
 </ol>
-<div id="87111819" class="cell" data-execution_count="1">
+<div id="3df0576a" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># best RF</span></span>
@@ -333,7 +340,7 @@ window.Quarto = {
 <ol type="1">
 <li>Generate predictions on the test set using the best RF model from Exercise 5 and compute the residuals.</li>
 </ol>
-<div id="f648c213" class="cell" data-execution_count="2">
+<div id="75568897" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># best RF</span></span>
@@ -348,13 +355,13 @@ window.Quarto = {
 <ol start="2" type="1">
 <li>Compute RMSE, MAE and R² using scikit-learn’s metrics module for the comparison of RF and GB models.</li>
 </ol>
-<div class="callout callout-style-default callout-tip callout-titled" title="Click to view a hint">
+<div class="callout callout-style-default callout-tip callout-titled" title="Hint">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Click to view a hint
+<span class="screen-reader-only">Tip</span>Hint
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -365,7 +372,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="5f2397c1" class="cell" data-execution_count="3">
+<div id="1dc5e7a4" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> root_mean_squared_error, mean_absolute_error, r2_score</span>
@@ -392,13 +399,13 @@ window.Quarto = {
 <ol start="3" type="1">
 <li>(Optional) Compute the MAPE to express the average prediction error as a percentage of the actual price.</li>
 </ol>
-<div class="callout callout-style-default callout-tip callout-titled" title="Click to view a hint">
+<div class="callout callout-style-default callout-tip callout-titled" title="Hint">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Click to view a hint
+<span class="screen-reader-only">Tip</span>Hint
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -408,7 +415,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="e113af55" class="cell" data-execution_count="4">
+<div id="95675518" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Disponible à partir de scikit-learn &gt;= 0.24</span></span>
@@ -420,39 +427,30 @@ window.Quarto = {
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"MAPE GB: </span><span class="sc">{</span>mape_pct_gb<span class="sc">:.2f}</span><span class="ss"> %"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-</div>
-</div>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span><i class="bi bi-book"></i> Exercice 11: Generate diagnostic plots
-</div>
-</div>
-<div class="callout-body-container callout-body">
+</section>
+<section id="exercice-11-generate-diagnostic-plots" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="exercice-11-generate-diagnostic-plots"><span class="header-section-number">2.2</span> Exercice 11: Generate diagnostic plots</h2>
 <p>In this exercise, you will produce four diagnostic plots: a residuals distribution, a QQ-plot comparing actual and predicted quantiles, the target distribution and a feature importance plot. For each plot, take a moment to interpret what you observe.</p>
 <ol type="1">
 <li>Write a <code>residuals_distribution(residuals, rmse)</code> function to plot the histogram of the residuals. It takes <code>residuals</code> (a pandas Series) and <code>rmse</code> (a float), along with <code>ax</code>, <code>label</code> and <code>color</code> parameters for overlay plotting.</li>
 </ol>
-<div class="callout callout-style-default callout-tip callout-titled" title="Click to view a hint">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout callout-style-default callout-tip callout-titled" title="Hint">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Click to view a hint
+<span class="screen-reader-only">Tip</span>Hint
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Use <code>matplotlib.pyplot</code> module to plot the distribution. You can read the documentation <a href="https://matplotlib.org/stable/tutorials/pyplot.html">here</a>.</p>
 </div>
 </div>
 </div>
-<div id="3fdc3e7e" class="cell" data-execution_count="5">
+<div id="a129038c" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -472,23 +470,23 @@ window.Quarto = {
 <ol start="2" type="1">
 <li>Plot the residuals distribution of the RF and GB models. Look at whether the histogram is centered around zero and whether it is approximately symmetric.</li>
 </ol>
-<div class="callout callout-style-default callout-tip callout-titled" title="Click to view a hint">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout callout-style-default callout-tip callout-titled" title="Hint">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Click to view a hint
+<span class="screen-reader-only">Tip</span>Hint
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Pass the residuals series and the RMSE value computed in Exercise 8. The RMSE value is needed in the plot title. Call <code>plt.show()</code> to display the figure.</p>
 </div>
 </div>
 </div>
-<div id="99d65fce" class="cell" data-execution_count="6">
+<div id="e134c3a7" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
@@ -500,7 +498,7 @@ window.Quarto = {
 <ol start="3" type="1">
 <li>Write a <code>QQplot(y_test, y_pred)</code> function which computes 1000 quantile points for both series and plots them against each other. The parameters are <code>y_test</code>, <code>y_pred</code>, pandas series of observed and predicted target and the same parameters that question 1. for overlay plotting. The function should return the plot.</li>
 </ol>
-<div id="e267aad3" class="cell" data-execution_count="7">
+<div id="aae25828" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -531,23 +529,23 @@ window.Quarto = {
 <ol start="4" type="1">
 <li>Plot the QQ plot comparing the quantiles of the actual and predicted distributions for RF and GB models. Check whether the points align closely along the diagonal, especially in the tails.</li>
 </ol>
-<div class="callout callout-style-default callout-tip callout-titled" title="Click to view a hint">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout callout-style-default callout-tip callout-titled" title="Hint">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Click to view a hint
+<span class="screen-reader-only">Tip</span>Hint
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Points well above the diagonal in the upper tail indicate that the model underestimates high prices.</p>
 </div>
 </div>
 </div>
-<div id="e5ad82aa" class="cell" data-execution_count="8">
+<div id="86927df0" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
@@ -562,7 +560,7 @@ window.Quarto = {
 <ol start="5" type="1">
 <li>Define a <code>target_distribution()</code> function to plot the distribution of the parameter <code>y</code>, a pandas Serie.</li>
 </ol>
-<div id="2bcdbe33" class="cell" data-execution_count="9">
+<div id="42700938" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> target_distribution(y: pd.Series):</span>
@@ -580,23 +578,23 @@ window.Quarto = {
 <ol start="6" type="1">
 <li>Plot and compare the target distributions for the actual test values and the predicted values side by side.</li>
 </ol>
-<div class="callout callout-style-default callout-tip callout-titled" title="Click to view a hint">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout callout-style-default callout-tip callout-titled" title="Hint">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Click to view a hint
+<span class="screen-reader-only">Tip</span>Hint
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Call it twice — once for <code>y_test</code> and once for <code>y_pred</code>. Display both figures. Compare the shapes: a compressed predicted distribution indicates regression to the mean, while a systematic vertical shift indicates a constant bias.</p>
 </div>
 </div>
 </div>
-<div id="81bbac01" class="cell" data-execution_count="10">
+<div id="803b82f9" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fig_actual <span class="op">=</span> target_distribution(y_test)</span>
@@ -623,7 +621,7 @@ Tip
 </div>
 <div class="callout-body-container callout-body">
 <p>If you want to plot both plots on a single figure, you can adapt the function :</p>
-<div id="d5bc50c6" class="cell" data-execution_count="11">
+<div id="fc356747" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_combined_distribution(y_test: pd.Series, y_pred: pd.Series, ax<span class="op">=</span><span class="va">None</span>, label<span class="op">=</span><span class="va">None</span>, color<span class="op">=</span><span class="va">None</span>, show_actual<span class="op">=</span><span class="va">True</span>):</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Plots the target distributions of actual and predicted values on the same graph.</span></span>
@@ -660,23 +658,23 @@ Tip
 <blockquote class="blockquote">
 <p>Note: Permutation importance is computationally expensive on a large test set. The <code>calculate_importance()</code> function automatically subsamples up to 100,000 observations before computing importance scores. This subsample does not change the result.</p>
 </blockquote>
-<div class="callout callout-style-default callout-tip callout-titled" title="Click to view a hint">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout callout-style-default callout-tip callout-titled" title="Hint">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Click to view a hint
+<span class="screen-reader-only">Tip</span>Hint
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Use <code>permutation_importance</code> function from scikit-learn. See <a href="https://scikit-learn.org/stable/modules/generated/sklearn.inspection.permutation_importance.html">here</a> for the documentation.</p>
 </div>
 </div>
 </div>
-<div id="74f5081f" class="cell" data-execution_count="12">
+<div id="17c16537" class="cell" data-execution_count="12">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.inspection <span class="im">import</span> permutation_importance</span>
@@ -703,7 +701,7 @@ Tip
 <ol start="8" type="1">
 <li>Write a <code>permutation_importance()</code> function to plot the bar chart of features importance.</li>
 </ol>
-<div id="8579beaa" class="cell" data-execution_count="13">
+<div id="9fd3d973" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> importance_plot(importances):</span>
@@ -723,23 +721,23 @@ Tip
 <ol start="9" type="1">
 <li>Compute the permutation importance and plot the top 20 most important features.</li>
 </ol>
-<div class="callout callout-style-default callout-tip callout-titled" title="Click to view a hint">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout callout-style-default callout-tip callout-titled" title="Hint">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Click to view a hint
+<span class="screen-reader-only">Tip</span>Hint
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Calculate the importance with the train set and the final RF model. The <code>SCORING</code> argument should match the metric used during training (e.g.&nbsp;<code>"r2"</code>).</p>
 </div>
 </div>
 </div>
-<div id="c20668c8" class="cell" data-execution_count="14">
+<div id="4f199826" class="cell" data-execution_count="14">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>score <span class="op">=</span> <span class="st">"r2"</span></span>
@@ -751,10 +749,9 @@ Tip
 </details>
 </div>
 <p>Congrats 🎉! You now have a complete evaluation pipeline: scalar metrics, residual diagnostics, distributional analysis, feature importance and a head-to-head model comparison. These steps form the foundation of any rigorous model validation workflow.</p>
-</div>
-</div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

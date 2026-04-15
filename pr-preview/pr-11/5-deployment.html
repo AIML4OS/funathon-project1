@@ -89,10 +89,21 @@ ul.task-list li input[type="checkbox"] {
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
-  <li class="nav-item">
-    <a class="nav-link" href="./index.html"> 
-<span class="menu-text">Introduction</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-introduction" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Introduction</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-introduction">    
+        <li>
+    <a class="dropdown-item" href="./index.html">
+ <span class="dropdown-text">Presentation</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="./intro_data.html">
+ <span class="dropdown-text">Data presentation</span></a>
+  </li>  
+    </ul>
+  </li>
   <li class="nav-item">
     <a class="nav-link" href="./1-preprocessing.html"> 
 <span class="menu-text">Preprocessing</span></a>
@@ -142,8 +153,14 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#exercice-7-déploiement-de-lapplication-dash" id="toc-exercice-7-déploiement-de-lapplication-dash" class="nav-link active" data-scroll-target="#exercice-7-déploiement-de-lapplication-dash"><span class="header-section-number">1</span> Exercice 7: Déploiement de l’application Dash</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/AIML4OS/funathon-project1/edit/main/5-deployment.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/AIML4OS/funathon-project1/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -168,18 +185,8 @@ ul.task-list li input[type="checkbox"] {
 
 
 <p>Dans cette partie on propose de déployer l’application sur le SSP Cloud et de la rendre accessible depuis Internet. L’exercice constitue une introduction à la mise en production d’applications dans un environnement Cloud. Pour aller plus loin, n’hésitez pas à consulter <a href="https://ensae-reproductibilite.github.io/website/">cet excellent cours</a>.</p>
-<div class="callout callout-style-default callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span><i class="bi bi-book"></i> Exercice 7: Déploiement de l’application Dash
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-1" class="callout-1-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
+<section id="exercice-7-déploiement-de-lapplication-dash" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Exercice 7: Déploiement de l’application Dash</h1>
 <ol type="1">
 <li><p>Pour déployer son application, la première étape consiste à la <a href="https://ensae-reproductibilite.github.io/website/chapters/portability.html#les-conteneurs">conteneuriser</a>, ce qui signifie la mettre dans une sorte de boîte virtuelle contenant tout ce dont l’application a besoin pour fonctionner. Le conteneur sépare l’application de son environnement extérieur, ce qui permet d’éviter les conflits avec d’autres applications ou dépendances sur le même système. Puisque le conteneur contient tout ce dont l’application a besoin (comme les bibliothèques et les dépendances), l’application peut être déplacée et exécutée sur n’importe quel système qui supporte les conteneurs, sans se soucier des différences entre ces systèmes.</p>
 <p>Ainsi, conteneuriser une application permet de la rendre plus facile à déployer, plus fiable et plus portable (en utilisant efficacement les ressources du système). Docker est un outil populaire pour créer et gérer des conteneurs. Le fichier <code>Dockerfile</code> contient le code nécessaire pour construire l’image Docker de l’application finale située dans le répertoire <code>correction</code>. Vous pouvez consulter la <a href="https://docs.docker.com/build/building/packaging/">documentation Docker</a> pour tenter de comprendre comment l’image est construite.</p>
@@ -202,11 +209,9 @@ ul.task-list li input[type="checkbox"] {
 <li><p>Entrer dans un navigateur l’URL spécifiée dans le fichier <code>kubernetes/ingress.yaml</code>, et vérifier que l’application fonctionne correctement !</p></li>
 <li><p>Dernier point important : il ne faut pas oublier de supprimer l’application pour ne pas occuper inutilement les ressources du SSP Cloud. Pour fermer l’application, exécuter <code>kubectl delete -f kubernetes/</code>.</p></li>
 </ol>
-</div>
-</div>
-</div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -617,7 +622,7 @@ ul.task-list li input[type="checkbox"] {
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions"><ul><li><a href="https://github.com/AIML4OS/funathon-project1/edit/main/5-deployment.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/AIML4OS/funathon-project1/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/AIML4OS/funathon-project1/edit/main/5-deployment.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/AIML4OS/funathon-project1/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item">

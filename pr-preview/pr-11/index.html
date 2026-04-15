@@ -131,10 +131,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
-  <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
-<span class="menu-text">Introduction</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-introduction" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Introduction</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-introduction">    
+        <li>
+    <a class="dropdown-item" href="./index.html">
+ <span class="dropdown-text">Presentation</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="./intro_data.html">
+ <span class="dropdown-text">Data presentation</span></a>
+  </li>  
+    </ul>
+  </li>
   <li class="nav-item">
     <a class="nav-link" href="./1-preprocessing.html"> 
 <span class="menu-text">Preprocessing</span></a>
@@ -189,25 +200,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#structure-of-the-project" id="toc-structure-of-the-project" class="nav-link" data-scroll-target="#structure-of-the-project"><span class="header-section-number">1</span> Structure of the project</a></li>
-  <li><a href="#presentation-of-the-data" id="toc-presentation-of-the-data" class="nav-link" data-scroll-target="#presentation-of-the-data"><span class="header-section-number">2</span> Presentation of the data</a>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
+  <li><a href="#structure-of-the-project" id="toc-structure-of-the-project" class="nav-link" data-scroll-target="#structure-of-the-project"><span class="header-section-number">2</span> Structure of the project</a></li>
+  <li><a href="#generalities-about-housing-market-in-france" id="toc-generalities-about-housing-market-in-france" class="nav-link" data-scroll-target="#generalities-about-housing-market-in-france"><span class="header-section-number">3</span> Generalities about housing market in France</a>
   <ul class="collapse">
-  <li><a href="#opening-remarks" id="toc-opening-remarks" class="nav-link" data-scroll-target="#opening-remarks"><span class="header-section-number">2.1</span> Opening remarks</a>
-  <ul class="collapse">
-  <li><a href="#how-to-buy-a-property-in-france" id="toc-how-to-buy-a-property-in-france" class="nav-link" data-scroll-target="#how-to-buy-a-property-in-france"><span class="header-section-number">2.1.1</span> How to buy a property in France ?</a></li>
-  <li><a href="#specificity-of-the-data-set" id="toc-specificity-of-the-data-set" class="nav-link" data-scroll-target="#specificity-of-the-data-set"><span class="header-section-number">2.1.2</span> Specificity of the data set</a></li>
+  <li><a href="#how-to-buy-a-property-in-france" id="toc-how-to-buy-a-property-in-france" class="nav-link" data-scroll-target="#how-to-buy-a-property-in-france"><span class="header-section-number">3.1</span> How to buy a property in France ?</a></li>
+  <li><a href="#specificity-of-the-data-set" id="toc-specificity-of-the-data-set" class="nav-link" data-scroll-target="#specificity-of-the-data-set"><span class="header-section-number">3.2</span> Specificity of the data set</a></li>
   </ul></li>
-  <li><a href="#general-presentation-of-the-data" id="toc-general-presentation-of-the-data" class="nav-link" data-scroll-target="#general-presentation-of-the-data"><span class="header-section-number">2.2</span> General presentation of the data</a></li>
-  <li><a href="#list-of-variable-and-explanations" id="toc-list-of-variable-and-explanations" class="nav-link" data-scroll-target="#list-of-variable-and-explanations"><span class="header-section-number">2.3</span> List of variable and explanations</a></li>
-  </ul></li>
-  <li><a href="#initialization-of-the-project" id="toc-initialization-of-the-project" class="nav-link" data-scroll-target="#initialization-of-the-project"><span class="header-section-number">3</span> Initialization of the project</a>
+  <li><a href="#initialization-of-the-project" id="toc-initialization-of-the-project" class="nav-link" data-scroll-target="#initialization-of-the-project"><span class="header-section-number">4</span> Initialization of the project</a>
   <ul class="collapse">
-  <li><a href="#technical-requirements" id="toc-technical-requirements" class="nav-link" data-scroll-target="#technical-requirements"><span class="header-section-number">3.1</span> Technical requirements</a></li>
-  <li><a href="#fork-the-project-with-git-b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c206661206272616e6473206769742d616c74203e7d7d" id="toc-fork-the-project-with-git-b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c206661206272616e6473206769742d616c74203e7d7d" class="nav-link" data-scroll-target="#fork-the-project-with-git-b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c206661206272616e6473206769742d616c74203e7d7d"><span class="header-section-number">3.2</span> Fork the project with <code>Git</code> <i class="fa-brands fa-git-alt" aria-label="git-alt"></i></a></li>
-  <li><a href="#open-a-vs-code-on-sspcloud-onyxia" id="toc-open-a-vs-code-on-sspcloud-onyxia" class="nav-link" data-scroll-target="#open-a-vs-code-on-sspcloud-onyxia"><span class="header-section-number">3.3</span> Open a VS Code on SSPCloud / Onyxia</a></li>
-  <li><a href="#installation-of-dependencies" id="toc-installation-of-dependencies" class="nav-link" data-scroll-target="#installation-of-dependencies"><span class="header-section-number">3.4</span> Installation of dependencies</a></li>
-  <li><a href="#python-interpreter-configuration" id="toc-python-interpreter-configuration" class="nav-link" data-scroll-target="#python-interpreter-configuration"><span class="header-section-number">3.5</span> Python interpreter configuration</a></li>
+  <li><a href="#technical-requirements" id="toc-technical-requirements" class="nav-link" data-scroll-target="#technical-requirements"><span class="header-section-number">4.1</span> Technical requirements</a></li>
+  <li><a href="#fork-the-project-with-git-b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c206661206272616e6473206769742d616c74203e7d7d" id="toc-fork-the-project-with-git-b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c206661206272616e6473206769742d616c74203e7d7d" class="nav-link" data-scroll-target="#fork-the-project-with-git-b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c206661206272616e6473206769742d616c74203e7d7d"><span class="header-section-number">4.2</span> Fork the project with <code>Git</code> <i class="fa-brands fa-git-alt" aria-label="git-alt"></i></a></li>
+  <li><a href="#open-a-vs-code-on-sspcloud-onyxia" id="toc-open-a-vs-code-on-sspcloud-onyxia" class="nav-link" data-scroll-target="#open-a-vs-code-on-sspcloud-onyxia"><span class="header-section-number">4.3</span> Open a VS Code on SSPCloud / Onyxia</a></li>
+  <li><a href="#installation-of-dependencies" id="toc-installation-of-dependencies" class="nav-link" data-scroll-target="#installation-of-dependencies"><span class="header-section-number">4.4</span> Installation of dependencies</a></li>
+  <li><a href="#python-interpreter-configuration" id="toc-python-interpreter-configuration" class="nav-link" data-scroll-target="#python-interpreter-configuration"><span class="header-section-number">4.5</span> Python interpreter configuration</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/AIML4OS/funathon-project1/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/AIML4OS/funathon-project1/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
@@ -265,20 +271,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td><span class="level-button level-beginner">Beginner</span></td>
-<td>Doing the exercises of steps 1 to 3, relying on clues and solutions if needed.</td>
-</tr>
-<tr class="even">
-<td><span class="level-button level-intermediate">Intermediate</span></td>
-<td>Doing the exercises of steps 1 to 3, without relying on clues and solutions.</td>
-</tr>
-<tr class="odd">
-<td><span class="level-button level-expert">Expert</span></td>
-<td>Doing the exercises of steps 1 to 3, without relying on clues and solutions, and completing steps 4 (logging) and 5 (deployment).</td>
+<td>The whole project is written for beginners, relying on clues and solutions if needed.</td>
 </tr>
 </tbody>
 </table>
-<section id="introduction" class="level1 unnumbered">
-<h1 class="unnumbered">Introduction</h1>
+<section id="introduction" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
 <p>The project focuses on predicting housing prices in the Paris area (Île-de-France region). We will explore how to perform inference using only a limited number of data sources, specifically transaction records and cadastral data. The reason for this choice is that data sources are widely available across many countries. At the end of this project, you will be able to :</p>
 <ul>
 <li>prepare your training data;</li>
@@ -287,8 +285,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>use some tools to ensure the reproductibility of the process (monitoring the model, deploy an API).</li>
 </ul>
 </section>
-<section id="structure-of-the-project" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> Structure of the project</h1>
+<section id="structure-of-the-project" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Structure of the project</h1>
 <p>This project includes five steps (listed in the banner at the top of the page):</p>
 <ul>
 <li>data generation : how to generate synthetic data from confidential data - this step can be skipped;</li>
@@ -299,17 +297,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>Every step is independent from the other : one will be able to start from the next step if a step is too difficult.</p>
 </section>
-<section id="presentation-of-the-data" class="level1" data-number="2">
-<h1 data-number="2"><span class="header-section-number">2</span> Presentation of the data</h1>
-<section id="opening-remarks" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="opening-remarks"><span class="header-section-number">2.1</span> Opening remarks</h2>
-<section id="how-to-buy-a-property-in-france" class="level3" data-number="2.1.1">
-<h3 data-number="2.1.1" class="anchored" data-anchor-id="how-to-buy-a-property-in-france"><span class="header-section-number">2.1.1</span> How to buy a property in France ?</h3>
+<section id="generalities-about-housing-market-in-france" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Generalities about housing market in France</h1>
+<section id="how-to-buy-a-property-in-france" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="how-to-buy-a-property-in-france"><span class="header-section-number">3.1</span> How to buy a property in France ?</h2>
 <p>A housing transaction is always formalized in front of a <strong>notary</strong> in France, who acts as a legal intermediary to ensure the transaction’s validity and compliance with civil law. The notary checks among other things that the property effectively belongs to the seller, calculates and collects the <strong>transfer taxes</strong> (such as <em>droits de mutation</em>) based on the transaction’s details and the property’s characteristics.</p>
 <p>After collecting these taxes, the notary forwards the details of the transaction to the <strong>fiscal administration</strong>, including the sale price, the identities of the buyer and seller, the property’s cadastral reference and the notarized document. The fiscal administration then records this information in its databases and updates the <strong>land registry</strong> to reflect the new ownership.</p>
 </section>
-<section id="specificity-of-the-data-set" class="level3" data-number="2.1.2">
-<h3 data-number="2.1.2" class="anchored" data-anchor-id="specificity-of-the-data-set"><span class="header-section-number">2.1.2</span> Specificity of the data set</h3>
+<section id="specificity-of-the-data-set" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="specificity-of-the-data-set"><span class="header-section-number">3.2</span> Specificity of the data set</h2>
 <p>Since 2019, the fiscal administration publishes <strong>all real estate transactions</strong> twice a year in open data format on data.gouv.fr. You can access and download the original datasets (<em>Demande de Valeurs Foncières - DVF</em> or request for property values) directly here (in French only - sadly 😞): <a href="https://www.data.gouv.fr/datasets/demandes-de-valeurs-foncieres">data.gouv.fr/datasets/demandes-de-valeurs-foncieres</a>.</p>
 <p><strong>Types of transaction stored</strong>:</p>
 <p>What transaction is stored in the DVF dataset is a vast question. It’s key to remember that the first goal of the dataset is to collect taxes. The dataset therefore is not fully complete and does not contain all the housing transactions in France that we would be interested in (the dataset remains of very high value and one of the most complete source of transaction as of today). For example, transactions involving <strong>real estate investment company</strong> (or <em>Sociétés Civiles Immobilières (SCIs)</em>) are excluded from housing transaction data, as they are not considered housing transactions from a legal perspective. However, in the way these companies are used transfering the ownership of a SCI is very similar to buying a property.</p>
@@ -325,434 +321,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The <strong>official geographic code</strong> — commonly referred to as the <strong>Insee code</strong> — is a unique five-digit identifier assigned by the National Institute of Statistics and Economic Studies (<a href="https://www.insee.fr/en/metadonnees/source/serie/s2084">Insee</a>) to each city, department, region and other administrative area. This code allows to uniquely identify a city (or equivalent) and remains constant even if the city’s name changes or if it merges with another municipality. The two first digits of the city’s Insee code is the department code. You can find the full COG data and documentation here: <a href="https://www.insee.fr/fr/information/2560452">Insee - Code Officiel Géographique (COG)</a> and in open data format here: <a href="https://www.data.gouv.fr/datasets/code-officiel-geographique-cog">data.gouv.fr - Code Officiel Géographique (COG)</a>.</p>
 <p>It means that if you search for a city with its Insee code on Google maps for example, Google maps won’t find it as it uses the <strong>zip code</strong> (or postal code). The zip code is not a reliable identifier for a city as multiple cities share the same zip code, and a single city may have several zip codes depending on its districts or neighborhoods.</p>
 <p>For example, the city of Paris is identified by the department code <strong>75</strong>, the Insee code <strong>75056</strong> (Paris itself), and is associated with multiple zip codes (e.g., <strong>75001</strong>, <strong>75002</strong>, etc.). Montrouge’s Insee code is 92049 and 92 is the department code of Hauts-de-Seine, where Montrouge is located.</p>
+<p>In depth details about the data is presented in the <a href="./intro_data.html">dedicated page</a>.</p>
 </section>
 </section>
-<section id="general-presentation-of-the-data" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="general-presentation-of-the-data"><span class="header-section-number">2.2</span> General presentation of the data</h2>
-<p>Data prepared for this project gathers all of the housing transactions in France between 2014 and 2021 and details about the property sold. Because the characteristics of the property sold isn’t open source, the data you’ll be working with are <strong>synthetic data</strong>. It has been generated to mirror the original data.</p>
-<p>If you want to have a closer look at the data, CEREMA publishes on <a href="](https://doc-datafoncier.cerema.fr/doc/ff/pb0010_local)">its website</a> an extensive documentation of the different datasets, the variables, their modalities and the overall quality of variable.</p>
-</section>
-<section id="list-of-variable-and-explanations" class="level2" data-number="2.3">
-<h2 data-number="2.3" class="anchored" data-anchor-id="list-of-variable-and-explanations"><span class="header-section-number">2.3</span> List of variable and explanations</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 0%">
-<col style="width: 4%">
-<col style="width: 14%">
-<col style="width: 73%">
-<col style="width: 7%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: right;"></th>
-<th style="text-align: left;">Label of the variable</th>
-<th style="text-align: left;">Full name of the variable</th>
-<th style="text-align: left;">Explanation and remarks</th>
-<th style="text-align: left;">Original label of the variable (French)</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">1</td>
-<td style="text-align: left;">dist_tosea</td>
-<td style="text-align: left;">Distance of the property to the nearest seashore - capped at 10km</td>
-<td style="text-align: left;">This variable has been calculated</td>
-<td style="text-align: left;">distance_ltm (calculated)</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">2</td>
-<td style="text-align: left;">farea</td>
-<td style="text-align: left;">Reported floor area of the property</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">dsupdc</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">3</td>
-<td style="text-align: left;">has_cheating</td>
-<td style="text-align: left;">If the property has access to central heating</td>
-<td style="text-align: left;">The modalities are coded in the following way : <br> - <code>0</code> : <code>No</code> <br> - <code>1</code> : <code>Missing value</code> <br> - <code>2</code> : <code>Yes</code></td>
-<td style="text-align: left;">gchclc</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">4</td>
-<td style="text-align: left;">has_elec</td>
-<td style="text-align: left;">If the property has access to electricity</td>
-<td style="text-align: left;">The modalities are coded in the following way : <br> - <code>0</code> : <code>No</code> <br> - <code>1</code> : <code>Missing value</code> <br> - <code>2</code> : <code>Yes</code></td>
-<td style="text-align: left;">gelelc</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">5</td>
-<td style="text-align: left;">has_elevator</td>
-<td style="text-align: left;">If the building of the flat has an elevator (for flats only)</td>
-<td style="text-align: left;">The modalities are coded in the following way : <br> - <code>0</code> : <code>No</code> <br> - <code>1</code> : <code>Missing value</code> <br> - <code>2</code> : <code>Yes</code></td>
-<td style="text-align: left;">gasclc</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">6</td>
-<td style="text-align: left;">has_gas</td>
-<td style="text-align: left;">If the building is connected to the gas mains</td>
-<td style="text-align: left;">The modalities are coded in the following way : <br> - <code>0</code> : <code>No</code> <br> - <code>1</code> : <code>Missing value</code> <br> - <code>2</code> : <code>Yes</code></td>
-<td style="text-align: left;">ggazlc</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">7</td>
-<td style="text-align: left;">has_mdrainage</td>
-<td style="text-align: left;">If the property is connected to the mains drainage system</td>
-<td style="text-align: left;">The modalities are coded in the following way : <br> - <code>0</code> : <code>No</code> <br> - <code>1</code> : <code>Missing value</code> <br> - <code>2</code> : <code>Yes</code></td>
-<td style="text-align: left;">gteglc</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">8</td>
-<td style="text-align: left;">has_rchute</td>
-<td style="text-align: left;">If the building of the flat has refuse chutes (for flats only)</td>
-<td style="text-align: left;">The modalities are coded in the following way : <br> - <code>0</code> : <code>No</code> <br> - <code>1</code> : <code>Missing value</code> <br> - <code>2</code> : <code>Yes</code></td>
-<td style="text-align: left;">gvorlc</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">9</td>
-<td style="text-align: left;">has_water</td>
-<td style="text-align: left;">If the property has access to water</td>
-<td style="text-align: left;">The modalities are coded in the following way : <br> - <code>0</code> : <code>No</code> <br> - <code>1</code> : <code>Missing value</code> <br> - <code>2</code> : <code>Yes</code></td>
-<td style="text-align: left;">geaulc</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">10</td>
-<td style="text-align: left;">n_ancrooms</td>
-<td style="text-align: left;">Number of ancillary rooms reported in the property</td>
-<td style="text-align: left;">Ancillary rooms include hallways, attics. They differ from n_otherannex.</td>
-<td style="text-align: left;">dnbann</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">11</td>
-<td style="text-align: left;">n_attic</td>
-<td style="text-align: left;">Number of attics reported in the whole property</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">nb_greniers (calculated)</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">12</td>
-<td style="text-align: left;">n_basmt</td>
-<td style="text-align: left;">Number of basements reported in the whole property</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">nb_caves (calculated)</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">13</td>
-<td style="text-align: left;">n_bath</td>
-<td style="text-align: left;">Number of bathtubs reported in the property</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">dnbbai</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">14</td>
-<td style="text-align: left;">n_eatr</td>
-<td style="text-align: left;">Number of eating rooms reported in the property</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">dnbsam</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">15</td>
-<td style="text-align: left;">n_floors</td>
-<td style="text-align: left;">Number of floor in the property (building or house)</td>
-<td style="text-align: left;">This variable is more reliable with houses than with buildings. Underground floors encoding is not fully harmonized and is often equal to 81 for minus 1, 82 for minus 2 … It can also be encoded as 99, 98. A flat at the 2nd floor of a seven-floors building should be encoded with nth_floor=1 and n_floors=8 (ground floor and seven floors above ground level)</td>
-<td style="text-align: left;">dnbniv</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">16</td>
-<td style="text-align: left;">n_garage</td>
-<td style="text-align: left;">Number of garages reported in the whole property</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">nb_garages (calculated)</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">17</td>
-<td style="text-align: left;">n_kit8</td>
-<td style="text-align: left;">Number of kitchens reported in the property with an area of less than 8 square meters</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">dnbcu8</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">18</td>
-<td style="text-align: left;">n_kit9</td>
-<td style="text-align: left;">Number of kitchens reported in the property with an area of larger than 9 square meters</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">dnbcu9</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">19</td>
-<td style="text-align: left;">n_mrooms</td>
-<td style="text-align: left;">Number of main rooms reported in the property</td>
-<td style="text-align: left;">n_mrooms = n_eatr + n_slr + n_kit8 + n_kit9 + n_washr</td>
-<td style="text-align: left;">dnbppr</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">20</td>
-<td style="text-align: left;">n_otherannex</td>
-<td style="text-align: left;">Number of other annexes reported in the whole property</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">nb_autresdep (calculated)</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">21</td>
-<td style="text-align: left;">n_pool</td>
-<td style="text-align: left;">Number of pools reported in the whole property</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">nb_piscines (calculated)</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">22</td>
-<td style="text-align: left;">n_rooms</td>
-<td style="text-align: left;">Number of rooms reported in the property</td>
-<td style="text-align: left;">n_rooms = n_mrooms + n_annex</td>
-<td style="text-align: left;">dnbpdc</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">23</td>
-<td style="text-align: left;">n_show</td>
-<td style="text-align: left;">Number of showers reported in the property</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">dnbdou</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">24</td>
-<td style="text-align: left;">n_sink</td>
-<td style="text-align: left;">Number of sinks reported in the property</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">dnblav</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">25</td>
-<td style="text-align: left;">n_slr</td>
-<td style="text-align: left;">Number of sleeping rooms reported in the property</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">dnbcha</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">26</td>
-<td style="text-align: left;">n_terrace</td>
-<td style="text-align: left;">Number of terraces reported in the whole property</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">nb_terrasses (calculated)</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">27</td>
-<td style="text-align: left;">n_washr</td>
-<td style="text-align: left;">Number of washing rooms reported in the property</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">dnbsea</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">28</td>
-<td style="text-align: left;">n_wc</td>
-<td style="text-align: left;">Number of toilets reported in the property</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">dnbwc</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">29</td>
-<td style="text-align: left;">nth_floor</td>
-<td style="text-align: left;">Reported floor of the property</td>
-<td style="text-align: left;">It represents the floor of the flat (in France, the second floor is the first floor above ground level). This variable is set to 00 for houses. Underground floors encoding is not fully harmonized and is often equal to 81 for minus 1, 82 for minus 2 … It can also be encoded as 99, 98. A flat at the 2nd floor of a seven-floors building should be encoded with nth_floor=1 and n_floors=8 (ground floor and seven floors above ground level).</td>
-<td style="text-align: left;">dniv</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">30</td>
-<td style="text-align: left;">price</td>
-<td style="text-align: left;">Price of the transaction</td>
-<td style="text-align: left;">Price of the transaction is in EUR</td>
-<td style="text-align: left;">valeurfonc</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">31</td>
-<td style="text-align: left;">price_sqm</td>
-<td style="text-align: left;">Price per square meter of the transaction</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">price_sqm (calculated)</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">32</td>
-<td style="text-align: left;">prop_loc_citycode</td>
-<td style="text-align: left;">Official city’s code where the property is located</td>
-<td style="text-align: left;">see remarks above</td>
-<td style="text-align: left;">depcom</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">33</td>
-<td style="text-align: left;">prop_loc_dep</td>
-<td style="text-align: left;">Department code where the property is located</td>
-<td style="text-align: left;">Data doesn’t cover the whole French territory - overseas territory are included but Alsace-Moselle (Eastern part of France) isn’t</td>
-<td style="text-align: left;">ccodep</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">34</td>
-<td style="text-align: left;">prop_loc_x</td>
-<td style="text-align: left;">Longitude where the property is located</td>
-<td style="text-align: left;">see remarks above</td>
-<td style="text-align: left;">x</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">35</td>
-<td style="text-align: left;">prop_loc_y</td>
-<td style="text-align: left;">Latitude where the property is located</td>
-<td style="text-align: left;">see remarks above</td>
-<td style="text-align: left;">y</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">36</td>
-<td style="text-align: left;">prop_type</td>
-<td style="text-align: left;">Type of property</td>
-<td style="text-align: left;">1 represents a flat and 2 a house</td>
-<td style="text-align: left;">dteloc</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">37</td>
-<td style="text-align: left;">prop_year_harm</td>
-<td style="text-align: left;">Year of contruction of the property</td>
-<td style="text-align: left;">This variable has been harmonized to correct for typing mistakes. More details is available in the introduction.</td>
-<td style="text-align: left;">jannath</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">38</td>
-<td style="text-align: left;">s_land_agri</td>
-<td style="text-align: left;">Agricultural land area (square meters)</td>
-<td style="text-align: left;">Agricultural land is used for farming. It includes fields, meadows, orchards and vineyards.</td>
-<td style="text-align: left;">dcntagri</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">39</td>
-<td style="text-align: left;">s_land_artif</td>
-<td style="text-align: left;">Artificial land area (square meters)</td>
-<td style="text-align: left;">Artificial land includes recreational areas, land, building plots and gardens. Artificial land refers to land that has been altered by humans.</td>
-<td style="text-align: left;">dcntsol</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">40</td>
-<td style="text-align: left;">s_land_nat</td>
-<td style="text-align: left;">Natural land area (square meters)</td>
-<td style="text-align: left;">Natural land is land that has not been altered. This includes, for example, forests.</td>
-<td style="text-align: left;">dcntnat</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">41</td>
-<td style="text-align: left;">stair</td>
-<td style="text-align: left;">If the building of the flat has stairs (for flats only)</td>
-<td style="text-align: left;">The modalities are coded in the following way : <br> - <code>0</code> : <code>No</code> <br> - <code>1</code> : <code>Missing value</code> <br> - <code>2</code> : <code>Yes</code></td>
-<td style="text-align: left;">gesclc</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">42</td>
-<td style="text-align: left;">trans_date</td>
-<td style="text-align: left;">Date of the official certified transaction</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">datemut</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">43</td>
-<td style="text-align: left;">trans_id</td>
-<td style="text-align: left;">Unique identifier code of the transaction</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">idmutation</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">44</td>
-<td style="text-align: left;">trans_month</td>
-<td style="text-align: left;">Month of the official certified transaction</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">moismut</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">45</td>
-<td style="text-align: left;">trans_type_code</td>
-<td style="text-align: left;">Type of transaction</td>
-<td style="text-align: left;">There are several types of transaction in the original data (sale, off-plan sale, sale of building land, tender, compulsory purchase). Original data have been filtered to keep only sale.</td>
-<td style="text-align: left;">idnatmut</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">46</td>
-<td style="text-align: left;">trans_type_label</td>
-<td style="text-align: left;">Type of transaction</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">libnatmut</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">47</td>
-<td style="text-align: left;">trans_year</td>
-<td style="text-align: left;">Year of the official certified transaction</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">anneemut</td>
-</tr>
-</tbody>
-</table>
-<p>See <a href="https://doc-datafoncier.cerema.fr/doc/ff/pb0010_local">CEREMA’s documentation (in French)</a> for a more detailled description.</p>
-<p>Note that the variable year of the building has been harmonized to correct for typing mistakes. Here are the transformation made from the original data :</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 33%">
-<col style="width: 33%">
-<col style="width: 33%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Original modality</th>
-<th>Corrections to original modality</th>
-<th>Exemple of transformation</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>1 ≤ prop_year ≤ 22</td>
-<td>Add 2000 as the first digits were not entered</td>
-<td>8 → 2008</td>
-</tr>
-<tr class="even">
-<td>23 ≤ prop_year ≤ 99</td>
-<td>Add 1900 as the first digits were not entered</td>
-<td>83 → 1983</td>
-</tr>
-<tr class="odd">
-<td>100 ≤ prop_year ≤ 119</td>
-<td>Set to 0 as it is unknown</td>
-<td>105 → 0</td>
-</tr>
-<tr class="even">
-<td>120 ≤ prop_year ≤ 200</td>
-<td>Add a 0 at the end as the last digit has not been entered</td>
-<td>187 → 1870</td>
-</tr>
-<tr class="odd">
-<td>201 ≤ prop_year ≤ 299</td>
-<td>Set to 0 as it is unknown</td>
-<td>250 → 0</td>
-</tr>
-<tr class="even">
-<td>300 ≤ prop_year ≤ 999</td>
-<td>Add 1000 as the first digits have not been entered</td>
-<td>980 → 1980</td>
-</tr>
-<tr class="odd">
-<td>1000 ≤ prop_year ≤ 1120</td>
-<td>Set to 0 as it is unknown</td>
-<td>1005 → 0</td>
-</tr>
-<tr class="even">
-<td>1120 ≤ prop_year ≤ 1199</td>
-<td>Replace the second 1 with 9</td>
-<td>1155 → 1955</td>
-</tr>
-<tr class="odd">
-<td>1200 ≤ prop_year ≤ 2022</td>
-<td>No change</td>
-<td>1200 → 1200</td>
-</tr>
-</tbody>
-</table>
-<p>More information about this transformation is available <a href="https://doc-datafoncier.cerema.fr/doc/ff/pb40_pevprincipale/prop_year_harm">online</a> (in French).</p>
-</section>
-</section>
-<section id="initialization-of-the-project" class="level1" data-number="3">
-<h1 data-number="3"><span class="header-section-number">3</span> Initialization of the project</h1>
-<section id="technical-requirements" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="technical-requirements"><span class="header-section-number">3.1</span> Technical requirements</h2>
+<section id="initialization-of-the-project" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Initialization of the project</h1>
+<section id="technical-requirements" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="technical-requirements"><span class="header-section-number">4.1</span> Technical requirements</h2>
 <ul>
 <li>You need to have an account on <a href="https://datalab.sspcloud.fr/">Insee’s Onyxia platform</a>, called SSPCloud (for <em>cloud platform for the French Official Statistical System</em>). When you are on this webpage, you should see something similar to this image once you’re logged in. To change the language, you can do so on the bottom right part of the webpage (see the orange arrow on the screen shot below).</li>
 </ul>
@@ -766,8 +341,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>You also need to have a Github account. Your Github credentials (username, email and token) should be registered in your <a href="https://datalab.sspcloud.fr/">Insee’s Onyxia</a> account in the My account/Git tab.</li>
 </ul>
 </section>
-<section id="fork-the-project-with-git-b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c206661206272616e6473206769742d616c74203e7d7d" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="fork-the-project-with-git-b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c206661206272616e6473206769742d616c74203e7d7d"><span class="header-section-number">3.2</span> Fork the project with <code>Git</code> <i class="fa-brands fa-git-alt" aria-label="git-alt"></i></h2>
+<section id="fork-the-project-with-git-b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c206661206272616e6473206769742d616c74203e7d7d" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="fork-the-project-with-git-b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c206661206272616e6473206769742d616c74203e7d7d"><span class="header-section-number">4.2</span> Fork the project with <code>Git</code> <i class="fa-brands fa-git-alt" aria-label="git-alt"></i></h2>
 <p>First, you need to fork the funathons’s project on Github by clicking on <a href="https://github.com/AIML4OS/funathon-project1/fork">this link</a>. For convenience, <strong>please not to change the repository name</strong>. Write down the owner’s name <code>OWNER_NAME</code> for the next step.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -776,8 +351,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </figure>
 </div>
 </section>
-<section id="open-a-vs-code-on-sspcloud-onyxia" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="open-a-vs-code-on-sspcloud-onyxia"><span class="header-section-number">3.3</span> Open a VS Code on SSPCloud / Onyxia</h2>
+<section id="open-a-vs-code-on-sspcloud-onyxia" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="open-a-vs-code-on-sspcloud-onyxia"><span class="header-section-number">4.3</span> Open a VS Code on SSPCloud / Onyxia</h2>
 <div class="callout callout-style-simple callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -803,8 +378,8 @@ git clone https://$GIT_PERSONAL_ACCESS_TOKEN@github.com/$OWNER_NAME/funathon-pro
 <li>TO BE COMPLETED DEPENDING ON THE PROJECT (<code>Dockerfile</code>, <code>kubernetes</code>…)/</li>
 </ul>
 </section>
-<section id="installation-of-dependencies" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="installation-of-dependencies"><span class="header-section-number">3.4</span> Installation of dependencies</h2>
+<section id="installation-of-dependencies" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="installation-of-dependencies"><span class="header-section-number">4.4</span> Installation of dependencies</h2>
 <p>Install the project dependencies by running the following command in the terminal:</p>
 <pre class="{bash}"><code>cd funathon-project1
 uv sync</code></pre>
@@ -834,8 +409,8 @@ uv sync</code></pre>
 </div>
 </div>
 </section>
-<section id="python-interpreter-configuration" class="level2" data-number="3.5">
-<h2 data-number="3.5" class="anchored" data-anchor-id="python-interpreter-configuration"><span class="header-section-number">3.5</span> Python interpreter configuration</h2>
+<section id="python-interpreter-configuration" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="python-interpreter-configuration"><span class="header-section-number">4.5</span> Python interpreter configuration</h2>
 <p>After installing dependencies with <code>uv</code>, you need to configure the Python interpreter so that the installed packages are properly recognized. This will allow you to run Python scripts in parts, similar to working in a Jupyter notebook.</p>
 <p>To do this, open the command palette <code>Show and Run commands</code> then select <strong><code>Python: select interpreter</code></strong> , or press <code>Ctrl+Shift+P</code>. Finally, enter the following path, which corresponds to the Python interpreter generated by <code>uv</code> :</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">/home/onyxia/work/funathon-project1/.venv/bin/python3.13</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
