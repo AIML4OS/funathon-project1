@@ -376,7 +376,7 @@ Tip
 <li>Loading the trained model</li>
 </ol>
 <p>We load the model <strong>once at startup</strong>, so that it does not need to be reloaded on every request. We retrieve it from MLFlow using the run ID saved in Part 4.</p>
-<div id="aa5b2444" class="cell" data-execution_count="1">
+<div id="62e855d4" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> mlflow.sklearn</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>MODEL_URI <span class="op">=</span> <span class="st">"runs:/&lt;your_run_id&gt;/model"</span></span>
@@ -386,7 +386,7 @@ Tip
 <li>We will now write the prediction endpoint. To do so, we will predict and the loaded model into a <code>/predict</code> endpoint.</li>
 </ol>
 <p>Create a file <code>api.py</code> with the following content:</p>
-<div id="020ed4c3" class="cell" data-execution_count="2">
+<div id="9ef823b5" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> mlflow.sklearn</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastapi <span class="im">import</span> FastAPI</span>
@@ -532,7 +532,7 @@ Tip
 </div>
 </div>
 </div>
-<div id="e27d7b8a" class="cell" data-execution_count="3">
+<div id="55e30cf6" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>prop_features <span class="op">=</span> {</span>
