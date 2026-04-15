@@ -9,8 +9,7 @@ format:
 
 Dans cette partie on propose de déployer l'application sur le SSP Cloud et de la rendre accessible depuis Internet. L'exercice constitue une introduction à la mise en production d'applications dans un environnement Cloud. Pour aller plus loin, n'hésitez pas à consulter [cet excellent cours](https://ensae-reproductibilite.github.io/website/).
 
-::: {.callout-tip collapse="false" icon=false}
-## `<i class="bi bi-book"></i>`{=html} Exercice 7: Déploiement de l'application Dash
+# Exercice 7: Déploiement de l'application Dash
 
 1. Pour déployer son application, la première étape consiste à la [conteneuriser](https://ensae-reproductibilite.github.io/website/chapters/portability.html#les-conteneurs), ce qui signifie la mettre dans une sorte de boîte virtuelle contenant tout ce dont l'application a besoin pour fonctionner. Le conteneur sépare l'application de son environnement extérieur, ce qui permet d'éviter les conflits avec d'autres applications ou dépendances sur le même système. Puisque le conteneur contient tout ce dont l'application a besoin (comme les bibliothèques et les dépendances), l'application peut être déplacée et exécutée sur n'importe quel système qui supporte les conteneurs, sans se soucier des différences entre ces systèmes.
 
@@ -36,4 +35,3 @@ Dans cette partie on propose de déployer l'application sur le SSP Cloud et de l
 
 4. Dernier point important : il ne faut pas oublier de supprimer l'application pour ne pas occuper inutilement les ressources du SSP Cloud. Pour fermer l'application, exécuter `kubectl delete -f kubernetes/`.
 
-:::
