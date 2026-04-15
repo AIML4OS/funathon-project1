@@ -15,7 +15,7 @@ To have a better understanding of what we will do, here is an overview of the pr
 
 ![Overview of the pre-processing](pre-processing.png)
 
-# 1 - What are data inputs ?
+# What are data inputs ?
 
 ::: {.callout-note appearance="simple"}
 ## Watch out
@@ -198,7 +198,7 @@ trans = trans[trans["prop_loc_dep"].isin(["75", "77", "78", "91", "92", "93", "9
 ```
 
 
-# 2 - Which transformations must you apply to the data ?
+# Which transformations must you apply to the data ?
 
 ## Exercice 2: Analyzing data inputs
 
@@ -526,7 +526,7 @@ Now that you are familiar with the main mechanisms of pre-processing for model t
 Scikit-learn has a very well crafted documentation, so please do not hesitate to go and have a look on [their website](https://scikit-learn.org/stable/api/index.html).
 
 
-# 3 - How do you prepare your data with scikit-learn?
+# How do you prepare your data with scikit-learn?
 
 ## Exercice 3: The scikit-learn pipeline
 
