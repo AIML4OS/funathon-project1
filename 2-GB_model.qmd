@@ -43,8 +43,7 @@ For more information, you can read the detailed presentation of the gradient boo
 
 To allow for comparison with the random forest section, we chose to use the same conditions : dropping the `trans_date` and `prop_type` features and working with the **non transformed target** (i.e.price per square meter) and not use the transformed target (i.e. log of the price per square meter) defined at the end of the pre-processing. We will come back to this later on and chain it with the preprocessing steps.
 
-::: {.callout-tip collapse="false" icon="false"}
-## <i class="bi bi-book"></i> Exercice 7: Train your first Gradient Boosting model
+### Exercice 7: Train your first Gradient Boosting model
 
 1.  Using the `HistGradientBoostingRegressor` class and its [scikit-learn documentation page](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html), define and train a baseline model with **default hyperparameters** using the same training set `X_train` and `y_train` defined in the preprocessing section.
 
@@ -98,9 +97,9 @@ for split, X, y in list:
 ```
 
 3.  How does the default Gradient Boosting model compare with the best Random Forest model from Exercise 6?
-:::
 
-## Key Hyperparameters of Gradient Boosting {#key-hyperparameters-of-gradient-boosting}
+
+### Key Hyperparameters of Gradient Boosting {#key-hyperparameters-of-gradient-boosting}
 
 The gradient boosting algorithm has many hyperparameters, but the literature identifies a small set that most strongly influence model performance. Gradient-boosting hyperparameters are also coupled, so we cannot set them one after the other anymore. The important hyperparameters are `max_iter`, `learning_rate`, and `max_depth` or `max_leaf_nodes` (as previously discussed random forest). We recommend reading the scikit-learn MOOC on tuning [here](https://inria.github.io/scikit-learn-mooc/python_scripts/ensemble_hyperparameters.html#histogram-gradient-boosting-decision-trees) for more details. Here for this tutorial, we focus on these four groups:
 
@@ -136,7 +135,7 @@ The learning rate $\eta \in (0, 1]$ scales the contribution of each tree to the 
 
 For more information, you can read the detailed description of these hyperparameters [here](https://inseefrlab.github.io/DT_methodes_ensemblistes/chapters/chapter3/3-guide_usage_GB.html#sec-hyperparam-gb) or on scikit learn's documentation (for the [`HistGradientBoostingRegressor` function](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html) or the [MOOC material](https://inria.github.io/scikit-learn-mooc/python_scripts/ensemble_hyperparameters.html)).
 
-## Tuning Gradient Boosting Hyperparameters
+### Tuning Gradient Boosting Hyperparameters
 
 We follow the **iterative simple validation procedure** described in the [usage guide](https://inseefrlab.github.io/DT_methodes_ensemblistes/chapters/chapter3/3-guide_usage_GB.html#approche-2-approche-it%C3%A9rative-par-validation-simple). Rather than using cross-validation (which would require training many models), we evaluate each hyperparameter configuration once on the test set and proceed in three sequential steps:
 
@@ -150,8 +149,7 @@ For each step, we record **both training and test scores** to monitor overfittin
 We use the same `X_train`, `X_test`, `y_train`, `y_test` splits defined in the preprocessing section. Note that strictly speaking, the test set should not be used to select hyperparameters — a proper hold-out validation set should be used instead. We use the test set here for simplicity and pedagogical clarity.
 :::
 
-::::: {.callout-tip collapse="false" icon="false"}
-## <i class="bi bi-book"></i> Exercice 8: Tuning Gradient Boosting hyperparameters
+### Exercice 8: Tuning Gradient Boosting hyperparameters
 
 0.  For convenience, we prepare the data and pipeline with the following instructions :
     -   Drop the features `prop_type`, `trans_date` of the dataframe;
@@ -195,7 +193,7 @@ model = TransformedTargetRegressor(
 
 ```
 
-### Step 1 — Jointly optimise the number of trees and the learning rate
+#### Step 1 — Jointly optimise the number of trees and the learning rate
 
 1.  Define the parameter grid for `max_iter` and `learning_rate`, then run a `GridSearchCV` with 2 folds (to speed-up training time), `scoring="r2"` and `return_train_score=True`. Use `n_jobs=-1` to parallelise the search.
 
@@ -319,7 +317,7 @@ BEST_ITER = 500  # to automatically catch the best hyperparameter, set to : gs_s
 BEST_LR = 0.2  # to automatically catch the best hyperparameter, set to : gs_step1.best_params_["regressor__GB__learning_rate"]
 ```
 
-### Step 2 — Jointly optimise the tree structure
+#### Step 2 — Jointly optimise the tree structure
 
 4.  Fix `max_iter` and `learning_rate` to the best values found in step 1, then run a second `GridSearchCV` over `max_depth` and `min_samples_leaf` with other settings unchanged.
 
@@ -383,7 +381,7 @@ BEST_DEPTH = gs_step2.best_params_["regressor__GB__max_depth"]
 BEST_MIN_LEAF = gs_step2.best_params_["regressor__GB__min_samples_leaf"]
 ```
 
-### Step 3 — Optimise the regularisation parameters
+#### Step 3 — Optimise the regularisation parameters
 
 6.  Using the best hyperparameters found in steps 1 and 2, train one model for each value of `l2_regularization` in `[0.0, 0.1, 0.3, 0.5, 1.0]`. To use our predefined function, make it as if it was a cross validation with `max_iter` set to the above chosen value. Using our pre-defined function, plot the result.
 
@@ -440,7 +438,7 @@ BEST_L2 = gs_step3.best_params_["regressor__GB__l2_regularization"]
 
 ```
 
-### Step 4 — Train the final model
+#### Step 4 — Train the final model
 
 7.  Train the final `HistGradientBoostingRegressor` using all the best hyperparameters identified in the previous steps. Then re-train it on the full training set.
 
@@ -481,10 +479,9 @@ gb_model_final = TransformedTargetRegressor(
 gb_model_final.fit(X_train, y_train)
 print("Final model trained.")
 ```
-:::::
 
-::: {.callout-tip collapse="false"}
-## <i class="bi bi-book"></i> Exercice 9: Evaluate the final Gradient Boosting model
+
+## Exercice 9: Evaluate the final Gradient Boosting model
 
 Now that the model has been tuned, evaluate its performance on the test set and compare it to the Random Forest baseline.
 
@@ -531,4 +528,3 @@ plt.show()
 ```
 
 Congrats 🎉! You have successfully trained, tuned, and evaluated a Gradient Boosting model and compared it to the Random Forest baseline.
-:::
