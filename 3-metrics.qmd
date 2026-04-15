@@ -11,9 +11,9 @@ Training a model is only half the work. Before drawing any conclusions or deploy
 
 Before evaluating our trained models, you will discover some metrics and plots to measure the quality of the predictions.
 
-# I - How can you evaluate the model's inference ?
+# How can you evaluate the model's inference ?
 
-## A - Regression metrics
+## Regression metrics
 
 Regression metrics assess the quality of a model's predictions by comparing predicted and "observed" values. Each metric offers a different perspective depending on whether the goal is : 
 - to penalize extreme error ;
@@ -53,7 +53,7 @@ R² measures the proportion of variance in the target that is explained by the m
 
 Unlike RMSE and MAE, R² allows comparison across different datasets and targets. Its main limitation is that it can be inflated by adding features, even irrelevant ones.
 
-## B - Diagnostic plots
+## Diagnostic plots
 
 Scalar metrics alone are insufficient: two models can share the same RMSE while exhibiting very different error patterns. Diagnostic plots reveal the structure of residuals and provide insights that numbers cannot. Moreover, they add details to see if the model performs well where you want it to perform. For example, if your aim is to have good results on the center of the distribution, you can live with worse results on extreme values (or the opposite). 
 
@@ -95,7 +95,7 @@ Permutation importance has several advantages over the default impurity-based im
 Features with near-zero or negative permutation importance can safely be removed without hurting predictive performance. A high importance score validates that a feature carries genuine predictive signal.
 
 
-# 2 - Computing evaluation metrics
+# Computing evaluation metrics
 
 ## Exercice 10: Compute evaluation metrics
 
