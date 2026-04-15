@@ -28,25 +28,25 @@ website:
         aria-label: GitHub
 
     left:
-      - text: "Introduction"
+      - text: "0. Introduction"
         menu: 
         - text: "Presentation"
           href: index.qmd
         - text: "Data presentation"
           href: intro_data.qmd
-      - text: "Preprocessing"
+      - text: "1. Preprocessing"
         href: 1-preprocessing.qmd
-      - text: "Modelling"
+      - text: "2. Modelling"
         menu: 
         - text: "with a random forest"
           href: 2-RF_model.qmd
         - text: "with a gradient boosting"
           href: 2-GB_model.qmd
-      - text: "Model evaluation"
+      - text: "3. Model evaluation"
         href: 3-metrics.qmd
-      - text: "Model logging"
+      - text: "4. Model logging"
         href: 4-logging.qmd
-      - text: "Deployment"
+      - text: "5. Deployment"
         href: 5-deployment.qmd
 
 
