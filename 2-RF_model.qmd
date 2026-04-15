@@ -527,6 +527,6 @@ Congrats 🎉! In this section, you have successfully
 - optimized the `RandomForestRegressor` parameters through a gridsearch and cross-validation,
 - and finally, evaluated a random Forest model for price per square meter predictions with the RMSE and MAE metrics.
 
-You can now have a look at the [gradient boosting model](2-GB_model.Qmd).
-Once you have trained both model, you can have a closer look at metrics with the [metrics section](3-metrics.Qmd).  
+You can now have a look at the [gradient boosting model](2-GB_model.qmd).
+Once you have trained both model, you can have a closer look at metrics with the [metrics section](3-metrics.qmd).  
 
