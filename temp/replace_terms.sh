@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Usage: ./replace_terms_in_paths.sh /path/to/paths.txt /path/to/replacements.json
+# Usage: bash temp/replace_terms.sh temp/paths_to_replace.txt temp/replacements.json
 
 # Check if jq is installed
 if ! command -v jq &> /dev/null; then
