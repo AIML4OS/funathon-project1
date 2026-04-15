@@ -111,8 +111,7 @@ In this example, `GET /` just returns a static message — no body needed from t
 :::
 
 
-
-3. Building on this first API, build a default endpoint for the API that gives back the model used. 
+3. Building on this first basic API, modify the default endpoint to give back a message indicating what the API does, the model name and version. 
 
 
 ::: {.callout-tip}
@@ -125,9 +124,9 @@ def show_welcome_page():
     """
 
     return {
-        "Message": "API to predict housing price in the Paris region",
-        "Model_name": "Paris ML",
-        "Model_version": "0.1",
+        "message": "API to predict housing price in the Paris region",
+        "model_name": "Paris_ML",
+        "model_version": "0.1",
     }
 ```
 
