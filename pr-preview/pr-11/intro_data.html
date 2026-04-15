@@ -42,7 +42,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-9c86c6a150ad8204aa26c688cf8b52e3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-10001ffb058a23507bc90342e4cf6f50.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -150,7 +150,7 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
@@ -158,15 +158,14 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#general-presentation-of-the-data" id="toc-general-presentation-of-the-data" class="nav-link active" data-scroll-target="#general-presentation-of-the-data"><span class="header-section-number">1</span> General presentation of the data</a>
-  <ul class="collapse">
-  <li><a href="#list-of-variable-and-explanations" id="toc-list-of-variable-and-explanations" class="nav-link" data-scroll-target="#list-of-variable-and-explanations"><span class="header-section-number">1.1</span> List of variable and explanations</a></li>
-  </ul></li>
+  <li><a href="#general-presentation-of-the-data" id="toc-general-presentation-of-the-data" class="nav-link active" data-scroll-target="#general-presentation-of-the-data"><span class="header-section-number">1</span> General presentation of the data</a></li>
+  <li><a href="#list-of-variables" id="toc-list-of-variables" class="nav-link" data-scroll-target="#list-of-variables"><span class="header-section-number">2</span> List of variables</a></li>
+  <li><a href="#detailled-note" id="toc-detailled-note" class="nav-link" data-scroll-target="#detailled-note"><span class="header-section-number">3</span> Detailled note</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/AIML4OS/funathon-project1/edit/main/intro_data.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/AIML4OS/funathon-project1/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content column-page-left" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -175,7 +174,7 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<div class="quarto-title-meta column-page-left">
+<div class="quarto-title-meta">
 
     
   
@@ -191,15 +190,16 @@ ul.task-list li input[type="checkbox"] {
 <h1 data-number="1"><span class="header-section-number">1</span> General presentation of the data</h1>
 <p>Data prepared for this project gathers all of the housing transactions in France between 2014 and 2021 and details about the property sold. Because the characteristics of the property sold isn’t open source, the data you’ll be working with are <strong>synthetic data</strong>. It has been generated to mirror the original data.</p>
 <p>If you want to have a closer look at the data, CEREMA publishes on <a href="](https://doc-datafoncier.cerema.fr/doc/ff/pb0010_local)">its website</a> an extensive documentation of the different datasets, the variables, their modalities and the overall quality of variable.</p>
-<section id="list-of-variable-and-explanations" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="list-of-variable-and-explanations"><span class="header-section-number">1.1</span> List of variable and explanations</h2>
+</section>
+<section id="list-of-variables" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> List of variables</h1>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 0%">
-<col style="width: 4%">
-<col style="width: 14%">
-<col style="width: 73%">
+<col style="width: 2%">
 <col style="width: 7%">
+<col style="width: 26%">
+<col style="width: 52%">
+<col style="width: 10%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -543,6 +543,9 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 <p>See <a href="https://doc-datafoncier.cerema.fr/doc/ff/pb0010_local">CEREMA’s documentation (in French)</a> for a more detailled description.</p>
+</section>
+<section id="detailled-note" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Detailled note</h1>
 <p>Note that the variable year of the building has been harmonized to correct for typing mistakes. Here are the transformation made from the original data :</p>
 <table class="caption-top table">
 <colgroup>
@@ -608,7 +611,6 @@ ul.task-list li input[type="checkbox"] {
 <p>More information about this transformation is available <a href="https://doc-datafoncier.cerema.fr/doc/ff/pb40_pevprincipale/prop_year_harm">online</a> (in French).</p>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
