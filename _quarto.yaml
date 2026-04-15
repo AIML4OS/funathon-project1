@@ -58,6 +58,8 @@ format:
     reference-location: margin
     code-copy: true
     code-overflow: wrap
+    grid:
+      body-width: 1100px
 
 execute: 
   eval: false
