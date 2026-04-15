@@ -41,7 +41,6 @@ Client (browser / script)
 - [`uvicorn`](https://www.uvicorn.org/) — ASGI server used to run the FastAPI application locally
 :::
 
-
 # Exercice 8 – Deploying a local API
 
 1. Add the necessary packages to deploy an API using `uv`. 
@@ -65,16 +64,49 @@ def read_root():
 
 Save this as `api.py` and run it with:
 
-```bash
+```{.bash filename="terminal"}
 uvicorn api:app --reload
 ```
 
 Then open [http://localhost:8000](http://localhost:8000) in your browser. You should see the JSON response `"Housing price prediction API is running"`.
 
+Without closing the Terminal where the API runs, you can also test the API from the Terminal. 
+Open a new Terminal and run a simple `GET` request on the default endpoint with the following `curl` command:
+
+```{.bash filename="terminal"}
+curl "http://127.0.0.1:8000"
+```
+
+The response should be the default response defined above as a JSON format. 
 
 ::: {.callout-note}
 
-FastAPI is very convenient because it automatically generates interactive documentation, which is very useful for testing your endpoints.
+In FastAPI, `@app.get(...)`, `@app.post(...)` etc. are **decorators** — they register a function as the handler for a specific HTTP route and method.
+
+Here's how to read them:
+
+```python
+@app.post("/predict")
+def predict(features: PropertyFeatures):
+    ...
+    return json_response
+```
+
+- `@app.post` means: "when the server receives an **HTTP POST** request..."
+- `"/predict"` is the path: "at the URL `/predict`"
+- `def predict(...)` is the function that will be called when that happens — it runs, and whatever it returns is sent back as the HTTP response.
+
+So the decorator is a way to tell FastAPI *"wire this function up to this URL + HTTP method"*. Under the hood, FastAPI registers the route and, when a matching request comes in, calls your function automatically.
+
+The HTTP methods map to conventional use cases:
+
+| Decorator | HTTP method | Typical use |
+|---|---|---|
+| `@app.get("/")` | GET | Read / retrieve data. GET requests don't carry a body by convention. |
+| `@app.post("/predict")` | POST | Send data, trigger computation. POST requests carry data as input for the API to work by convention. |
+
+
+In this example, `GET /` just returns a static message — no body needed from the client. `POST /predict` would need to use a POST request because the client needs to **send** a JSON payload (the property features) along with the request. 
 
 :::
 
@@ -85,8 +117,8 @@ FastAPI is very convenient because it automatically generates interactive docume
 
 ::: {.callout-tip}
 
-``` python
-@app.get("/", tags=["Welcome"])
+```{.python}
+@app.get("/")
 def show_welcome_page():
     """
     Show welcome page with model name and version.
@@ -100,14 +132,6 @@ def show_welcome_page():
 ```
 
 :::
-
-::: {.callout-note}
-
-We didn't specify the input schema. A more robust API would make sure that all the input data is formatted with the right type, for example by using `pydantic` package.  
-
-:::
-
-
 
 4. Loading the trained model
 
@@ -142,7 +166,6 @@ Create a file `api.py` with the following content:
 import pandas as pd
 import mlflow.sklearn
 from fastapi import FastAPI
-from pydantic import BaseModel
 
 
 # ── App initialization ──────────────────────────────────────────────────────
@@ -160,57 +183,27 @@ MODEL_URI = "runs:/<your_run_id>/model"
 model = mlflow.sklearn.load_model(MODEL_URI)
 
 
-# ── Input schema ────────────────────────────────────────────────────────────
-
-class PropertyFeatures(BaseModel):
-    trans_year: int
-    prop_type: int
-    prop_year_harm: int
-    prop_loc_dep: str
-    prop_loc_citycode: str
-    prop_loc_x: float
-    prop_loc_y: float
-    dist_tosea: float
-    n_floors: int
-    n_bath: int
-    n_show: int
-    n_sink: int
-    n_wc: int
-    n_mrooms: int
-    n_eatr: int
-    n_slr: int
-    n_kit8: int
-    n_kit9: int
-    n_washr: int
-    n_ancrooms: int
-    n_rooms: int
-    farea: int
-    nth_floor: int
-    n_terrace: int
-    n_attic: int
-    n_basmt: int
-    n_otherannex: int
-
-
 # ── Endpoints ────────────────────────────────────────────────────────────────
 
 @app.get("/")
-def root():
-    return {"message": "Housing Price Prediction API is running. Go to /docs for usage."}
+def show_welcome_page():
+    """
+    Show welcome page with model name and version.
+    """
 
-
-@app.get("/health")
-def health():
-    return {"status": "ok"}
-
+    return {
+        "Message": "API to predict housing price in the Paris region",
+        "Model_name": "Paris ML",
+        "Model_version": "0.1",
+    }
 
 @app.post("/predict")
-def predict(features: PropertyFeatures):
+def predict(features):
     """
     Accepts a JSON description of a property and returns the predicted price per m²
     and the estimated total price.
     """
-    input_df = pd.DataFrame([features.model_dump()])
+    input_df = pd.DataFrame([features])
     price_sqm = model.predict(input_df)[0]
     predicted_price = price_sqm * features.farea
 
@@ -227,21 +220,20 @@ def predict(features: PropertyFeatures):
 
 Start the server with:
 
-```bash
+```{.bash filename="terminal"}
 uvicorn api:app --reload --port 8000
 ```
 
 The `--reload` flag restarts the server automatically whenever you save changes to `api.py`, which is very convenient during development.
 
-You can now query your API in three ways:
+You can now query your API with python's request :
 
-**Option A — Interactive docs (Swagger UI)**
 
-Open [http://localhost:8000/docs](http://localhost:8000/docs) to use the interface generated automatically by FastAPI. You can fill in the fields and send requests directly from the browser.
+::: {.callout-tip}
 
-**Option B — `curl` from the terminal**
+You can also quesry the API using the swagger that FastAPI builds or use a `curl` command from the terminal. 
 
-```bash
+```{.bash filename="terminal"}
 curl -X POST "http://localhost:8000/predict" \
   -H "Content-Type: application/json" \
   -d '{
@@ -274,8 +266,8 @@ curl -X POST "http://localhost:8000/predict" \
     "n_otherannex": 0
   }'
 ```
+:::
 
-**Option C — Python `requests`**
 
 ```{python}
 #| eval: false
@@ -332,8 +324,7 @@ Expected output:
 In this chapter, we have:
 
 - Built a **FastAPI** application that wraps our trained scikit-learn model,
-- Defined a **Pydantic schema** using the updated variable names from the dataset (see [the data introduction](intro_data.qmd)),
 - Exposed a `/predict` endpoint that returns a predicted `price_sqm` and total `predicted_price`,
-- Tested the API locally via `curl`, `requests`, and the auto-generated Swagger UI.
+- Tested the API locally `requests`.
 
 The next natural step — beyond the scope of this tutorial — would be to containerize this API with Docker and deploy it on a cloud platform so it becomes accessible to external users.
