@@ -8,7 +8,7 @@ format:
 ---
 
 
-## Introduction
+# Introduction
 
 So far, we have trained and evaluated a housing price prediction model, and tracked our experiments with MLFlow. The final step of a machine learning pipeline is to make the model **available to end users**, so that it can produce predictions on new data without requiring anyone to re-run training code.
 
@@ -39,23 +39,19 @@ Client (browser / script)
 
 - [`FastAPI`](https://fastapi.tiangolo.com/tutorial/) — modern, fast web framework for building APIs with Python
 - [`uvicorn`](https://www.uvicorn.org/) — ASGI server used to run the FastAPI application locally
-- [`pydantic`](https://docs.pydantic.dev/) — data validation library used by FastAPI to define request/response schemas
-- [`mlflow`](https://mlflow.org/docs/latest/ml/) — to retrieve the model logged in Part 4
 :::
 
 
-## Step 1 – Installing the dependencies
+# Exercice 8 – Deploying a local API
 
-Make sure the following packages are available in your environment:
+1. Add the necessary packages to deploy an API using `uv`. 
 
 ```{.bash}
 #| eval: false
 uv add fastapi uvicorn mlflow pydantic
 ```
 
-## Step 2 – Understanding the FastAPI basics
-
-FastAPI allows you to define an HTTP endpoint in just a few lines of Python. Here is a minimal working example:
+2. We will first deploy a basic fastAPI. FastAPI allows you to define an HTTP endpoint in just a few lines of Python. Here is a minimal working example:
 
 ```{.python}
 from fastapi import FastAPI
@@ -75,65 +71,51 @@ uvicorn api:app --reload
 
 Then open [http://localhost:8000](http://localhost:8000) in your browser. You should see the JSON response `"Housing price prediction API is running"`.
 
-FastAPI also automatically generates interactive documentation at [http://localhost:8000/docs](http://localhost:8000/docs) — very useful for testing your endpoints.
 
+::: {.callout-note}
 
-## Step 3 – Defining the input schema
+FastAPI is very convenient because it automatically generates interactive documentation, which is very useful for testing your endpoints.
 
-Our prediction endpoint needs to receive a description of a property. We use a **Pydantic model** to define and validate the expected input.
-
-Based on the 27 features used in our trained model (see [the data introduction](intro_data.qmd) for full variable definitions):
-
-```{python}
-#| eval: false
-from pydantic import BaseModel
-
-class PropertyFeatures(BaseModel):
-    trans_year: int         # Year of the transaction
-    prop_type: int          # Property type: 1 = flat, 2 = house
-    prop_year_harm: int     # Year of construction (harmonized)
-    prop_loc_dep: str       # Department code (e.g. "75")
-    prop_loc_citycode: str  # Municipality code (e.g. "75056")
-    prop_loc_x: float       # Longitude
-    prop_loc_y: float       # Latitude
-    dist_tosea: float       # Distance to the nearest seashore, capped at 10km (m)
-    n_floors: int           # Number of floors in the property
-    n_bath: int             # Number of bathtubs
-    n_show: int             # Number of showers
-    n_sink: int             # Number of sinks
-    n_wc: int               # Number of toilets
-    n_mrooms: int           # Number of main rooms
-    n_eatr: int             # Number of eating rooms
-    n_slr: int              # Number of sleeping rooms
-    n_kit8: int             # Number of kitchens < 8m²
-    n_kit9: int             # Number of kitchens ≥ 9m²
-    n_washr: int            # Number of washing rooms
-    n_ancrooms: int         # Number of ancillary rooms
-    n_rooms: int            # Total number of rooms
-    farea: int              # Reported floor area (m²)
-    nth_floor: int          # Floor of the property
-    n_terrace: int          # Number of terraces
-    n_attic: int            # Number of attics
-    n_basmt: int            # Number of basements
-    n_otherannex: int       # Number of other annexes
-```
-
-::: {.callout-tip}
-Pydantic validates the data types automatically. If a client sends a string where an integer is expected, FastAPI will return a clear `422 Unprocessable Entity` error with an explanation — without any extra code on your part.
 :::
 
 
 
-## Step 4 – Loading the trained model
+3. Building on this first API, build a default endpoint for the API that gives back the model used. 
+
+
+::: {.callout-tip}
+
+``` python
+@app.get("/", tags=["Welcome"])
+def show_welcome_page():
+    """
+    Show welcome page with model name and version.
+    """
+
+    return {
+        "Message": "API to predict housing price in the Paris region",
+        "Model_name": "Paris ML",
+        "Model_version": "0.1",
+    }
+```
+
+:::
+
+::: {.callout-note}
+
+We didn't specify the input schema. A more robust API would make sure that all the input data is formatted with the right type, for example by using `pydantic` package.  
+
+:::
+
+
+
+4. Loading the trained model
 
 We load the model **once at startup**, so that it does not need to be reloaded on every request. We retrieve it from MLFlow using the run ID saved in Part 4.
 
 ```{python}
 #| eval: false
 import mlflow.sklearn
-
-# Replace with your actual MLFlow run ID
-MODEL_URI = "runs:/<your_run_id>/model"
 
 model = mlflow.sklearn.load_model(MODEL_URI)
 ```
