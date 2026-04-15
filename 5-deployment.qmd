@@ -81,6 +81,8 @@ curl "http://127.0.0.1:8000"
 
 The response should be the default response defined above as a JSON format. 
 
+If you want to close down the API, go to the Terminal where it has been laucnhed and press <kbd>CTRL</kbd>+<kbd>C</kbd> from your keyboard. 
+
 ::: {.callout-note}
 
 In FastAPI, `@app.get(...)`, `@app.post(...)` etc. are **decorators** — they register a function as the handler for a specific HTTP route and method.
@@ -188,18 +190,18 @@ def show_welcome_page():
     }
 
 @app.post("/predict")
-def predict(features: dict):
+def predict(prop_features: dict):
     """
     Accepts a JSON description of a property and returns the predicted price per m²
     and the estimated total price.
     """
-    input_df = pd.DataFrame([features])
-    farea = features["farea"]
-    price_sqm = model.predict(input_df.drop(columns="farea"))[0]
-    predicted_price = price_sqm * farea
+    prop_features_df = pd.DataFrame([prop_features])
+    farea = prop_features["farea"]
+    predicted_price_sqm = model.predict(prop_features_df.drop(columns="farea"))[0]
+    predicted_price = predicted_price_sqm * farea
 
     return {
-        "price_sqm": round(float(price_sqm), 2),
+        "predicted_price_sqm": round(float(predicted_price_sqm), 2),
         "predicted_price": round(float(predicted_price), 2),
         "farea": farea,
     }
@@ -227,7 +229,7 @@ To avoid typing everything, here is the list of variables :
 {
     "trans_year": 1000,
     "prop_type": 1,
-    "prop_year_harm": 1000,
+    "prop_year_harm_10": 1000,
     "prop_loc_x": 2.43,
     "prop_loc_y": 47.32, 
     "n_floors": 0,
@@ -252,7 +254,7 @@ To avoid typing everything, here is the list of variables :
   }
 ```
 
-You can now query your API with python's request.
+You can now query your API with python's `request`.
 
 
 ::: {.callout-tip}
@@ -265,7 +267,7 @@ curl -X POST "http://localhost:8000/predict" \
   -d '{
     "trans_year": 1000,
     "prop_type": 1,
-    "prop_year_harm": 1000,
+    "prop_year_harm_10": 1000,
     "prop_loc_x": 2.43,
     "prop_loc_y": 47.32, 
     "n_floors": 0,
@@ -296,10 +298,10 @@ curl -X POST "http://localhost:8000/predict" \
 #| eval: false
 import requests
 
-prop_characteristics = {
+prop_features = {
     "trans_year": 2023,
     "prop_type": 2,
-    "prop_year_harm": 1870,
+    "prop_year_harm_10": 1870,
     "prop_loc_x": 2.3845,
     "prop_loc_y": 48.8830, 
     "n_floors": 6,
@@ -323,13 +325,13 @@ prop_characteristics = {
     "n_otherannex": 0
   }
 
-response = requests.post("http://localhost:8000/predict", json=prop_characteristics)
+response = requests.post("http://localhost:8000/predict", json=prop_features)
 print(response.json())
 ```
 
 Expected output:
 
-```json
+```{.json}
 {
   "price_sqm": 9842.15,
   "predicted_price": 639739.75,
@@ -339,9 +341,9 @@ Expected output:
 
 
 
-## Summary
+# Summary
 
-In this chapter, we have:
+Congrats 🎉! In this section, we have:
 
 - Built a **FastAPI** application that wraps our trained scikit-learn model,
 - Exposed a `/predict` endpoint that returns a predicted `price_sqm` and total `predicted_price`,
