@@ -2,38 +2,38 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://AIML4OS.github.io/funathon-project1/temp/table_dict.html</loc>
-    <lastmod>2026-04-14T16:58:55.984Z</lastmod>
-  </url>
-  <url>
-    <loc>https://AIML4OS.github.io/funathon-project1/doc_projet.html</loc>
-    <lastmod>2026-04-14T16:58:55.979Z</lastmod>
-  </url>
-  <url>
-    <loc>https://AIML4OS.github.io/funathon-project1/4-logging.html</loc>
-    <lastmod>2026-04-14T16:58:55.969Z</lastmod>
-  </url>
-  <url>
-    <loc>https://AIML4OS.github.io/funathon-project1/2-RF_model.html</loc>
-    <lastmod>2026-04-14T16:58:55.969Z</lastmod>
-  </url>
-  <url>
-    <loc>https://AIML4OS.github.io/funathon-project1/1-preprocessing.html</loc>
-    <lastmod>2026-04-14T16:58:55.969Z</lastmod>
-  </url>
-  <url>
-    <loc>https://AIML4OS.github.io/funathon-project1/2-GB_model.html</loc>
-    <lastmod>2026-04-14T16:58:55.969Z</lastmod>
-  </url>
-  <url>
-    <loc>https://AIML4OS.github.io/funathon-project1/3-metrics.html</loc>
-    <lastmod>2026-04-14T16:58:55.969Z</lastmod>
-  </url>
-  <url>
-    <loc>https://AIML4OS.github.io/funathon-project1/5-deployment.html</loc>
-    <lastmod>2026-04-14T16:58:55.969Z</lastmod>
+    <lastmod>2026-04-15T13:10:17.003Z</lastmod>
   </url>
   <url>
     <loc>https://AIML4OS.github.io/funathon-project1/index.html</loc>
-    <lastmod>2026-04-14T16:58:55.979Z</lastmod>
+    <lastmod>2026-04-15T13:10:16.999Z</lastmod>
+  </url>
+  <url>
+    <loc>https://AIML4OS.github.io/funathon-project1/4-logging.html</loc>
+    <lastmod>2026-04-15T13:10:16.989Z</lastmod>
+  </url>
+  <url>
+    <loc>https://AIML4OS.github.io/funathon-project1/2-RF_model.html</loc>
+    <lastmod>2026-04-15T13:10:16.989Z</lastmod>
+  </url>
+  <url>
+    <loc>https://AIML4OS.github.io/funathon-project1/1-preprocessing.html</loc>
+    <lastmod>2026-04-15T13:10:16.989Z</lastmod>
+  </url>
+  <url>
+    <loc>https://AIML4OS.github.io/funathon-project1/2-GB_model.html</loc>
+    <lastmod>2026-04-15T13:10:16.989Z</lastmod>
+  </url>
+  <url>
+    <loc>https://AIML4OS.github.io/funathon-project1/3-metrics.html</loc>
+    <lastmod>2026-04-15T13:10:16.989Z</lastmod>
+  </url>
+  <url>
+    <loc>https://AIML4OS.github.io/funathon-project1/5-deployment.html</loc>
+    <lastmod>2026-04-15T13:10:16.989Z</lastmod>
+  </url>
+  <url>
+    <loc>https://AIML4OS.github.io/funathon-project1/intro_data.html</loc>
+    <lastmod>2026-04-15T13:10:17.000Z</lastmod>
   </url>
 </urlset>
