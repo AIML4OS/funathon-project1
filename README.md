@@ -46,17 +46,17 @@ Key variables include:
 
 | Variable | Description |
 |---|---|
-| `valeurfonc` | Transaction value (target) |
-| `dsupdc` | Floor area (m²) |
-| `dteloc` | Property type (1 = house, 2 = flat) |
-| `depcom` | Municipality code |
-| `x`, `y` | Geographic coordinates |
-| `dnbppr` | Number of main rooms |
-| `dnbcha` | Number of bedrooms |
-| `jannath` | Year of construction |
-| `anneemut` | Year of transaction |
-| `distance_ltm` | Distance to the coastline |
-| `nb_garages`, `nb_piscines`, `nb_terrasses`, ... | Outbuildings and amenities |
+| `price` | Transaction value (target) |
+| `farea` | Floor area (m²) |
+| `prop_type` | Property type (1 = house, 2 = flat) |
+| `prop_loc_citycode` | Municipality code |
+| `prop_loc_x`, `prop_loc_y` | Geographic coordinates |
+| `n_mrooms` | Number of main rooms |
+| `n_slr` | Number of bedrooms |
+| `prop_year_harm` | Year of construction |
+| `trans_year` | Year of transaction |
+| `dist_tosea` | Distance to the coastline |
+| `n_garage`, `n_pool`, `n_terrace`, ... | Outbuildings and amenities |
 
 > See the full variable dictionary in [the dedicated page](intro_data.Qmd).
 
