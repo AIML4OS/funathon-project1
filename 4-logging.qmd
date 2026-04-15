@@ -25,8 +25,7 @@ The MLflow tracking user interface (UI) lets you compare runs, visualize metrics
 
 Don't forget to search in [MLFlow documentation](https://mlflow.org/docs/latest/api_reference/python_api/mlflow.html#) for the functions details you're looking for. 
 
-::: callout-tip
-## <i class="bi bi-book"></i> Exercice 7: Log your RF model with MLflow
+# Exercice 7: Log your RF model with MLflow
 
 In this exercise, you will log the pre-trained RF model step by step, following the structure of the main training script. By the end, every artifact produced during training — figures, parameters, metrics and the model itself — will be registered in MLflow.
 
@@ -272,4 +271,3 @@ Inside an active `mlflow.start_run()` block, you can access the current run via 
 ```
 
 Congrats 🎉! You have logged a complete ML experiment in MLflow: configuration tags, hyperparameters, evaluation metrics, diagnostic figures and the model artifact with its signature. You can now open the MLflow UI to inspect and compare your runs.
-:::
