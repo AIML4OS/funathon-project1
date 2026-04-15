@@ -68,6 +68,8 @@ Save this as `api.py` and run it with:
 uvicorn api:app --reload
 ```
 
+The `--reload` flag restarts the server automatically whenever you save changes to `api.py`, which is very convenient during development.
+
 Then open [http://localhost:8000](http://localhost:8000) in your browser. You should see the JSON response `"Housing price prediction API is running"`.
 
 Without closing the Terminal where the API runs, you can also test the API from the Terminal. 
@@ -140,23 +142,12 @@ We load the model **once at startup**, so that it does not need to be reloaded o
 #| eval: false
 import mlflow.sklearn
 
+MODEL_URI = "runs:/<your_run_id>/model"
 model = mlflow.sklearn.load_model(MODEL_URI)
 ```
 
-::: {.callout-note}
-If you did not complete Part 4, you can also load the model directly from a serialized file using `joblib`:
 
-```python
-import joblib
-model = joblib.load("solution/model.joblib")
-```
-:::
-
-
-
-## Step 5 – Writing the prediction endpoint
-
-We now combine the input schema and the loaded model into a `/predict` endpoint.
+5. We will now write the prediction endpoint. To do so, we will predict and the loaded model into a `/predict` endpoint.
 
 Create a file `api.py` with the following content:
 
@@ -191,41 +182,77 @@ def show_welcome_page():
     """
 
     return {
-        "Message": "API to predict housing price in the Paris region",
-        "Model_name": "Paris ML",
-        "Model_version": "0.1",
+        "message": "API to predict housing price in the Paris region",
+        "model_name": "Paris_ML",
+        "model_version": "0.1",
     }
 
 @app.post("/predict")
-def predict(features):
+def predict(features: dict):
     """
     Accepts a JSON description of a property and returns the predicted price per m²
     and the estimated total price.
     """
     input_df = pd.DataFrame([features])
-    price_sqm = model.predict(input_df)[0]
-    predicted_price = price_sqm * features.farea
+    farea = features["farea"]
+    price_sqm = model.predict(input_df.drop(columns="farea"))[0]
+    predicted_price = price_sqm * farea
 
     return {
         "price_sqm": round(float(price_sqm), 2),
         "predicted_price": round(float(predicted_price), 2),
-        "farea": features.farea,
+        "farea": farea,
     }
 ```
 
 
 
-## Step 6 – Running the API locally
+6. We will check that the API runs locally. Predict the price of a property with the following characteristics using python's `requests` : 
+- a flat (prop_type: 2):
+  - a floor area of 65m²;
+  - one shower;
+  - one WC;
+  - 3 main rooms : 2 sleeping rooms, 1 small kitchen (it's Paris); 
+  - on the third floor; 
+  - with one terrace, one attic and one basement;
+- the building: 
+  - is located at 85, Rue Manin 75019 Paris (look up the latitude and longitude);
+  - has been built in 1870;
+  - has 6 floors. 
 
-Start the server with:
+To avoid typing everything, here is the list of variables : 
 
-```{.bash filename="terminal"}
-uvicorn api:app --reload --port 8000
+
+```{.python}
+{
+    "trans_year": 1000,
+    "prop_type": 1,
+    "prop_year_harm": 1000,
+    "prop_loc_x": 2.43,
+    "prop_loc_y": 47.32, 
+    "n_floors": 0,
+    "n_bath": 0,
+    "n_show": 0,
+    "n_sink": 0,
+    "n_wc": 0,
+    "n_mrooms": 0,
+    "n_eatr": 0,
+    "n_slr": 0,
+    "n_kit8": 0,
+    "n_kit9": 0,
+    "n_washr": 0,
+    "n_ancrooms": 0,
+    "n_rooms": 0, 
+    "farea": 0,
+    "nth_floor": 0,
+    "n_terrace": 0,
+    "n_attic": 0,
+    "n_basmt": 0,
+    "n_otherannex": 0
+  }
 ```
 
-The `--reload` flag restarts the server automatically whenever you save changes to `api.py`, which is very convenient during development.
-
-You can now query your API with python's request :
+You can now query your API with python's request.
 
 
 ::: {.callout-tip}
@@ -236,32 +263,29 @@ You can also quesry the API using the swagger that FastAPI builds or use a `curl
 curl -X POST "http://localhost:8000/predict" \
   -H "Content-Type: application/json" \
   -d '{
-    "trans_year": 2020,
+    "trans_year": 1000,
     "prop_type": 1,
-    "prop_year_harm": 1985,
-    "prop_loc_dep": "75",
-    "prop_loc_citycode": "75056",
-    "prop_loc_x": 2.347,
-    "prop_loc_y": 48.859,
-    "dist_tosea": 10000,
-    "n_floors": 7,
-    "n_bath": 1,
-    "n_show": 1,
-    "n_sink": 1,
-    "n_wc": 1,
-    "n_mrooms": 3,
-    "n_eatr": 1,
-    "n_slr": 2,
-    "n_kit8": 1,
+    "prop_year_harm": 1000,
+    "prop_loc_x": 2.43,
+    "prop_loc_y": 47.32, 
+    "n_floors": 0,
+    "n_bath": 0,
+    "n_show": 0,
+    "n_sink": 0,
+    "n_wc": 0,
+    "n_mrooms": 0,
+    "n_eatr": 0,
+    "n_slr": 0,
+    "n_kit8": 0,
     "n_kit9": 0,
-    "n_washr": 1,
+    "n_washr": 0,
     "n_ancrooms": 0,
-    "n_rooms": 4,
-    "farea": 65,
-    "nth_floor": 2,
+    "n_rooms": 0,
+    "farea": 0, 
+    "nth_floor": 0,
     "n_terrace": 0,
     "n_attic": 0,
-    "n_basmt": 1,
+    "n_basmt": 0,
     "n_otherannex": 0
   }'
 ```
@@ -272,22 +296,19 @@ curl -X POST "http://localhost:8000/predict" \
 #| eval: false
 import requests
 
-payload = {
-    "trans_year": 2020,
-    "prop_type": 1,
-    "prop_year_harm": 1985,
-    "prop_loc_dep": "75",
-    "prop_loc_citycode": "75056",
-    "prop_loc_x": 2.347,
-    "prop_loc_y": 48.859,
-    "dist_tosea": 10000,
-    "n_floors": 7,
-    "n_bath": 1,
+prop_characteristics = {
+    "trans_year": 2023,
+    "prop_type": 2,
+    "prop_year_harm": 1870,
+    "prop_loc_x": 2.3845,
+    "prop_loc_y": 48.8830, 
+    "n_floors": 6,
+    "n_bath": 0,
     "n_show": 1,
     "n_sink": 1,
     "n_wc": 1,
     "n_mrooms": 3,
-    "n_eatr": 1,
+    "n_eatr": 0,
     "n_slr": 2,
     "n_kit8": 1,
     "n_kit9": 0,
@@ -295,14 +316,14 @@ payload = {
     "n_ancrooms": 0,
     "n_rooms": 4,
     "farea": 65,
-    "nth_floor": 2,
-    "n_terrace": 0,
-    "n_attic": 0,
+    "nth_floor": 3,
+    "n_terrace": 1,
+    "n_attic": 1,
     "n_basmt": 1,
-    "n_otherannex": 0,
-}
+    "n_otherannex": 0
+  }
 
-response = requests.post("http://localhost:8000/predict", json=payload)
+response = requests.post("http://localhost:8000/predict", json=prop_characteristics)
 print(response.json())
 ```
 
