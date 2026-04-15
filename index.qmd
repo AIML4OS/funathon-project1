@@ -105,7 +105,7 @@ In-depth details about the data is presented in the [dedicated page](intro_data.
 
 ## Initialize your MLFlow service
 
-Launch a MLflow service by clicking on [this URL](https://datalab.sspcloud.fr/launcher/automation/mlflow?autoLaunch=true) with your Onyxia account opened.
+Launch a MLflow service by clicking on the below button with your Onyxia account opened: <a href="https://datalab.sspcloud.fr/launcher/automation/mlflow?autoLaunch=true" target="_blank" rel="noopener"><img src="https://custom-icon-badges.demolab.com/badge/SSP%20Cloud-Launch_MLFlow-blue?logo=mlflow&logoColor=white" alt="Onyxia"/></a>
 
 ## Fork the project with `Git` {{< fa brands git-alt >}}
 
@@ -117,7 +117,7 @@ First, you need to fork the funathons's project on Github by clicking on [this l
 ## Open a VS Code on SSPCloud
 
 
-To launch the project, open a VS Code service with the following button : <a href="https://datalab.sspcloud.fr/launcher/ide/vscode-python?name=AIML4OS-funathon-project1&version=2.5.5&s3=region-79669f20&git.cache=«5000»&networking.user.enabled=true&autoLaunch=true" target="_blank" rel="noopener"><img src="https://custom-icon-badges.demolab.com/badge/SSP%20Cloud-Launch_with_VSCode-blue?logo=vsc&amp;logoColor=white" alt="Onyxia"/></a>.
+To launch the project, open a VS Code service with the following button: <a href="https://datalab.sspcloud.fr/launcher/ide/vscode-python?name=AIML4OS-funathon-project1&version=2.5.5&s3=region-79669f20&git.cache=«5000»&networking.user.enabled=true&autoLaunch=true" target="_blank" rel="noopener"><img src="https://custom-icon-badges.demolab.com/badge/SSP%20Cloud-Launch_with_VSCode-blue?logo=vsc&amp;logoColor=white" alt="Onyxia"/></a>.
 
 In the VS Code service, open a terminal (`CTRL` + `MAJ` + `C` or in the file menu go to `Terminal > New Terminal`). Clone the project repository with the following command after replacing `OWNER_NAME` with your name on Github from the previous step:
 
