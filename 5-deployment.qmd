@@ -16,22 +16,12 @@ In this chapter, we build a local **REST API** using [FastAPI](https://fastapi.t
 
 The overall architecture we are aiming for:
 
-```
-Client (browser / script)
-        │
-        │  HTTP POST  /predict
-        ▼
-  ┌─────────────┐
-  │  FastAPI    │  ← loads model once at startup
-  │  (uvicorn)  │
-  └──────┬──────┘
-         │  calls
-         ▼
-  scikit-learn pipeline
-  (HistGradientBoostingRegressor)
-         │
-         ▼
-    predicted price (€)
+```{mermaid}
+graph TD
+    Client["Client (browser / script)"] -->|HTTP POST /predict| FastAPI["FastAPI (uvicorn)"]
+    ModelLoad["loads model once at startup"] --> FastAPI
+    FastAPI -->|calls| Model["scikit-learn pipeline (HistGradientBoostingRegressor)"]
+    Model -->|predicts| Output["predicted price (€)"]
 ```
 
 ::: {.callout-note}
