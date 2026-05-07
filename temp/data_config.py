@@ -11,6 +11,31 @@ fs = s3fs.S3FileSystem(client_kwargs={'endpoint_url': S3_ENDPOINT_URL})
 
 
 # %%
+
+def data_fr_raw_to_en(file_names_list, mapping, file_out_name):
+    BUCKET = "projet-funathon"
+    list_df = []
+    cols_to_keep = list(mapping_fr_en.keys())
+
+    for file_name in file_names_list:
+        FILE_PATH_S3 = BUCKET + "/" + "2026/project1/data/raw/" + file_name
+
+        with fs.open(FILE_PATH_S3, mode="rb") as file_in:
+            df_raw = pd.read_parquet(file_in)
+        
+        list_df.append(df_raw[cols_to_keep])
+
+    df_en = pd.concat(list_df)
+    df_en = df_en.rename(columns=mapping)
+
+    FILE_PATH_OUT_S3 = "s3://" + BUCKET + "/2026/project1/data/" + file_out_name
+
+    df_en.to_parquet(FILE_PATH_OUT_S3)
+
+    return df_en
+
+
+# %%
 mapping_fr_en = {
   "datemut":"trans_date",
   "anneemut":"trans_year",
@@ -19,7 +44,7 @@ mapping_fr_en = {
   "dteloc":"prop_type",
   "jannath":"prop_year_harm",
   "ccodep":"prop_loc_dep",
-  "depcom":"prop_loc_",
+  "depcom":"prop_loc_citycode",
   "x":"prop_loc_x",
   "y":"prop_loc_y",
   "distance_ltm":"dist_tosea",
@@ -56,32 +81,7 @@ mapping_fr_en = {
   "nb_caves":"n_basmt",
   "nb_autresdep":"n_otherannex", 
   "predicted_price":"predicted_price"}
-
-
-def data_fr_raw_to_en(file_names_list, mapping, file_out_name):
-    BUCKET = "projet-funathon"
-    list_df = []
-    cols_to_keep = list(mapping_fr_en.keys())
-
-    for file_name in file_names_list:
-        FILE_PATH_S3 = BUCKET + "/" + "2026/project1/data/raw/" + file_name
-
-        with fs.open(FILE_PATH_S3, mode="rb") as file_in:
-            df_raw = pd.read_parquet(file_in)
-        
-        list_df.append(df_raw[cols_to_keep])
-
-    df_en = pd.concat(list_df)
-    df_en = df_en.rename(columns=mapping)
-
-    FILE_PATH_OUT_S3 = "s3://" + BUCKET + "/2026/project1/data/" + file_out_name
-
-    df_en.to_parquet(FILE_PATH_OUT_S3)
-
-    return df_en
-
-
-# %%
+  
 data_fr_raw_to_en(
     ["transactions_houses_FR_raw.parquet", "transactions_flats_FR_raw.parquet"], 
     mapping_fr_en, 
