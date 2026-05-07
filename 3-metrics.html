@@ -232,6 +232,7 @@ window.Quarto = {
   <li><a href="#exercice-10-compute-evaluation-metrics" id="toc-exercice-10-compute-evaluation-metrics" class="nav-link" data-scroll-target="#exercice-10-compute-evaluation-metrics"><span class="header-section-number">2.1</span> Exercice 10: Compute evaluation metrics</a></li>
   <li><a href="#exercice-11-generate-diagnostic-plots" id="toc-exercice-11-generate-diagnostic-plots" class="nav-link" data-scroll-target="#exercice-11-generate-diagnostic-plots"><span class="header-section-number">2.2</span> Exercice 11: Generate diagnostic plots</a></li>
   </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">3</span> Summary</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/AIML4OS/funathon-project1/edit/main/3-metrics.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/AIML4OS/funathon-project1/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -272,9 +273,7 @@ window.Quarto = {
 <li><strong>Choose RMSE</strong> when large errors are particularly costly and you want the metric to reflect this (e.g.&nbsp;a prediction off by 2000 €/m² is much worse than being off by 200 €/m² twice);</li>
 <li><strong>Choose MAE</strong> when you want a robust, interpretable measure of typical error that is less dominated by a few extreme observations.</li>
 </ul>
-<blockquote class="blockquote">
-<p>Note : Be careful : you can compare different models based on their MAE, MSE and RMSE metrics but only <strong>if the metrics are calculated on exactly the same test set</strong>.</p>
-</blockquote>
+<p>Be careful when you can compare different models : you can compare them based on their MAE, MSE and RMSE metrics but only <strong>if the metrics are calculated on exactly the same test set</strong>.</p>
 <p><strong>Mean Absolute Percentage Error (MAPE)</strong> : <span class="math display">\[\text{MAPE} = \frac{1}{n}\sum_{i=1}^{n}\left|\frac{y_i - \hat{y}_i}{y_i}\right| \times 100\]</span> MAPE expresses errors as a percentage of the actual value, making it scale-free and immediately interpretable for non-technical stakeholders. However, MAPE is undefined when <span class="math inline">\(y_i = 0\)</span> and is biased towards underpredictions (a 100% overestimation and a 100% underestimation are not symmetrically penalized). For real-estate prices, where the target is always strictly positive, MAPE is a natural complement to RMSE. For example, a MAPE of 12% means the model is off by 12% of the actual price on average.</p>
 <p><strong>Coefficient of Determination (R²)</strong> : <span class="math display">\[R^2 = 1 - \frac{\text{SS}_\text{res}}{\text{SS}_\text{tot}} = 1 - \frac{\displaystyle\sum_{i=1}^{n}(y_i - \hat{y}_i)^2}{\displaystyle\sum_{i=1}^{n}(y_i - \bar{y})^2}\]</span> where <span class="math inline">\(\bar{y}\)</span> is the mean of the actual values.</p>
 <p>R² measures the proportion of variance in the target that is explained by the model. It is scale-free:</p>
@@ -327,7 +326,7 @@ window.Quarto = {
 <ol start="0" type="1">
 <li>Load the RF and GB models</li>
 </ol>
-<div id="e2559f04" class="cell" data-execution_count="1">
+<div id="e1ddec75" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># best RF</span></span>
@@ -340,7 +339,7 @@ window.Quarto = {
 <ol type="1">
 <li>Generate predictions on the test set using the best RF model from Exercise 5 and compute the residuals.</li>
 </ol>
-<div id="2a7bd4b3" class="cell" data-execution_count="2">
+<div id="b758a6fe" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># best RF</span></span>
@@ -368,11 +367,11 @@ window.Quarto = {
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Import <code>root_mean_squared_error</code>, <code>mean_absolute_error</code> and <code>r2_score</code> from <code>sklearn.metrics</code>. You can see the documentation of <code>sklearn.metrics</code> <a href="https://scikit-learn.org/stable/api/sklearn.metrics.html">here</a>.</p>
-<p>You can use the function <code>print-metrics</code> make in last section on <em>GB model</em>.</p>
+<p>You can use the function <code>print-metrics</code> made in the last section on <em>GB model</em>.</p>
 </div>
 </div>
 </div>
-<div id="ecd985cf" class="cell" data-execution_count="3">
+<div id="782f3f91" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> root_mean_squared_error, mean_absolute_error, r2_score</span>
@@ -415,7 +414,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="c2423845" class="cell" data-execution_count="4">
+<div id="f0f28fa0" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Disponible à partir de scikit-learn &gt;= 0.24</span></span>
@@ -450,7 +449,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="34f1ad40" class="cell" data-execution_count="5">
+<div id="9d97bdeb" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -486,7 +485,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="e56808a4" class="cell" data-execution_count="6">
+<div id="54d4de5b" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
@@ -498,7 +497,7 @@ window.Quarto = {
 <ol start="3" type="1">
 <li>Write a <code>QQplot(y_test, y_pred)</code> function which computes 1000 quantile points for both series and plots them against each other. The parameters are <code>y_test</code>, <code>y_pred</code>, pandas series of observed and predicted target and the same parameters that question 1. for overlay plotting. The function should return the plot.</li>
 </ol>
-<div id="cca385a6" class="cell" data-execution_count="7">
+<div id="0225dcd0" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -545,7 +544,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="fc9217cb" class="cell" data-execution_count="8">
+<div id="a8005bd3" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
@@ -560,7 +559,7 @@ window.Quarto = {
 <ol start="5" type="1">
 <li>Define a <code>target_distribution()</code> function to plot the distribution of the parameter <code>y</code>, a pandas Serie.</li>
 </ol>
-<div id="9f283fae" class="cell" data-execution_count="9">
+<div id="069252c1" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> target_distribution(y: pd.Series):</span>
@@ -594,7 +593,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="0f1e08cd" class="cell" data-execution_count="10">
+<div id="7cea7b4a" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fig_actual <span class="op">=</span> target_distribution(y_test)</span>
@@ -621,7 +620,7 @@ Tip
 </div>
 <div class="callout-body-container callout-body">
 <p>If you want to plot both plots on a single figure, you can adapt the function :</p>
-<div id="040fb26d" class="cell" data-execution_count="11">
+<div id="03fb8131" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_combined_distribution(y_test: pd.Series, y_pred: pd.Series, ax<span class="op">=</span><span class="va">None</span>, label<span class="op">=</span><span class="va">None</span>, color<span class="op">=</span><span class="va">None</span>, show_actual<span class="op">=</span><span class="va">True</span>):</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Plots the target distributions of actual and predicted values on the same graph.</span></span>
@@ -655,9 +654,7 @@ Tip
 <ol start="7" type="1">
 <li>(Only for RF model) Write a <code>calculate_importance(X_test, y_test, RANDOM_STATE, rf_best, SCORING)</code> function, which returns a sorted Series of importance scores with features name as index. The parameters are the test set (<code>X_test</code> and <code>y_test</code>), the RF model <code>rf_best</code> trained in last section and the scoring chosen for the impurity reduction.</li>
 </ol>
-<blockquote class="blockquote">
-<p>Note: Permutation importance is computationally expensive on a large test set. The <code>calculate_importance()</code> function automatically subsamples up to 100,000 observations before computing importance scores. This subsample does not change the result.</p>
-</blockquote>
+<p>Note that permutation importance is computationally expensive on a large test set. The <code>calculate_importance()</code> function automatically subsamples up to 100,000 observations before computing importance scores. This subsample does not change the result.</p>
 <div class="callout callout-style-default callout-tip callout-titled" title="Hint">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -674,7 +671,7 @@ Tip
 </div>
 </div>
 </div>
-<div id="0b109c10" class="cell" data-execution_count="12">
+<div id="3deb8a09" class="cell" data-execution_count="12">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.inspection <span class="im">import</span> permutation_importance</span>
@@ -701,7 +698,7 @@ Tip
 <ol start="8" type="1">
 <li>Write a <code>permutation_importance()</code> function to plot the bar chart of features importance.</li>
 </ol>
-<div id="8cb11553" class="cell" data-execution_count="13">
+<div id="d87ee73b" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> importance_plot(importances):</span>
@@ -737,7 +734,7 @@ Tip
 </div>
 </div>
 </div>
-<div id="8813de6d" class="cell" data-execution_count="14">
+<div id="48e60533" class="cell" data-execution_count="14">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>score <span class="op">=</span> <span class="st">"r2"</span></span>
@@ -748,10 +745,21 @@ Tip
 <span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<p>Congrats 🎉! You now have a complete evaluation pipeline: scalar metrics, residual diagnostics, distributional analysis, feature importance and a head-to-head model comparison. These steps form the foundation of any rigorous model validation workflow.</p>
-
-
 </section>
+</section>
+<section id="summary" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Summary</h1>
+<p>Congrats 🎉! In this section, you have a complete evaluation pipeline:</p>
+<ul>
+<li>scalar metrics,</li>
+<li>residual diagnostics,</li>
+<li>distributional analysis,</li>
+<li>feature importance,</li>
+<li>and a head-to-head model comparison.</li>
+</ul>
+<p>These steps form the foundations of any rigorous model validation workflow, well done ! You can now have a look at <a href="./4-logging.html">how to log a model</a> to avoid being lost between different models and having to train again a model.</p>
+
+
 </section>
 
 </main> <!-- /main -->
