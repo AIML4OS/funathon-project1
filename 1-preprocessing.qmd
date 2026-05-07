@@ -239,9 +239,10 @@ plt.tight_layout()
 plt.show()
 ```
 
-By looking at the graph, we see that the left tail gets bigger the closer we are to price going to 0.
-It may indicate an issue with data around these points.
-By looking at this phenomena closer, we can see that a threshold of €100, €200 or €300 would filter out these issues.
+The graph is quite clean because the data are synthetic and cleaner than the original data. 
+But with original data, we would have seen that the left tail gets bigger the closer we are to 0.
+It may indicate an issue with data around these points and the need to apply a filter for values that are too low.
+We will set a price ceiling of 100€ to micmic original issue, even if with the synthethic data it's not warranted.    
 
 The second step is to apply some statistic methods.
 For example, we can use the **Interquartile Range (IQR)** *to remove outlier target values*.
