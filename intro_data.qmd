@@ -63,11 +63,8 @@ If you want to have a closer look at the data, CEREMA publishes on [its website]
 |  40 | s_land_nat              | Natural land area (square meters)                           | Natural land is land that has not been altered. This includes, for example, forests.           | dcntnat       |
 |  41 | stair                   | If the building of the flat has stairs (for flats only)     | The modalities are coded in the following way : <br> - `0` : `No` <br> - `1` : `Missing value` <br> - `2` : `Yes`                       | gesclc        |
 |  42 | trans_date              | Date of the official certified transaction                  |                           | datemut       |
-|  43 | trans_id                | Unique identifier code of the transaction                   |                           | idmutation    |
-|  44 | trans_month             | Month of the official certified transaction                 |                           | moismut       |
-|  45 | trans_type_code         | Type of transaction| There are several types of transaction in the original data (sale, off-plan sale, sale of building land, tender, compulsory purchase). Original data have been filtered to keep only sale.                   | idnatmut      |
-|  46 | trans_type_label        | Type of transaction|                           | libnatmut     |
-|  47 | trans_year              | Year of the official certified transaction                  |                           | anneemut      |
+|  43 | trans_month             | Month of the official certified transaction                 |                           | moismut       |
+|  44 | trans_year              | Year of the official certified transaction                  |                           | anneemut      |
 
 See [CEREMA's documentation (in French)](https://doc-datafoncier.cerema.fr/doc/ff/pb0010_local) for a more detailled description.
 
