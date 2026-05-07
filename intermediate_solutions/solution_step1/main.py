@@ -1,367 +1,176 @@
 
 # ============================================
 # STEP 1 — Data exploration
-#
 # ============================================
+3 %%
+## ============================================
+# Exercice 1 -Import data and calculate price per sqm for Paris region
+# ## ============================================
 
-# YOUR CODE HERE
-# %%
-import polars as pl
-import plotnine as p9
-from datetime import datetime, timedelta
-import seaborn as sns
-
-pl.Config.set_tbl_cols(-1)  # show all columns
-pl.Config.set_tbl_rows(50)  # show 20 rows
-# %%
-data = pl.read_parquet('s3://confpns/synthetic-transactions/rawdata/transactions/transactions_flats_final.parquet')
-
-# %%
-
-data_h = pl.read_parquet("s3://confpns/synthetic-transactions/rawdata/transactions/transactions_houses_final.parquet")
-
-# %%
-if data.columns == data_h.columns:
-    data_all = pl.concat([data, data_h])
-# %%
-#| label: paris_transactions_all_plot
-(
-    p9.ggplot(
-        data.select(["prop_loc_dep", "x", "y", "price"]).with_columns(
-                price_log=pl.col("price").log(base=10)
-            ).filter(pl.col("prop_loc_dep")=="75"),
-        p9.aes("x","y", colour="price_log")
-    ) +
-    p9.geom_point(size=0.05)+
-    p9.theme_matplotlib() +
-    p9.ggtitle("Localization of transactions (flat+houses) in Paris with price")
-)
-
-# %%
-#| label: all_transactions_plot
-(
-    p9.ggplot(
-        data_all.select(["x", "y"]),
-        p9.aes("x","y")
-    ) +
-    p9.geom_point(size=0.01)+
-    p9.theme_matplotlib() +
-    p9.ggtitle("Localization of transactions (flat+houses) in France since 2010")
-)
-# %%
-#| label: all_transactions_plot_hexag
-(
-    p9.ggplot(
-        data_all.select(["x", "y"])
-        .filter(
-            pl.col("x") >= -5,
-            pl.col("x") <= 20,
-            pl.col("y") >= 30,
-            pl.col("y") <= 60
-        ),
-        p9.aes("x","y")
-    ) +
-    p9.geom_point(size=0.01)+
-    p9.theme_matplotlib() +
-    p9.ggtitle("Localization of transactions (flat+houses) in France hexag since 2010")
-)
-
-
-# %%
-# Retrouver la mutation 
-# data_h.filter(
-#             pl.col("trans_id")=="DVF+_6242255"
-#             ).glimpse()
-
-
-# %%
-def analyse_colonnes(df: pl.DataFrame) -> pl.DataFrame:
-    """
-    Retourne un DataFrame avec pour chaque colonne :
-    - Nom, type, statistiques de valeurs (nulles, NaN, manquantes, valides)
-    - Médiane (numérique), mode (string), date moyenne (date)
-    - Min, max
-    """
-    resultats = []
-
-    for col in df.columns:
-        serie = df[col]
-        n_total = len(serie)
-        n_null = serie.null_count()
-
-        # Calcul des NaN (spécifique aux float)
-        n_nan = 0
-        if serie.dtype in (pl.Float32, pl.Float64):
-            n_nan = serie.is_nan().sum()
-        n_valid = n_total - n_null - n_nan
-
-        # Calcul de la médiane, mode, min, max, ou date moyenne
-        if serie.dtype in (pl.Int8, pl.Int16, pl.Int32, pl.Int64, pl.Float32, pl.Float64):
-            median = f'{serie.median():.2f}'
-            val_min = f'{serie.min():.2f}'
-            val_max = f'{serie.max():.2f}'
-            val_001 = f'{serie.quantile(0.001):.2f}'
-            val_01 = f'{serie.quantile(0.01):.2f}'
-            val_05 = f'{serie.quantile(0.05):.2f}'
-            val_25 = f'{serie.quantile(0.25):.2f}'
-            val_75 = f'{serie.quantile(0.75):.2f}'
-            val_95 = f'{serie.quantile(0.95):.2f}'
-            val_99 = f'{serie.quantile(0.99):.2f}'
-            val_999 = f'{serie.quantile(0.999):.2f}'
-        elif serie.dtype == pl.Date:
-            median = serie.median()
-            val_min = serie.min()
-            val_max = serie.max()
-            val_001 = "."
-            val_01 = "."
-            val_05 = "."
-            val_25 = "."
-            val_75 = "."
-            val_95 = "."
-            val_99 = "."
-            val_999 = "."
-            # Calcul de la date moyenne
-            dates = serie.drop_nulls().to_list()
-            if dates:
-                avg_date = sum((d - datetime.min.date()).days for d in dates) / len(dates)
-                median = datetime.min.date() + timedelta(days=avg_date)
-            else:
-                median = "."
-        else:  # Strings, booléens, etc.
-            median = serie.mode().first()
-            val_min = serie.min()
-            val_max = serie.max()
-            val_001 = "."
-            val_01 = "."
-            val_05 = "."
-            val_25 = "."
-            val_75 = "."
-            val_95 = "."
-            val_99 = "."
-            val_999 = "."
-
-        resultats.append({
-            "colonne": col,
-            "type": str(serie.dtype),
-            "total": n_total,
-            "nulls": n_null,
-            "NaN": n_nan,
-            "valid": n_valid,
-            "min": str(val_min),
-            "0.1%": val_001, 
-            "1%": val_01, 
-            "5%": val_05, 
-            "25%": val_25, 
-            "median/mode": str(median),
-            "75%": val_75, 
-            "95%": val_95, 
-            "99%": val_99, 
-            "99.9%": val_999, 
-            "max": str(val_max)
-        })
-
-    return pl.DataFrame(resultats)
-
-
-#%%
-descr_df = analyse_colonnes(data_all)
-#%%
-print(descr_df)
-
-
-# %%
-# print(descr_df.to_pandas().to_markdown(index=False))
-
-# %%
-#| label: stat_des_plot
-# Reshape the data for plotting
-descr_df_long = (
-    descr_df
-    .filter(
-        pl.col("type") != "String",
-        pl.col("type") != "Date", 
-        pl.col("max").str.len_chars() <= 5  # keeping only var with max <100
-    )
-    .unpivot(
-    index='colonne',
-    on=['min', '1%','5%', '25%', 'median/mode', '75%', '95%', '99%', 'max'],
-    variable_name='statistic',
-    value_name='value'
-    )
-    .cast({"value":pl.Float32})
-    .filter(
-        pl.col("colonne") != "x",
-        pl.col("colonne") != "y",
-        pl.col("colonne") != "trans_type_code",
-        pl.col("colonne") != "trans_month"
-    )
-)
-# %%
-#| label: stat_des_plot
-# Create the plot
-(
-    p9.ggplot(p9.aes(colour="statistic")) +
-    p9.geom_point(
-        descr_df_long.filter(pl.col('statistic') == 'min'),
-        p9.aes(x='colonne', y='value')
-    ) +
-    p9.geom_point(
-        descr_df_long.filter(pl.col('statistic') == '1%'),
-        p9.aes(x='colonne', y='value')
-    ) +    
-    p9.geom_point(
-        descr_df_long.filter(pl.col('statistic') == '5%'),
-        p9.aes(x='colonne', y='value')
-    ) +    
-    p9.geom_segment(
-        descr_df_long.filter(pl.col('statistic') == '25%'),
-        p9.aes(
-            x='colonne', 
-            y='value', 
-            xend='colonne', 
-            yend=descr_df_long.filter(pl.col('statistic') == '75%')['value']
-            ),
-            color="black"
-    ) + 
-    p9.geom_point(
-        descr_df_long.filter(pl.col('statistic') == '25%'),
-        p9.aes(x='colonne', y='value')
-    ) + 
-    p9.geom_point(
-        descr_df_long.filter(pl.col('statistic') == 'median/mode'),
-        p9.aes(x='colonne', y='value')
-    ) + 
-    p9.geom_point(
-        descr_df_long.filter(pl.col('statistic') == '75%'),
-        p9.aes(x='colonne', y='value')
-    ) + 
-    p9.geom_point(
-        descr_df_long.filter(pl.col('statistic') == '95%'),
-        p9.aes(x='colonne', y='value')
-    ) + 
-    p9.geom_point(
-        descr_df_long.filter(pl.col('statistic') == '99%'),
-        p9.aes(x='colonne', y='value')
-    ) +
-    p9.coord_flip() +
-    p9.theme_matplotlib()
-)
-
-
-# %%
-# Variable to keep
-col_to_keep = (
-    pl.from_dicts(
-        [{"trans_id":0,"trans_date":0,"trans_year":0,"trans_month":0,"trans_type_code":0,
-        "trans_type_label":0,"price":0,"prop_type":0,"prop_year_harm":0,"prop_loc_dep":0,
-        "prop_loc_citycode":0,"prop_loc_x":0,"prop_loc_y":0,"dist_tosea":0,"dist_tosea_corr":0,
-        "n_floors":1,"n_bath":1,"n_show":1,"n_sink":1,"n_wc":1,"n_mrooms":1,
-        "n_eatr":1,"n_slr":1,"n_kit8":1,"n_kit9":1,"n_washr":1,"n_ancrooms":1,
-        "n_rooms":1,"farea":1,"has_water":0,"has_elec":0,"stair":0,"has_gas":0,
-        "has_elevator":0,"has_cheating":0,"has_rchute":0,"has_mdrainage":0,"nth_floor":1,"s_land_artif":1,
-        "s_land_agri":1,"s_land_nat":1,"n_garage":1,"n_pool":1,
-        "n_terrace":1,"n_attic":1,"n_basmt":1,"n_otherannex":1}]
-    )
-    .unpivot()
-    .filter(pl.col("value") == 1)
-    .select("variable")
-    .to_series()
-    .to_list()
-)
-col_to_keep
-# %%
-#| label : stat_des_details_flat
-(
-    p9.ggplot(
-        data
-        .select(col_to_keep)
-        .unpivot()
-        .group_by("variable", "value")
-        .agg((pl.len()/1000000).alias("count"))
-        .filter(pl.col("value")<10)
-        .cast({"value":pl.String}),
-        p9.aes(y="count", x="variable", fill="value")
-    ) +
-    p9.geom_col(position=p9.position_stack(reverse=True)) +
-    p9.theme_minimal() +
-    p9.coord_flip()
-)
-
-# %%
-#| label: stat_des_details_surf_flat_num
-# (
-#     data
-#         .select([
-#             "s_land_artif",
-#             "s_land_nat",
-#             "s_land_agri"
-#         ])
-#         .unpivot()
-#         .group_by("variable", "value")
-#         .agg(pl.len())
-#         .filter(pl.col("value")<10)
-#         .sort("variable", "value")
-# )
-# %%
-#| label : stat_des_details_surf_flat_plot
-
-(
-    p9.ggplot(
-        data
-        .select([
-            "s_land_artif",
-            "s_land_nat",
-            "s_land_agri"
-        ])
-        .unpivot()
-        .filter(pl.col("value")>0),
-        p9.aes("value")
-    ) +
-    p9.geom_histogram(bins = 25, fill='skyblue', color='black')  +
-    p9.facet_wrap('~variable', scales='free') +
-    p9.theme_minimal()
-)
-
-
-# %%
-# Plot price (log) - seems ok 
-(
-    p9.ggplot(data.with_columns(
-                price_log=pl.col("price").log(base=10)
-            ).select(["price_log"]).unpivot(value_name="log_price"), 
-            p9.aes(x='log_price')
-    ) +
-    p9.geom_histogram(bins = 100, fill='skyblue', color='black') +
-    p9.facet_grid('~variable', scales='free') +
-    p9.theme_minimal()
-)
-# %%
-#|: label : stat_des_some_vars_pairplot
-sns.pairplot(
-    data=data_all.sample(1000).select(["prop_type", "n_mrooms", "farea", "n_slr", pl.col("price").log().floor(), "n_pool"]).cast({"prop_type":pl.Int32}).to_pandas(),
-    vars=["prop_type", "n_mrooms", "farea", "n_slr","n_pool"],
-    hue="price",
-)
-matplotlib.pyplot.show()
-# %%
-data.len()
-# %%
-#| label: stat_des75_pandas
-# %%
-import matplotlib.pyplot as plt
+import duckdb
+import os
 import pandas as pd
 
-ax = data_75.hist(log=True, figsize=(12, 10), xlabelsize=8,    # x-axis label size
-    ylabelsize=8)
+# Create a non-persistent connection (the database exists only while the connection is alive and disappears when it is closed)
+con = duckdb.connect(database=":memory:")
 
-# Set label sizes for all subplots
-for axes in ax.flatten():
-    axes.tick_params(axis='both', labelsize=8)  # Tick labels
-    axes.set_xlabel(axes.get_xlabel(), fontsize=8)  # x-axis label
-    axes.set_ylabel(axes.get_ylabel(), fontsize=8)  # y-axis label
-    axes.set_title(axes.get_title(), fontsize=8)    # Subplot title
+# You need to create a secret table with all the S3 credentials
+con.execute(
+    f"""
+CREATE SECRET secret_s3 (
+    TYPE S3,
+    KEY_ID '{os.environ["AWS_ACCESS_KEY_ID"]}',
+    SECRET '{os.environ["AWS_SECRET_ACCESS_KEY"]}',
+    ENDPOINT '{os.environ["AWS_S3_ENDPOINT"]}',
+    SESSION_TOKEN '{os.environ["AWS_SESSION_TOKEN"]}',
+    REGION 'eu-west-1',
+    URL_STYLE 'path',
+    SCOPE 's3://projet-funathon/'
+);
+"""
+)
+RANDOM_STATE=202605
 
-plt.subplots_adjust(wspace=0.3, hspace=0.5)
+# We load all transactions made in France between 2010 and 2022
+trans = con.sql(
+    """
+        SELECT * FROM read_parquet('s3://projet-funathon/2026/project1/data/transactions_EN.parquet')
+    """).to_df()
 
-plt.suptitle("Custom Histogram", fontsize=12)  # Main title
-plt.show()
+# Filtering Paris region
+trans = trans[trans["prop_loc_dep"].isin(["75", "77", "78", "91", "92", "93", "94", "95"])]
+trans["price_sqm"] = trans["price"] / trans["farea"]
+
+# %%
+## ============================================
+# Exercice 2 - Data exploration
+# ## ============================================
+trans = trans[(trans["price_sqm"] < 200000) & (trans["price_sqm"] > 100)]
+
+# Apply IQR methods for the outlier removal
+def outlier_transform(y, lower=0.1, upper=0.9):
+    """
+    Transform Y target to log(Y) and remove outliers with IQR method
+
+    Args :
+        y : target
+        lower: lower quantile for the IQR
+        upper: upper quantile for the IQR
+    """
+    Q_lower = np.quantile(y, lower)
+    Q_upper = np.quantile(y, upper)
+    IQR = Q_upper - Q_lower
+
+    mask = (y >= Q_lower - 1.5 * IQR) & (y <= Q_upper + 1.5 * IQR)
+    return mask
+
+mask = outlier_transform(trans["price_sqm"])
+trans = trans[mask].reset_index(drop=True)
+trans = trans.dropna(subset = "price_sqm")
+
+# --- features filtering
+df = trans.drop(columns=[
+    "price", "prop_loc_dep", "prop_loc_citycode", "dist_tosea", "predicted_price"
+])
+
+# Filtering NA values
+df = df.dropna()
+
+# Categorical feature
+df["prop_type"] = pd.Categorical(
+    df["prop_type"],
+    categories=["1", "2"],
+    ordered=False
+).rename_categories({"1": "House", "2": "Flat"})
+
+# Simplifying year of the property 
+# Replacing year of construction by decade and merging together all years before 1850
+df['prop_year_harm_10'] = (df['prop_year_harm'] // 10)*10
+df['prop_year_harm_10'] = df['prop_year_harm_10'].where(df['prop_year_harm_10'] >= 1850, 1840)
+
+# Dropping old column
+df = df.drop(columns=["prop_year_harm"])
+
+## ============================================
+# Exercice 3 - A first pipeline
+# ## ============================================
+# %%
+
+from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
+from sklearn.compose import ColumnTransformer, TransformedTargetRegressor
+from sklearn.pipeline import Pipeline
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
+from sklearn.model_selection import train_test_split
+
+# Split features / target
+X = df.drop(columns="price_sqm")  # X must contain only the features we'll learn from
+y = df["price_sqm"]  # target must be a dataframe with 1 column
+
+# Split train / test set
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y,
+    test_size=0.2,
+    random_state=RANDOM_STATE
+)
+
+def date_to_days(X: pd.Series, ref_date:pd.Timestamp):
+    # converts a date to a difference to ref_date : 
+    diff_dt = pd.to_datetime(X) - ref_date
+    # Extract days part from datetime object
+    diff_dt = diff_dt.dt.days
+    # Transform it from a Pandas series to a Numpy nd array, used by scikit learn for input
+    diff_dt = diff_dt.to_numpy().reshape(-1, 1)
+
+    return diff_dt 
+    
+date_transformer = FunctionTransformer(
+    date_to_days,
+    kw_args={"ref_date": pd.Timestamp('2010-01-01 00:00')}
+    )
+
+preprocessor = ColumnTransformer(
+    transformers=[
+        ("cat", OneHotEncoder(handle_unknown="ignore"), ["prop_type", "prop_year_harm_10"]),  # one-hot encoder on feature
+        ("dat", date_transformer, "trans_date") # feature time since 01-01-2010
+    ],
+    remainder="passthrough"  # to keep features not transformed
+) 
+
+
+def log_transform(y):
+    return np.log10(y)
+
+def inverse_log_transform(y):
+    return 10 ** y
+
+y_transformer = FunctionTransformer(
+    func = log_transform,
+    inverse_func = inverse_log_transform)
+
+# Other option with Numpy : 
+# y_transformer = FunctionTransformer(
+#     func=np.log,
+#     inverse_func=np.exp)
+
+rf_params = {
+    "n_estimators": 100,
+    "max_depth": 5,
+    "max_features": "sqrt",
+    "min_samples_split": 2,
+    "min_samples_leaf": 10,
+    "random_state": RANDOM_STATE,
+    "oob_score": True,
+    "n_jobs": -1,  # The number of jobs to run in parallel, -1 using all processors
+}
+
+rf_pipeline = Pipeline([
+    ('preprocessing', preprocessor),
+    ('RF', RandomForestRegressor(**rf_params))
+])
+
+model = TransformedTargetRegressor(
+    regressor=rf_pipeline,
+    transformer=y_transformer
+)
