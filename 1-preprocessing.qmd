@@ -20,14 +20,10 @@ To have a better understanding of what we will do, here is an overview of the pr
 ::: {.callout-note appearance="simple"}
 ## Watch out
 
-All data inputs are available on the following S3 bucket : `s3://confpns/synthetic-transactions`
+All data inputs are available on the following S3 bucket : `s3://projet-funathon/2026/project1/data/`
 
-You have to load two different files :
+You have to load the file `2026/project1/data/transactions_EN.parquet` for transactions.
 
--   `rawdata/transactions/transactions_houses_final.parquet` for houses transactions
--   `rawdata/transactions/ transactions_flats_final.parquet` for flats transactions
-
-TO BE CHECKED - à refaire avec les données synthétiques finales - une seule base
 :::
 
 ## Exercice 1: Understanding data inputs
@@ -62,9 +58,9 @@ The aim of this part is to manipulate new database and understand features in or
         SECRET '{os.environ["AWS_SECRET_ACCESS_KEY"]}',
         ENDPOINT '{os.environ["AWS_S3_ENDPOINT"]}',
         SESSION_TOKEN '{os.environ["AWS_SESSION_TOKEN"]}',
-        REGION 'us-east-1',
+        REGION 'eu-west-1',
         URL_STYLE 'path',
-        SCOPE 's3://confpns/synthetic-transactions/'
+        SCOPE 's3://projet-funathon/'
     );
     """
     )
@@ -80,60 +76,10 @@ The aim of this part is to manipulate new database and understand features in or
 
 # We load all transactions made in France between 2010 and 2022
 trans = con.sql(
-    f"""
-        SELECT * FROM read_parquet('s3://confpns/synthetic-transactions/rawdata/transactions/transactions_houses_final.parquet')
-        UNION ALL
-        SELECT * FROM read_parquet('s3://confpns/synthetic-transactions/rawdata/transactions/transactions_flats_final.parquet')
+    """
+        SELECT * FROM read_parquet('s3://projet-funathon/2026/project1/data/transactions_EN.parquet')
     """).to_df()
 
-trans = trans.rename({
-  "idmutation":"trans_id",
-  "datemut":"trans_date",
-  "anneemut":"trans_year",
-  "moismut":"trans_month",
-  "idnatmut":"trans_type_code",
-  "libnatmut":"trans_type_label",
-  "valeurfonc":"price",
-  "dteloc":"prop_type",
-  "jannath":"prop_year_harm",
-  "ccodep":"prop_loc_dep",
-  "depcom":"prop_loc_",
-  "x":"prop_loc_x",
-  "y":"prop_loc_y",
-  "distance_ltm":"dist_tosea",
-  "distance_ltm_corr":"dist_tosea_corr",
-  "dnbniv":"n_floors",
-  "dnbbai":"n_bath",
-  "dnbdou":"n_show",
-  "dnblav":"n_sink",
-  "dnbwc":"n_wc",
-  "dnbppr":"n_mrooms",
-  "dnbsam":"n_eatr",
-  "dnbcha":"n_slr",
-  "dnbcu8":"n_kit8",
-  "dnbcu9":"n_kit9",
-  "dnbsea":"n_washr",
-  "dnbann":"n_ancrooms",
-  "dnbpdc":"n_rooms",
-  "dsupdc":"farea",
-  "geaulc":"has_water",
-  "gelelc":"has_elec",
-  "gesclc":"stair",
-  "ggazlc":"has_gas",
-  "gasclc":"has_elevator",
-  "gchclc":"has_cheating",
-  "gvorlc":"has_rchute",
-  "gteglc":"has_mdrainage",
-  "dniv":"nth_floor",
-  "dcntsol":"s_land_artif",
-  "dcntagri":"s_land_agri",
-  "dcntnat":"s_land_nat",
-  "nb_garages":"n_garage",
-  "nb_piscines":"n_pool",
-  "nb_terrasses":"n_terrace",
-  "nb_greniers":"n_attic",
-  "nb_caves":"n_basmt",
-  "nb_autresdep":"n_otherannex"})
 
 ```
 
@@ -146,12 +92,7 @@ DuckDB is not the only tool you can use to read from the data. You can also use 
 import pandas as pd
 
 # We load all transactions made in France between 2010 and 2022
-trans = pd.concat(
-    [
-        pd.read_parquet('s3://confpns/synthetic-transactions/rawdata/transactions/transactions_houses_final.parquet'),
-        pd.read_parquet('s3://confpns/synthetic-transactions/rawdata/transactions/transactions_flats_final.parquet')
-    ]
-    )
+trans = pd.read_parquet('s3://projet-funathon/2026/project1/data/transactions_EN.parquet')
 ```
 :::
 
