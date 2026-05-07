@@ -185,7 +185,6 @@ We will transform a few features for the training part. It will enhance the qual
     import numpy as np
     import matplotlib.pyplot as plt
 
-    # --- Update with your target ---
     y = trans["price_sqm"]
     p = np.percentile(y, 99.5)
 
