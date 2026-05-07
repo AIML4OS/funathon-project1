@@ -64,16 +64,17 @@ def data_fr_raw_to_en(file_names_list, mapping, file_out_name):
     cols_to_keep = list(mapping_fr_en.keys())
 
     for file_name in file_names_list:
-        FILE_PATH_S3 = BUCKET + "/" + "2026/project1/data/raw" + file_name
+        FILE_PATH_S3 = BUCKET + "/" + "2026/project1/data/raw/" + file_name
 
         with fs.open(FILE_PATH_S3, mode="rb") as file_in:
             df_raw = pd.read_parquet(file_in)
         
         list_df.append(df_raw[cols_to_keep])
 
-    df_en = pd.concat(list_df).rename(mapping)
+    df_en = pd.concat(list_df)
+    df_en = df_en.rename(columns=mapping)
 
-    FILE_PATH_OUT_S3 = "s3://" + BUCKET + "/" + "2026/project1/" + file_out_name
+    FILE_PATH_OUT_S3 = "s3://" + BUCKET + "/2026/project1/data/" + file_out_name
 
     df_en.to_parquet(FILE_PATH_OUT_S3)
 
