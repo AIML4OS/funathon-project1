@@ -294,7 +294,7 @@ print(f"{n1} rows after deterministic and statistic filtering")
 
 ```{python}
 #| include: false
-print(f'Applying these filters methods has dropped about {(n0 - n1)/n0}:.2f % of the transactions.')
+print(f'Applying these filters methods has dropped about {((n0 - n1)/n0)*100:.2f} % of the transactions.')
 ```
 
 4.  **Handle missing values in the target variable**
@@ -361,7 +361,7 @@ You will see in the section {#sec-scikit-learn-pipeline} how preprocessing can b
 
     ::: {.callout-tip collapse="true" title="Hint"}
 
-    We chose to drop the following variables : `trans_id` (meaningless), `trans_type_code` (meaningless), `trans_type_label` (always equal to the same value), `price` (already taken care of with our target), `prop_loc_dep` (geographical information is comprised in geographical coordinates prop_loc_x and prop_loc_y), `prop_loc_citycode` (geographical information is comprised in geographical coordinates prop_loc_x and prop_loc_y), `dist_tosea` and `dist_tosea_corr` have no meaningful information in the Paris area, far from the sea.
+    We chose to drop the following variables : `price` (already taken care of with our target), `prop_loc_dep` (geographical information is comprised in geographical coordinates prop_loc_x and prop_loc_y), `prop_loc_citycode` (geographical information is comprised in geographical coordinates prop_loc_x and prop_loc_y), `dist_tosea` has no meaningful information in the Paris area, far from the sea.
 
     :::
 
@@ -371,8 +371,7 @@ You will see in the section {#sec-scikit-learn-pipeline} how preprocessing can b
 #| code-overflow: scroll
 
 df = trans.drop(columns=[
-    'trans_id', "trans_type_code", "trans_type_label", 
-    "price", "prop_loc_dep", "prop_loc_citycode", "dist_tosea", "dist_tosea_corr"
+    "price", "prop_loc_dep", "prop_loc_citycode", "dist_tosea", "predicted_price"
 ])
 
 ```
