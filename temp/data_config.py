@@ -30,7 +30,7 @@ def data_fr_raw_to_en(file_names_list, mapping, file_out_name):
 
     FILE_PATH_OUT_S3 = "s3://" + BUCKET + "/2026/project1/data/" + file_out_name
 
-    df_en.to_parquet(FILE_PATH_OUT_S3)
+    df_en.to_parquet(FILE_PATH_OUT_S3, index=False)
 
     return df_en
 
@@ -81,7 +81,7 @@ mapping_fr_en = {
   "nb_caves":"n_basmt",
   "nb_autresdep":"n_otherannex", 
   "predicted_price":"predicted_price"}
-  
+
 data_fr_raw_to_en(
     ["transactions_houses_FR_raw.parquet", "transactions_flats_FR_raw.parquet"], 
     mapping_fr_en, 
