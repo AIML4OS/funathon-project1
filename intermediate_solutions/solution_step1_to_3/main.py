@@ -2,7 +2,7 @@
 # ============================================
 # STEP 1 — Data exploration
 # ============================================
-3 %%
+# %%
 ## ============================================
 # Exercice 1 -Import data and calculate price per sqm for Paris region
 # ## ============================================
@@ -10,6 +10,7 @@
 import duckdb
 import os
 import pandas as pd
+import numpy as np
 
 # Create a non-persistent connection (the database exists only while the connection is alive and disappears when it is closed)
 con = duckdb.connect(database=":memory:")
