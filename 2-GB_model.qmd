@@ -517,6 +517,43 @@ print("Final model trained.")
 
 ## Exercice 9: Evaluate the final Gradient Boosting model
 
+
+::: {.callout-tip title="If you're stuck - fetch back final GB model"}
+
+If you're stuck, you can fetch back the final trained model by executing the following code.
+The fetched model can then be used to predict any values and evaluate it. 
+
+
+```python
+from joblib import load
+import os
+import s3fs
+
+# Create filesystem object
+S3_ENDPOINT_URL = "https://" + os.environ["AWS_S3_ENDPOINT"]
+fs = s3fs.S3FileSystem(client_kwargs={'endpoint_url': S3_ENDPOINT_URL})
+FILE_PATH_S3 = "projet-funathon/2026/project1/models/final_gb_model.joblib" 
+
+with fs.open(FILE_PATH_S3, mode="rb") as model:
+    gb_model_final = load(model)
+
+```
+
+:::
+
+
+<!-- 
+``` python
+from joblib import dump
+
+# Save the model to a file
+dump(gb_final_model, 'gb_final_model.joblib')
+```
+```bash
+mc cp final_gb_model.joblib s3/projet-funathon/2026/project1/models/final_gb_model.joblib
+```
+-->
+
 Now that the model has been tuned, evaluate its performance on the test set and compare it to the Random Forest baseline.
 
 1.  Compute **RMSE**, **MAE** and **R²** on both the training and test sets for the final gradient boosting model using our `print_metrics` function.
@@ -588,6 +625,16 @@ plt.xscale('log')
 plt.yscale('log')
 plt.tight_layout()
 plt.show()
+```
+
+
+
+```{python}
+
+from joblib import dump
+
+# Save the model to a file
+dump(gb_model_final, 'final_gb_model.joblib')
 ```
 
 # Summary
