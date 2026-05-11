@@ -1,7 +1,5 @@
 #!/bin/bash
-# bash temp/extract.sh "2-GB_model.qmd" "intermediate_solutions/solution_step1_to_2a/main.py"
-# bash temp/extract.sh "2-RF_model.qmd" "intermediate_solutions/solution_step1_to_2b/main.py"
-# bash temp/extract.sh "1-preprocessing.qmd" "intermediate_solutions/solution_step1/main.py"
+
 
 # Check if input file is provided
 if [ "$#" -lt 1 ]; then
@@ -24,10 +22,11 @@ fi
 # Extract Python code blocks, remove #| lines, and trim the exact number of leading whitespace
 awk '
 /# Exercice/ {
-    print $0;
+    print ""; print $0;
     next;
     }
 /^[[:space:]]*```\{python/ {
+    print "# %%"
     leading_ws = 0;
     temp = $0;
     while (substr(temp, leading_ws + 1, 1) ~ /[[:space:]]/) {
@@ -37,7 +36,7 @@ awk '
     next;
 }
 /^[[:space:]]*```/ && flag {
-    flag = 0;
+    flag = 0; print ""
     next;
 }
 flag {
