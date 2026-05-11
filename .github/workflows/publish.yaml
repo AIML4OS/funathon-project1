@@ -26,6 +26,11 @@ jobs:
         - name: Set up Quarto
           uses: quarto-dev/quarto-actions/setup@v2
 
+        # - name: Generate model  # wont work as missing S3 env vars
+        #   run: |
+        #     uv run temp/generate_gb.py 
+        #     mc cp final_gb_model.joblib s3/projet-funathon/2026/project1/models/final_gb_model.joblib
+
         - name: Render
           run: uv run quarto render
 

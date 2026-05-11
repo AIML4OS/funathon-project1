@@ -542,18 +542,6 @@ with fs.open(FILE_PATH_S3, mode="rb") as model:
 :::
 
 
-<!-- 
-``` python
-from joblib import dump
-
-# Save the model to a file
-dump(gb_final_model, 'gb_final_model.joblib')
-```
-```bash
-mc cp final_gb_model.joblib s3/projet-funathon/2026/project1/models/final_gb_model.joblib
-```
--->
-
 Now that the model has been tuned, evaluate its performance on the test set and compare it to the Random Forest baseline.
 
 1.  Compute **RMSE**, **MAE** and **R²** on both the training and test sets for the final gradient boosting model using our `print_metrics` function.
