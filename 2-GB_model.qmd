@@ -56,7 +56,7 @@ To allow for comparison with the random forest section, we chose to use the same
 #| eval: false
 from sklearn.ensemble import HistGradientBoostingRegressor
 
-X = df.drop(columns=["price_sqm", "trans_date", "prop_type"]) 
+X = df.drop(columns=["price_sqm", "trans_date", "prop_type"])
 y = df["price_sqm"]
 X_train, X_test, y_train, y_test = train_test_split(
     X, y,
@@ -88,7 +88,7 @@ def print_metrics(model, split, X=X_train, y=y_train):
     mae = mean_absolute_error(y, y_pred)
     r2  = r2_score(y, y_pred)
     print(f"{split} — RMSE: {rmse:.2f}  |  MAE: {mae:.2f}  |  R²: {r2:.4f}")
-    
+
 list = [("Train", X_train, y_train), ("Test", X_test, y_test)]
 model = gb_baseline
 
@@ -182,7 +182,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 gb_pipeline = Pipeline([
     ('preprocessing', preprocessor),
     ('GB', HistGradientBoostingRegressor(
-        random_state=RANDOM_STATE, 
+        random_state=RANDOM_STATE,
         early_stopping=True))
 ])
 
@@ -210,6 +210,7 @@ To retrieve all fold scores after fitting, use `cv_results_` — it is a dict th
 #| code-summary: See the solution
 #| code-overflow: scroll
 #| eval: false
+from sklearn.model_selection import GridSearchCV
 
 param_grid_step1 = {
     "regressor__GB__max_iter": [200, 500],
@@ -456,7 +457,7 @@ gb_final = HistGradientBoostingRegressor(
 )
 
 X = df.drop(columns=["price_sqm"])
-y = df["price_sqm"] 
+y = df["price_sqm"]
 X_train, X_test, y_train, y_test = train_test_split(
     X, y,
     test_size=0.2,
@@ -491,14 +492,13 @@ Now that the model has been tuned, evaluate its performance on the test set and 
 #| code-overflow: scroll
 #| eval: false
 
-model = gb_model_best
 list = [("train", X_train, y_train), ("test", X_test, y_test)]
 
 for split, X, y in list:
-    print_metrics(model, split, X, y)
+    print_metrics(gb_model_final, split, X, y)
 ```
 
-2.  Plot predicted values against actual values on the test set. 
+2.  Plot predicted values against actual values on the test set.
 
 ```{python}
 #| code-fold: true
@@ -507,7 +507,7 @@ for split, X, y in list:
 #| eval: false
 import matplotlib.pyplot as plt
 
-y_pred_test = gb_model_best.predict(X_test)
+y_pred_test = gb_model_final.predict(X_test)
 
 fig, ax = plt.subplots(figsize=(7, 7))
 
@@ -527,12 +527,12 @@ plt.show()
 
 # Summary
 
-Congrats 🎉! In this section, you have successfully 
+Congrats 🎉! In this section, you have successfully
 
-- seen the foundations of goosting models, 
-- trained a `HistGradientBoostingRegressor` with scikit-learn, 
+- seen the foundations of goosting models,
+- trained a `HistGradientBoostingRegressor` with scikit-learn,
 - optimized the `HistGradientBoostingRegressor` parameters through a gridsearch,
 - and finally, evaluated the best gradient boosting model for price per square meter predictions with the RMSE and MAE metrics.
 
-You can now have a look at how to train a [random forest model](2-RF_model.qmd). 
-Once you have trained both model, you can have a closer look at metrics with the [metrics section](3-metrics.qmd). 
+You can now have a look at how to train a [random forest model](2-RF_model.qmd).
+Once you have trained both model, you can have a closer look at metrics with the [metrics section](3-metrics.qmd).
