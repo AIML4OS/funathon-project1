@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
 from sklearn.compose import ColumnTransformer, TransformedTargetRegressor
 from sklearn.pipeline import Pipeline
-from sklearn.ensemble import HistGradientBoostingRegressor
+from sklearn.ensemble import HistGradientBoostingRegressor, RandomForestRegressor
 from joblib import dump
 
 # Create a non-persistent connection (the database exists only while the connection is alive and disappears when it is closed)
@@ -173,3 +173,28 @@ gb_model_final.fit(X_train, y_train)
 # Save the model to a file
 dump(gb_model_final, 'final_gb_model.joblib')
 
+
+
+# create RandomForestRegressor with tuned hyperparameters
+rf_final = RandomForestRegressor(
+    n_estimators=80,
+    max_features="sqrt",
+    min_samples_leaf=50
+)
+
+rf_pipeline_best = Pipeline([
+    ("preprocessor", preprocessor),  # same preprocessor as defined in the preprocessing section
+    ("RF", rf_final),
+])
+
+rf_model_final = TransformedTargetRegressor(
+    regressor=rf_pipeline_best,
+    transformer=y_transformer  # same targettransformer as defined in preprocessing section
+)
+
+# Train the model
+rf_model_final.fit(X_train, y_train)
+
+
+# Save the model to a file
+dump(rf_model_final, 'final_rf_model.joblib')
