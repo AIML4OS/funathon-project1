@@ -238,10 +238,10 @@ plt.tight_layout()
 plt.show()
 ```
 
-The graph is quite clean because the data are synthetic and cleaner than the original data. 
+The graph is quite clean because the data are synthetic and cleaner than the original data.
 But with original data, we would have seen that the left tail gets bigger the closer we are to 0.
 It may indicate an issue with data around these points and the need to apply a filter for values that are too low.
-We will set a price ceiling of 100€ to micmic original issue, even if with the synthethic data it's not warranted.    
+We will set a price ceiling of 100€ to micmic original issue, even if with the synthethic data it's not warranted.
 
 The second step is to apply some statistic methods.
 For example, we can use the **Interquartile Range (IQR)** *to remove outlier target values*.
@@ -400,7 +400,7 @@ df["prop_type"] = pd.Categorical(
 ```
 
 
-4.  The codification of categorical variable can be computational intensive. `prop_type` has only two modalities but check the number of modalities of `prop_year_harm`. To speed-up the computation, can we regroup modalities together ?  Does it make sense given how the variable has been transformed (see the [presentation of the data](index.qmd)) ? How can we do it ? 
+4.  The codification of categorical variable can be computational intensive. `prop_type` has only two modalities but check the number of modalities of `prop_year_harm`. To speed-up the computation, can we regroup modalities together ?  Does it make sense given how the variable has been transformed (see the [presentation of the data](index.qmd)) ? How can we do it ?
 
 ```{python}
 #| code-fold: true
@@ -408,11 +408,11 @@ df["prop_type"] = pd.Categorical(
 #| code-overflow: scroll
 
 counts = df.value_counts("prop_year_harm").reset_index()
-counts[counts["prop_year_harm"] < 1850].describe() # there more than 400 different years of construction, going from 13th century to now. Maybe we can bundle together years before 1850 and group them by decade
+counts[counts["prop_year_harm"] < 1850].describe() # there more than 500 different years of construction, going from 13th century to now. Maybe we can bundle together years before 1850 and group them by decade
 
-counts_10 = ((df["prop_year_harm"] // 10)*10).value_counts().reset_index()  # 76 modalities
-counts_10[counts_10["prop_year_harm"] < 1850].describe()  # years before 1850 represent 58 modalities with maximal class of about twenty thousands operations - ok
-counts_10[counts_10["prop_year_harm"] < 1850]["count"].sum()  
+counts_10 = ((df["prop_year_harm"] // 10)*10).value_counts().reset_index()  # 82 modalities
+counts_10[counts_10["prop_year_harm"] < 1850].describe()  # years before 1850 represent 64 modalities with maximal class of about two thousands operations - ok
+counts_10[counts_10["prop_year_harm"] < 1850]["count"].sum()
 
 # Replacing year of construction by decade and merging together all years before 1850
 df['prop_year_harm_10'] = (df['prop_year_harm'] // 10)*10
@@ -519,13 +519,13 @@ preprocessor = ColumnTransformer([
     ("num", StandardScaler(), cols_num), # scaling can be useful for some model but not for our project
     ("cat", OneHotEncoder(), ["region", "job_type", "prop_year_harm_10"])
     ],
-    remainder="passthrough" # the remainder parameter tells what to do with features not transformed. By default, non transformed data is dropped. Specifying "passthrough" passes on the data unchanged to the model. 
+    remainder="passthrough" # the remainder parameter tells what to do with features not transformed. By default, non transformed data is dropped. Specifying "passthrough" passes on the data unchanged to the model.
 )
 
 pipeline = Pipeline([
     ("preprocessor", preprocessor),
     ("model", RandomForestRegressor())
-]) 
+])
 ```
 
 ### Now let's go : prepare the pipeline for the training
@@ -552,15 +552,15 @@ from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
 
 
 def date_to_days(X: pd.Series, ref_date:pd.Timestamp):
-    # converts a date to a difference to ref_date : 
+    # converts a date to a difference to ref_date :
     diff_dt = pd.to_datetime(X) - ref_date
     # Extract days part from datetime object
     diff_dt = diff_dt.dt.days
     # Transform it from a Pandas series to a Numpy nd array, used by scikit learn for input
     diff_dt = diff_dt.to_numpy().reshape(-1, 1)
 
-    return diff_dt 
-    
+    return diff_dt
+
 date_transformer = FunctionTransformer(
     date_to_days,
     kw_args={"ref_date": pd.Timestamp('2010-01-01 00:00')}
@@ -572,10 +572,10 @@ preprocessor = ColumnTransformer(
         ("dat", date_transformer, "trans_date") # feature time since 01-01-2010
     ],
     remainder="passthrough"  # to keep features not transformed
-) 
+)
 ```
 
-2.  Create the Pipeline for training a RandomForestRegressor model. Go to the [scikit-learn's documentation](https://scikit-learn.org/stable/modules/compose.html#pipelines-and-composite-estimators) on the matter to understand how it works. 
+2.  Create the Pipeline for training a RandomForestRegressor model. Go to the [scikit-learn's documentation](https://scikit-learn.org/stable/modules/compose.html#pipelines-and-composite-estimators) on the matter to understand how it works.
 
     ::: {.callout-tip collapse="true" title="Hint"}
 
@@ -607,7 +607,7 @@ y_transformer = FunctionTransformer(
     func = log_transform,
     inverse_func = inverse_log_transform)
 
-# Other option with Numpy : 
+# Other option with Numpy :
 # y_transformer = FunctionTransformer(
 #     func=np.log,
 #     inverse_func=np.exp)
@@ -639,7 +639,7 @@ model = TransformedTargetRegressor(
 Congrats ! You have completed the data preparation exercises. Now you can choose one of the two model you'll want to train - or do both ! 💪
 
 ::: {.callout-tip}
-Scikit-learn allows you to access every step defined in the `rf_pipeline` (preprocessing or RF).  
+Scikit-learn allows you to access every step defined in the `rf_pipeline` (preprocessing or RF).
 
 ```python
 rf_pipeline["preprocessing"]   # access to the first step
@@ -653,10 +653,10 @@ For more details, go to [the documentation](https://scikit-learn.org/stable/modu
 
 Congrats 🎉! In this section, you have successfully :
 
-- loaded the data, 
-- had a look at variable to select best variables for the model, 
+- loaded the data,
+- had a look at variable to select best variables for the model,
 - cleaned data (time variables, categorical variables),
-- plotted the target variable and defined that it needs to be transformed, 
+- plotted the target variable and defined that it needs to be transformed,
 - and finally, defined the pre-processing steps of our machine learning with scikit-learn's pipeline.
 
-You can now have a look at how to train a [random forest model](2-RF_model.qmd) and a [gradient boosting model](2-GB_model.qmd). 
+You can now have a look at how to train a [random forest model](2-RF_model.qmd) and a [gradient boosting model](2-GB_model.qmd).
