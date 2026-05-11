@@ -103,6 +103,33 @@ In this exercise, you will generate predictions from the best RF and GB model an
 
 0. Load the RF and GB models
 
+::: {.callout-tip title="If you want to fetch back final RF and GB model"}
+
+You can fetch back the final trained models by executing the following code.
+The fetched models can then be used to predict any values and evaluate it. 
+
+
+```python
+from joblib import load
+import os
+import s3fs
+
+# Create filesystem object
+S3_ENDPOINT_URL = "https://" + os.environ["AWS_S3_ENDPOINT"]
+fs = s3fs.S3FileSystem(client_kwargs={'endpoint_url': S3_ENDPOINT_URL})
+FILE_PATH_S3 = "projet-funathon/2026/project1/models/final_rf_model.joblib" 
+
+with fs.open(FILE_PATH_S3, mode="rb") as model:
+    rf_best = load(model)
+
+FILE_PATH_S3 = "projet-funathon/2026/project1/models/final_gb_model.joblib" 
+
+with fs.open(FILE_PATH_S3, mode="rb") as model:
+    gb_model_final = load(model)
+
+```
+:::
+
 ```{python}
 #| code-fold: true
 #| code-summary: See the solution
