@@ -115,10 +115,10 @@ rf.oob_score_
 from sklearn.metrics import mean_squared_error
 
 # Predictions on train set
-y_pred = rf.predict(X_test)
+y_pred_test = rf.predict(X_test)
 
 # Print the error
-print(mean_squared_error(y_test, y_pred))
+print(mean_squared_error(y_test, y_pred_test))
 
 ```
 
@@ -172,8 +172,13 @@ X_sub = X_train.filter(items=y_sub.index, axis=0 )  # sampling X_train
 
     If you need, here is the code to calculate and store the OOB score.
 
-    ```{python}
+    ``` python
+    import warnings 
+
     oob_scores = []
+    min_estimators = 5 # Set this parameter
+    max_estimators = 100  # Set this parameter
+    metric = "r2"  # Set the metric you want to choose
     warnings.filterwarnings("ignore", message="Some inputs do not have OOB scores")
     # filterwarnings remove some warnings messages
     for n in range(min_estimators, max_estimators, 10):
@@ -196,8 +201,8 @@ X_sub = X_train.filter(items=y_sub.index, axis=0 )  # sampling X_train
 #| code-summary: See the solution
 #| code-overflow: scroll
 #| eval: false
-import warnings 
 import numpy as np
+import warnings
 
 metric = "r2"
 min_estimators=5
@@ -380,8 +385,8 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 param_grid = {
     "regressor__RF__n_estimators": [80],
-    "regressor__RF__max_features": ["sqrt", "log2"],
-    "regressor__RF__min_samples_leaf": [5, 10, 50]
+    "regressor__RF__max_features": ["sqrt"],
+    "regressor__RF__min_samples_leaf": [40, 50, 75]
 }
 ```
 
@@ -445,6 +450,29 @@ Congrats ! You have optimized your RF model. Now, you need to evaluate its accur
 
 # Exercice 6: Model evaluation
 
+
+::: {.callout-tip title="If you're stuck - fetch back final RF model"}
+
+If you're stuck, you can fetch back the final trained model by executing the following code.
+The fetched model can then be used to predict any values and evaluate it. 
+
+
+```python
+from joblib import load
+import os
+import s3fs
+
+# Create filesystem object
+S3_ENDPOINT_URL = "https://" + os.environ["AWS_S3_ENDPOINT"]
+fs = s3fs.S3FileSystem(client_kwargs={'endpoint_url': S3_ENDPOINT_URL})
+FILE_PATH_S3 = "projet-funathon/2026/project1/models/final_rf_model.joblib" 
+
+with fs.open(FILE_PATH_S3, mode="rb") as model:
+    rf_best = load(model)
+
+```
+
+
 Now that your model has been optimized, it is time to rigorously evaluate its performance on the test set — data the model has never seen during training. This step is essential to assess how well your model generalizes to new observations.
 
 Several metrics are commonly used to evaluate regression models:
@@ -461,7 +489,7 @@ Several metrics are commonly used to evaluate regression models:
 #| code-overflow: scroll
 #| eval: false
 
-y_pred = rf_best.predict(X_test)
+y_pred_test = rf_best.predict(X_test)
 ```
 
 2.  Calculate the three evaluation metrics on the test set.
@@ -480,9 +508,9 @@ You can use `mean_squared_error`, `mean_absolute_error`, and `r2_score` from `sk
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 import numpy as np
 
-rmse = np.sqrt(mean_squared_error(y_test, y_pred))
-mae  = mean_absolute_error(y_test, y_pred)
-r2   = r2_score(y_test, y_pred)
+rmse = np.sqrt(mean_squared_error(y_test, y_pred_test))
+mae  = mean_absolute_error(y_test, y_pred_test)
+r2   = r2_score(y_test, y_pred_test)
 
 print(f"RMSE : {rmse:.2f}")
 print(f"MAE  : {mae:.2f}")
@@ -493,7 +521,7 @@ print(f"R²   : {r2:.4f}")
 
 ::: {.callout-tip collapse="true" title="Hint"}
 
-Use `matplotlib.pyplot` to create a scatter plot of `y_test` against `y_pred`. Add a reference diagonal line (representing perfect predictions) using `ax.plot([min, max], [min, max])`.
+Use `matplotlib.pyplot` to create a scatter plot of `y_test` against `y_pred_test`. Add a reference diagonal line (representing perfect predictions) using `ax.plot([min, max], [min, max])`.
 
 :::
 
@@ -505,15 +533,47 @@ Use `matplotlib.pyplot` to create a scatter plot of `y_test` against `y_pred`. A
 
 fig, ax = plt.subplots(figsize=(7, 7))
 
-ax.scatter(y_test, y_pred, alpha=0.3, s=5, label="Predictions")
+ax.scatter(y_test, y_pred_test, alpha=0.3, s=5, label="Predictions")
 
-lims = [min(y_test.min(), y_pred.min()), max(y_test.max(), y_pred.max())]
+lims = [min(y_test.min(), y_pred_test.min()), max(y_test.max(), y_pred_test.max())]
 ax.plot(lims, lims, "r--", linewidth=1.5, label="Perfect prediction")
 
-ax.set_xlabel("Actual values")
-ax.set_ylabel("Predicted values")
+ax.set_xlabel("Actual values (log, price per sqm)")
+ax.set_ylabel("Predicted values (log, price per sqm)")
 ax.set_title("Predicted vs. Actual values on the test set")
 ax.legend()
+plt.xscale('log')
+plt.yscale('log')
+plt.tight_layout()
+plt.show()
+```
+
+
+
+We trained another gradient boosting model using [CROSPINT's package](https://github.com/oliviermeslin/crospint). 
+The CROSPINT package transforms the geographical coordinates of a properties to predict with higher precision the final price. 
+In-depth details is available on its webpage. 
+The result is stored under the `predicted_value` column in the transaction dataframe. 
+Using that column, we can also compare our model, CROSPINT's model vs the actual values. 
+
+```{python}
+fig, ax = plt.subplots(figsize=(7, 7))
+
+other_pred = (trans["predicted_price"]/trans["farea"])[X_test.index]
+
+ax.scatter(y_test, y_pred_test, alpha=0.1, s=5, c="blue", label="Actual vs model")
+ax.scatter(other_pred, y_pred_test, alpha=0.3, s=5, c="green", label="CROSPINT vs this model")
+
+lims = [min(other_pred.min(), y_pred_test.min(), y_test.min(),),
+        max(other_pred.max(), y_pred_test.max(), y_test.max(),)]
+ax.plot(lims, lims, "r--", linewidth=1.5, label="Perfect prediction")
+
+ax.set_xlabel("Actual or CROSPINT predicted values (log, price per sqm)")
+ax.set_ylabel("Predicted values (log, price per sqm)")
+ax.set_title("Comparison of predicted, and CROSPINT values vs actual values on the test set\n(Gradient Boosting)")
+ax.legend()
+plt.xscale('log')
+plt.yscale('log')
 plt.tight_layout()
 plt.show()
 ```
