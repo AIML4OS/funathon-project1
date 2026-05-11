@@ -52,7 +52,7 @@ The aim of this part is to manipulate new database and understand features in or
     # You need to create a secret table with all the S3 credentials
     con.execute(
         f"""
-    CREATE SECRET secret_s3 (
+        CREATE SECRET secret_s3 (
         TYPE S3,
         KEY_ID '{os.environ["AWS_ACCESS_KEY_ID"]}',
         SECRET '{os.environ["AWS_SECRET_ACCESS_KEY"]}',
@@ -61,10 +61,11 @@ The aim of this part is to manipulate new database and understand features in or
         REGION 'eu-west-1',
         URL_STYLE 'path',
         SCOPE 's3://projet-funathon/'
-    );
-    """
+        );
+        """
     )
-    RANDOM_STATE=202605
+
+    RANDOM_STATE = 202605
     ```
 
 2.  **Load, with DuckDB, all data inputs in a DataFrame `trans`** (for transactions).
