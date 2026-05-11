@@ -8,6 +8,7 @@ dependencies = [
     "duckdb>=1.5.2",
     "fastapi>=0.135.3",
     "ipykernel>=7.2.0",
+    "joblib>=1.5.3",
     "jupyter>=1.1.1",
     "jupyter-cache>=1.0.1",
     "matplotlib>=3.10.8",
