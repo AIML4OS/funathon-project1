@@ -471,7 +471,7 @@ with fs.open(FILE_PATH_S3, mode="rb") as model:
     rf_best = load(model)
 
 ```
-
+:::
 
 Now that your model has been optimized, it is time to rigorously evaluate its performance on the test set — data the model has never seen during training. This step is essential to assess how well your model generalizes to new observations.
 
