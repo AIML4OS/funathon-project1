@@ -1,0 +1,517 @@
+
+## Exercice 1: Understanding data inputs
+# %%
+
+import duckdb
+import os
+
+# Create a non-persistent connection (the database exists only while the connection is alive and disappears when it is closed)
+con = duckdb.connect(database=":memory:")
+
+# You need to create a secret table with all the S3 credentials
+con.execute(
+    f"""
+    CREATE SECRET secret_s3 (
+    TYPE S3,
+    KEY_ID '{os.environ["AWS_ACCESS_KEY_ID"]}',
+    SECRET '{os.environ["AWS_SECRET_ACCESS_KEY"]}',
+    ENDPOINT '{os.environ["AWS_S3_ENDPOINT"]}',
+    SESSION_TOKEN '{os.environ["AWS_SESSION_TOKEN"]}',
+    REGION 'eu-west-1',
+    URL_STYLE 'path',
+    SCOPE 's3://projet-funathon/'
+    );
+    """
+)
+
+RANDOM_STATE = 202605
+
+# %%
+
+# We load all transactions made in France between 2010 and 2022
+trans = con.sql(
+    """
+        SELECT * FROM read_parquet('s3://projet-funathon/2026/project1/data/transactions_EN.parquet')
+    """).to_df()
+
+
+
+# %%
+import pandas as pd
+
+trans = trans[trans["prop_loc_dep"].isin(["75", "77", "78", "91", "92", "93", "94", "95"])]
+
+
+## Exercice 2: Analyzing data inputs
+# %%
+
+trans["price_sqm"] = trans["price"] / trans["farea"]
+
+# %%
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+y = trans["price_sqm"]
+p = np.percentile(y, 99.5)
+
+fig, axes = plt.subplots(4, 1, figsize=(12, 15))
+
+for ax, (data, label) in zip(axes, [(y, "Y"), (y[y <= p], "Y filtered"), (np.log(y), "log(Y)"), (np.log(y[y <= p]), "log(Y) filtered")]):
+    ax.hist(data, bins="auto", edgecolor="white", color="#334887", alpha=0.95)
+    ax.set_title(label)
+    ax.set_xlabel("Price per square meter")
+    ax.set_ylabel("Number of transactions")
+
+plt.tight_layout()
+plt.show()
+
+# %%
+
+fig, axes = plt.subplots(2, 1, figsize=(12, 15))
+
+for ax, (data, label) in zip(axes, [(y[y <= 2000], "Y below 2000€ per sqm"), (y[y <= 500], "Y below 500€ per sqm")]):
+    ax.hist(data, bins="auto", edgecolor="white", color="#334887", alpha=0.95)
+    ax.set_title(label)
+    ax.set_xlabel("Price per square meter")
+    ax.set_ylabel("Number of transactions")
+
+plt.tight_layout()
+plt.show()
+
+# %%
+
+n0 = trans.shape[0]
+print(f"{n0} rows before filtering")
+
+# Apply some deterministic threshold on the dataframe
+trans = trans[(trans["price_sqm"] < 200000) & (trans["price_sqm"] > 100)]
+
+print(f"{trans.shape[0]} rows after deterministic filtering")
+
+# Apply IQR methods for the outlier removal
+def outlier_transform(y, lower=0.1, upper=0.9):
+    """
+    Transform Y target to log(Y) and remove outliers with IQR method
+
+    Args :
+        y : target
+        lower: lower quantile for the IQR
+        upper: upper quantile for the IQR
+    """
+    Q_lower = np.quantile(y, lower)
+    Q_upper = np.quantile(y, upper)
+    IQR = Q_upper - Q_lower
+
+    mask = (y >= Q_lower - 1.5 * IQR) & (y <= Q_upper + 1.5 * IQR)
+    return mask
+
+mask = outlier_transform(trans["price_sqm"])
+trans = trans[mask].reset_index(drop=True)
+
+n1 = trans.shape[0]
+
+print(f"{n1} rows after deterministic and statistic filtering")
+
+
+# %%
+print(f'Applying these filters methods has dropped about {((n0 - n1)/n0)*100:.2f} % of the transactions.')
+
+# %%
+
+trans = trans.dropna(subset = "price_sqm")
+
+# %%
+
+df = trans.drop(columns=[
+    "price", "prop_loc_dep", "prop_loc_citycode", "dist_tosea", "predicted_price"
+])
+
+
+# %%
+# Printing all rows containing at least one NA
+print(df[df.isna().any(axis=1)])
+
+# Filtering NA values
+df = df.dropna()
+
+# %%
+
+df["prop_type"] = pd.Categorical(
+    df["prop_type"],
+    categories=["1", "2"],
+    ordered=False
+).rename_categories({"1": "House", "2": "Flat"})
+
+# %%
+
+counts = df.value_counts("prop_year_harm").reset_index()
+counts[counts["prop_year_harm"] < 1850].describe() # there more than 500 different years of construction, going from 13th century to now. Maybe we can bundle together years before 1850 and group them by decade
+
+counts_10 = ((df["prop_year_harm"] // 10)*10).value_counts().reset_index()  # 82 modalities
+counts_10[counts_10["prop_year_harm"] < 1850].describe()  # years before 1850 represent 64 modalities with maximal class of about two thousands operations - ok
+counts_10[counts_10["prop_year_harm"] < 1850]["count"].sum()
+
+# Replacing year of construction by decade and merging together all years before 1850
+df['prop_year_harm_10'] = (df['prop_year_harm'] // 10)*10
+df['prop_year_harm_10'] = df['prop_year_harm_10'].where(df['prop_year_harm_10'] >= 1850, 1840)
+
+# Dropping old column
+df = df.drop(columns=["prop_year_harm"])
+
+# %%
+
+from sklearn.model_selection import train_test_split
+
+# Split features / target
+X = df.drop(columns="price_sqm")  # X must contain only the features we'll learn from
+y = df["price_sqm"]  # target must be a dataframe with 1 column
+
+# Split train / test set
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y,
+    test_size=0.2,
+    random_state=RANDOM_STATE
+)
+
+
+## Exercice 3: The scikit-learn pipeline
+# %%
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
+
+
+def date_to_days(X: pd.Series, ref_date:pd.Timestamp):
+    # converts a date to a difference to ref_date :
+    diff_dt = pd.to_datetime(X) - ref_date
+    # Extract days part from datetime object
+    diff_dt = diff_dt.dt.days
+    # Transform it from a Pandas series to a Numpy nd array, used by scikit learn for input
+    diff_dt = diff_dt.to_numpy().reshape(-1, 1)
+
+    return diff_dt
+
+date_transformer = FunctionTransformer(
+    date_to_days,
+    kw_args={"ref_date": pd.Timestamp('2010-01-01 00:00')}
+    )
+
+preprocessor = ColumnTransformer(
+    transformers=[
+        ("cat", OneHotEncoder(handle_unknown="ignore"), ["prop_type", "prop_year_harm_10"]),  # one-hot encoder on feature
+        ("dat", date_transformer, "trans_date") # feature time since 01-01-2010
+    ],
+    remainder="passthrough"  # to keep features not transformed
+)
+
+# %%
+from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
+from sklearn.compose import ColumnTransformer, TransformedTargetRegressor
+from sklearn.pipeline import Pipeline
+from sklearn.ensemble import RandomForestRegressor
+
+def log_transform(y):
+    return np.log10(y)
+
+def inverse_log_transform(y):
+    return 10 ** y
+
+y_transformer = FunctionTransformer(
+    func = log_transform,
+    inverse_func = inverse_log_transform)
+
+# Other option with Numpy :
+# y_transformer = FunctionTransformer(
+#     func=np.log,
+#     inverse_func=np.exp)
+
+rf_params = {
+    "n_estimators": 100,
+    "max_depth": 5,
+    "max_features": "sqrt",
+    "min_samples_split": 2,
+    "min_samples_leaf": 10,
+    "random_state": RANDOM_STATE,
+    "oob_score": True,
+    "n_jobs": -1,  # The number of jobs to run in parallel, -1 using all processors
+}
+
+rf_pipeline = Pipeline([
+    ('preprocessing', preprocessor),
+    ('RF', RandomForestRegressor(**rf_params))
+])
+
+model = TransformedTargetRegressor(
+    regressor=rf_pipeline,
+    transformer=y_transformer
+)
+
+
+
+# Exercice 4: Train your first Random Forest model
+# %%
+from sklearn.ensemble import RandomForestRegressor
+
+# create RandomForestRegressor instance with selected hyperparameters
+rf = RandomForestRegressor(
+    n_estimators=50,
+    max_features="sqrt",
+    min_samples_leaf=10,
+    oob_score=True # for calculating total oob error for the RF
+)
+
+# Defining train and test sets
+X = df.drop(columns=["price_sqm", "trans_date", "prop_type"])  
+y = df["price_sqm"]  
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y,
+    test_size=0.2,
+    random_state=RANDOM_STATE
+)
+
+# Train the model
+rf.fit(X_train, y_train)
+
+# %%
+
+rf.oob_score_
+
+# %%
+from sklearn.metrics import mean_squared_error
+
+# Predictions on train set
+y_pred_test = rf.predict(X_test)
+
+# Print the error
+print(mean_squared_error(y_test, y_pred_test))
+
+
+
+# Exercice 5: Tuning a random forest's hyperparameters
+# %%
+
+# Sample the train dataset using Pandas' index
+y_train_df = pd.DataFrame(y_train)
+y_train_df["quantile"] = pd.qcut(y_train_df["price_sqm"], q=100, labels=False) ## allows to discretly cut along quantiles
+y_sub = y_train_df.groupby("quantile").sample(frac=0.1, random_state= RANDOM_STATE)  # sampling by quantile 
+
+y_sub = y_sub["price_sqm"] # converting to pandas.series
+X_sub = X_train.filter(items=y_sub.index, axis=0 )  # sampling X_train
+
+
+# %%
+import numpy as np
+import warnings
+
+metric = "r2"
+min_estimators=5
+max_estimators=150
+
+rf = RandomForestRegressor(
+    warm_start=True,
+    **rf_params,
+)
+
+oob_scores = []
+warnings.filterwarnings("ignore", message="Some inputs do not have OOB scores")
+# filterwarnings remove some warnings messages
+for n in range(min_estimators, max_estimators, 20):
+    rf.set_params(n_estimators=n)
+    rf.fit(X_sub, y_sub)
+    if metric == "r2":
+        oob_scores.append((n, 1 - rf.oob_score_))
+    elif metric == "neg_root_mean_squared_error":
+        mse = np.mean((y_sub - rf.oob_prediction_) ** 2)
+        oob_scores.append((n, np.sqrt(mse)))
+    else:
+        mae = np.mean(np.abs(y_sub - rf.oob_prediction_))
+        oob_scores.append((n, mae))
+warnings.resetwarnings()
+
+# %%
+import matplotlib.pyplot as plt
+
+rf_params = {
+    "max_depth": 8,
+    "max_features": "sqrt",
+    "min_samples_split": 5,
+    "min_samples_leaf": 10,
+    "random_state": RANDOM_STATE,
+}
+
+def rf_error_oob_plot(X_train,
+                      y_train,
+                      subsample=0.1,
+                      min_estimators=15,
+                      max_estimators=150,
+                      metric='r2',
+                      **rf_params):
+    """
+    Plot error OOB convergence by the number of trees
+
+    Args:
+        X_train: features
+        y_train: target
+        subsample: rate of sample for X_train
+        min_estimators: number min of trees
+        max_estimators: number max of trees
+        metric : 'r2',  'rmse' or 'mae'
+    """
+
+    # --- Stratified sampling of training set ---
+    y_train_df = pd.DataFrame(y_train)
+    y_train_df["quantile"] = pd.qcut(y_train_df["price_sqm"], q=100, labels=False) ## allows to discretly cut along quantiles
+    y_sub = y_train_df.groupby("quantile").sample(frac=0.1, random_state= RANDOM_STATE)  # sampling by quantile 
+
+    y_sub = y_sub["price_sqm"] # converting to pandas.series
+    X_sub = X_train.filter(items=y_sub.index, axis=0 )  # sampling X_train
+
+    # --- Training with warm start ---
+    rf = RandomForestRegressor(
+        oob_score=True,
+        warm_start=True,
+        **rf_params,
+    )
+
+    oob_scores = []
+    warnings.filterwarnings("ignore", message="Some inputs do not have OOB scores")
+    for n in range(min_estimators, max_estimators, 5):
+        rf.set_params(n_estimators=n)
+        rf.fit(X_sub, y_sub)
+        if metric == "r2":
+            oob_scores.append((n, 1 - rf.oob_score_))
+        elif metric == "neg_root_mean_squared_error":
+            mse = np.mean((y_sub - rf.oob_prediction_) ** 2)
+            oob_scores.append((n, np.sqrt(mse)))
+        else:
+            mae = np.mean(np.abs(y_sub - rf.oob_prediction_))
+            oob_scores.append((n, mae))
+    warnings.resetwarnings()
+
+    # Generate the "OOB error rate" vs. "n_estimators" plot.
+    xs, ys = zip(*oob_scores)
+
+    fig, ax = plt.subplots()
+    ax.plot(xs, ys)
+    ax.set_xlim(min_estimators, max_estimators)
+    ax.set_xlabel("n_trees")
+    ax.set_ylabel(f"OOB error ({metric})")
+    plt.close(fig)
+
+    return fig
+
+
+# %%
+oob_error_ntrees = rf_error_oob_plot(X_train=X_train,
+                                     y_train=y_train,
+                                     subsample=0.1,
+                                     min_estimators=5,
+                                     max_estimators=150,
+                                     metric="r2")
+oob_error_ntrees
+
+# %%
+
+# Split features / target
+X = df.drop(columns="price_sqm")  
+y = df["price_sqm"]  
+
+# Split train / test set
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y,
+    test_size=0.2,
+    random_state=RANDOM_STATE
+)
+
+# %%
+
+param_grid = {
+    "regressor__RF__n_estimators": [80],
+    "regressor__RF__max_features": ["sqrt"],
+    "regressor__RF__min_samples_leaf": [40, 50, 75]
+}
+
+# %%
+from sklearn.model_selection import GridSearchCV
+
+# Grid search
+grid_search = GridSearchCV(
+    estimator=model, # it is the TransformedTargetRegressor created in the preprocessing part
+    param_grid=param_grid,
+    cv=4,  # number of folds
+    scoring="r2", # 'r2' or 'neg_root_mean_squared_error' or 'neg_mean_absolute_error'
+    n_jobs=-1,
+    verbose=1
+)
+
+# Train
+grid_search.fit(X_train, y_train)
+
+# %%
+
+print(grid_search.best_params_)
+
+# %%
+
+rf_best = grid_search.best_estimator_
+print(type(rf_best))
+
+rf_best.fit(X_train, y_train)
+
+
+# Exercice 6: Model evaluation
+# %%
+
+y_pred_test = rf_best.predict(X_test)
+
+# %%
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+import numpy as np
+
+rmse = np.sqrt(mean_squared_error(y_test, y_pred_test))
+mae  = mean_absolute_error(y_test, y_pred_test)
+r2   = r2_score(y_test, y_pred_test)
+
+print(f"RMSE : {rmse:.2f}")
+print(f"MAE  : {mae:.2f}")
+print(f"R²   : {r2:.4f}")
+
+# %%
+
+fig, ax = plt.subplots(figsize=(7, 7))
+
+ax.scatter(y_test, y_pred_test, alpha=0.3, s=5, label="Predictions")
+
+lims = [min(y_test.min(), y_pred_test.min()), max(y_test.max(), y_pred_test.max())]
+ax.plot(lims, lims, "r--", linewidth=1.5, label="Perfect prediction")
+
+ax.set_xlabel("Actual values (log, price per sqm)")
+ax.set_ylabel("Predicted values (log, price per sqm)")
+ax.set_title("Predicted vs. Actual values on the test set")
+ax.legend()
+plt.xscale('log')
+plt.yscale('log')
+plt.tight_layout()
+plt.show()
+
+# %%
+fig, ax = plt.subplots(figsize=(7, 7))
+
+other_pred = (trans["predicted_price"]/trans["farea"])[X_test.index]
+
+ax.scatter(y_test, y_pred_test, alpha=0.1, s=5, c="blue", label="Actual vs model")
+ax.scatter(other_pred, y_pred_test, alpha=0.3, s=5, c="green", label="CROSPINT vs this model")
+
+lims = [min(other_pred.min(), y_pred_test.min(), y_test.min(),),
+        max(other_pred.max(), y_pred_test.max(), y_test.max(),)]
+ax.plot(lims, lims, "r--", linewidth=1.5, label="Perfect prediction")
+
+ax.set_xlabel("Actual or CROSPINT predicted values (log, price per sqm)")
+ax.set_ylabel("Predicted values (log, price per sqm)")
+ax.set_title("Comparison of predicted, and CROSPINT values vs actual values on the test set\n(Gradient Boosting)")
+ax.legend()
+plt.xscale('log')
+plt.yscale('log')
+plt.tight_layout()
+plt.show()
+
