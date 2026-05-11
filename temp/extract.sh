@@ -23,6 +23,10 @@ fi
 
 # Extract Python code blocks, remove #| lines, and trim the exact number of leading whitespace
 awk '
+/# Exercice/ {
+    print $0;
+    next;
+    }
 /^[[:space:]]*```\{python/ {
     leading_ws = 0;
     temp = $0;
