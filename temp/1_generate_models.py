@@ -1,3 +1,4 @@
+# %%
 import duckdb
 import os
 import pandas as pd
@@ -59,7 +60,7 @@ trans = con.sql(
 
 
 trans = trans[trans["prop_loc_dep"].isin(["75", "77", "78", "91", "92", "93", "94", "95"])]
-
+# %%
 print("Pre-processing")
 # Exercice 2: Analyzing data inputs
 trans["price_sqm"] = trans["price"] / trans["farea"]
@@ -110,7 +111,7 @@ df['prop_year_harm_10'] = df['prop_year_harm_10'].where(df['prop_year_harm_10'] 
 
 # Dropping old column
 df = df.drop(columns=["prop_year_harm"])
-
+# %%
 print("Pipeline")
 def date_to_days(X: pd.Series, ref_date:pd.Timestamp):
     # converts a date to a difference to ref_date :
@@ -160,13 +161,13 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 
 # Storing datasets
-datasets = {"X_train": X_train, "X_test": X_test, "y_train": y_train.to_frame(), "y_test":y_test.to_frame(), "df": df}
+datasets = {"X_train": X_train, "X_test": X_test, "y_train": y_train.to_frame(), "y_test":y_test.to_frame()}
 
 for name, data in datasets.items():
     with fs.open(generate_file_path_s3_data(f"2_preprocessing/{name}.parquet"), 'wb') as file_out:
         data.to_parquet(file_out, index=True)
 
-
+# %%
 print("Fitting GB model")
 BEST_ITER = 1000
 BEST_LR = 0.2

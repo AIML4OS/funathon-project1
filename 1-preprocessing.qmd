@@ -458,7 +458,7 @@ Scikit-learn has a very well crafted documentation, so please do not hesitate to
 ::: {.callout-note title="Fall-back option"}
 
 Preprocessed data have been stored in case you need a fall-back. 
-This data includes the final `X_train`, `X_test`, `y_train`, `y_test` and `df` datasets. 
+This data includes the final `X_train`, `X_test`, `y_train` and `y_test` datasets. 
 You can fetch it back by running the following code : 
 
 
@@ -467,7 +467,6 @@ X_train = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessi
 X_test  = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/X_test.parquet')
 y_train = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/y_train.parquet')["price_sqm"]
 y_test  = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/y_test.parquet')["price_sqm"]
-df      = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/df.parquet')
 ```
 
 
