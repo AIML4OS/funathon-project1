@@ -49,6 +49,10 @@ In case you start from here, here is the parameters you need from past sections 
 
 
 ```{python}
+#| code-fold: true
+#| code-overflow: scroll
+#| eval: false
+
 import pandas as pd 
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
@@ -89,6 +93,7 @@ preprocessor = ColumnTransformer(
     ],
     remainder="passthrough"  # to keep features not transformed
 )
+
 ```
 
 
