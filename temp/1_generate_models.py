@@ -2,13 +2,31 @@ import duckdb
 import os
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
 from sklearn.compose import ColumnTransformer, TransformedTargetRegressor
 from sklearn.pipeline import Pipeline
 from sklearn.ensemble import HistGradientBoostingRegressor, RandomForestRegressor
 from joblib import dump
+import s3fs
+
+# Setting the S3 connection and path generators
+S3_ENDPOINT_URL = "https://" + os.environ["AWS_S3_ENDPOINT"]
+fs = s3fs.S3FileSystem(client_kwargs={'endpoint_url': S3_ENDPOINT_URL})
+
+
+def generate_file_path_s3(FILE_KEY_OUT_S3: str):
+    BUCKET_OUT = "projet-funathon"
+    return BUCKET_OUT + "/2026/project1/" + FILE_KEY_OUT_S3
+
+
+def generate_file_path_s3_models(FILE_KEY_OUT_S3: str):
+    return generate_file_path_s3(f"models/{FILE_KEY_OUT_S3}")
+
+
+def generate_file_path_s3_data(FILE_KEY_OUT_S3: str):
+    return generate_file_path_s3(f"data/{FILE_KEY_OUT_S3}")
+
 
 # Create a non-persistent connection (the database exists only while the connection is alive and disappears when it is closed)
 con = duckdb.connect(database=":memory:")
@@ -35,18 +53,14 @@ RANDOM_STATE = 202605
 # We load all transactions made in France between 2010 and 2022
 trans = con.sql(
     """
-        SELECT * FROM read_parquet('s3://projet-funathon/2026/project1/data/transactions_EN.parquet')
+        SELECT * FROM read_parquet('s3://projet-funathon/2026/project1/data/1_input/transactions_EN.parquet')
     """).to_df()
 
 
 trans = trans[trans["prop_loc_dep"].isin(["75", "77", "78", "91", "92", "93", "94", "95"])]
 
-
-## Exercice 2: Analyzing data inputs
+# Exercice 2: Analyzing data inputs
 trans["price_sqm"] = trans["price"] / trans["farea"]
-
-
-
 
 # Apply some deterministic threshold on the dataframe
 trans = trans[(trans["price_sqm"] < 200000) & (trans["price_sqm"] > 100)]
@@ -74,7 +88,7 @@ trans = trans[mask].reset_index(drop=True)
 trans = trans.dropna(subset = "price_sqm")
 
 df = trans.drop(columns=[
-    "price", "prop_loc_dep", "prop_loc_citycode", "dist_tosea", "predicted_price"
+    "price", "prop_loc_dep", "prop_loc_citycode", "dist_tosea"
 ])
 
 
@@ -129,8 +143,8 @@ def inverse_log_transform(y):
 
 
 y_transformer = FunctionTransformer(
-    func = log_transform,
-    inverse_func = inverse_log_transform)
+    func=log_transform,
+    inverse_func=inverse_log_transform)
 
 
 BEST_ITER = 1000
@@ -148,7 +162,7 @@ gb_final = HistGradientBoostingRegressor(
     random_state=RANDOM_STATE,
 )
 
-X = df.drop(columns=["price_sqm"])
+X = df.drop(columns=["price_sqm",  "predicted_price"])
 y = df["price_sqm"]
 
 X_train, X_test, y_train, y_test = train_test_split(
@@ -156,6 +170,14 @@ X_train, X_test, y_train, y_test = train_test_split(
     test_size=0.2,
     random_state=RANDOM_STATE
 )
+
+# Storing datasets
+datasets = {"X_train": X_train, "X_test": X_test, "y_train": y_train.to_frame(), "y_test":y_test.to_frame(), "df": df}
+
+for name, data in datasets.items():
+    with fs.open(generate_file_path_s3_data(f"2_preprocessing/{name}.parquet"), 'wb') as file_out:
+        data.to_parquet(file_out, index=True)
+
 
 # Wrap in the same pipeline / TransformedTargetRegressor as the RF section
 gb_pipeline_best = Pipeline([
@@ -171,9 +193,8 @@ gb_model_final = TransformedTargetRegressor(
 gb_model_final.fit(X_train, y_train)
 
 # Save the model to a file
-dump(gb_model_final, 'final_gb_model.joblib')
-
-
+with fs.open(generate_file_path_s3_models("final_gb_model.joblib"), 'wb') as file_out:
+    dump(gb_model_final, file_out)
 
 # create RandomForestRegressor with tuned hyperparameters
 rf_final = RandomForestRegressor(
@@ -197,4 +218,6 @@ rf_model_final.fit(X_train, y_train)
 
 
 # Save the model to a file
-dump(rf_model_final, 'final_rf_model.joblib')
+with fs.open(generate_file_path_s3_models("final_rf_model.joblib"), 'wb') as file_out:
+    dump(rf_model_final, file_out)
+

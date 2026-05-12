@@ -22,7 +22,7 @@ To have a better understanding of what we will do, here is an overview of the pr
 
 All data inputs are available on the following S3 bucket : `s3://projet-funathon/2026/project1/data/`
 
-You have to load the file `2026/project1/data/transactions_EN.parquet` for transactions.
+You have to load the file `2026/project1/data/1_input/transactions_EN.parquet` for transactions.
 
 :::
 
@@ -78,7 +78,7 @@ The aim of this part is to manipulate new database and understand features in or
 # We load all transactions made in France between 2010 and 2022
 trans = con.sql(
     """
-        SELECT * FROM read_parquet('s3://projet-funathon/2026/project1/data/transactions_EN.parquet')
+        SELECT * FROM read_parquet('s3://projet-funathon/2026/project1/data/1_input/transactions_EN.parquet')
     """).to_df()
 
 
@@ -93,7 +93,7 @@ DuckDB is not the only tool you can use to read from the data. You can also use 
 import pandas as pd
 
 # We load all transactions made in France between 2010 and 2022
-trans = pd.read_parquet('s3://projet-funathon/2026/project1/data/transactions_EN.parquet')
+trans = pd.read_parquet('s3://projet-funathon/2026/project1/data/1_input/transactions_EN.parquet')
 ```
 :::
 
@@ -371,7 +371,7 @@ You will see in the section {#sec-scikit-learn-pipeline} how preprocessing can b
 #| code-overflow: scroll
 
 df = trans.drop(columns=[
-    "price", "prop_loc_dep", "prop_loc_citycode", "dist_tosea", "predicted_price"
+    "price", "prop_loc_dep", "prop_loc_citycode", "dist_tosea"
 ])
 
 ```
@@ -439,7 +439,7 @@ df = df.drop(columns=["prop_year_harm"])
 from sklearn.model_selection import train_test_split
 
 # Split features / target
-X = df.drop(columns="price_sqm")  # X must contain only the features we'll learn from
+X = df.drop(columns=["price_sqm", "predicted_price"])  # X must contain only the features we'll learn from
 y = df["price_sqm"]  # target must be a dataframe with 1 column
 
 # Split train / test set
@@ -454,6 +454,24 @@ Now that you are familiar with the main mechanisms of pre-processing for model t
 
 Scikit-learn has a very well crafted documentation, so please do not hesitate to go and have a look on [their website](https://scikit-learn.org/stable/api/index.html).
 
+
+::: {.callout-note title="Fall-back option"}
+
+Preprocessed data have been stored in case you need a fall-back. 
+This data includes the final `X_train`, `X_test`, `y_train`, `y_test` and `df` datasets. 
+You can fetch it back by running the following code : 
+
+
+```python
+X_train = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/X_train.parquet')
+X_test  = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/X_test.parquet')
+y_train = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/y_train.parquet')
+y_test  = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/y_test.parquet')
+df      = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/df.parquet')
+```
+
+
+:::
 
 # How do you prepare your data with scikit-learn?
 

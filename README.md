@@ -128,9 +128,9 @@ uv run quarto preview
 ## Data
 Data are synthetic data. 
 
-French version of the data is stored in two files in the `projet-funathon/2026/project1/data/raw/` folder : `2026/project1/data/raw/transactions_flats_FR_raw.parquet` and `2026/project1/data/raw/transactions_houses_FR_raw.parquet`.
+French version of the data is stored in two files in the `projet-funathon/2026/project1/data/0_raw/` folder : `2026/project1/data/0_raw/transactions_flats_FR_raw.parquet` and `2026/project1/data/0_raw/transactions_houses_FR_raw.parquet`.
 
-The script to convert French labelled data to English is stored in `temp/data_config.py`.
+The script to convert French labelled data to English is stored in `temp/0_generate_input.py`.
 
 ## Contributing
 
