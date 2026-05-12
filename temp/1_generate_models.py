@@ -28,6 +28,7 @@ def generate_file_path_s3_data(FILE_KEY_OUT_S3: str):
     return generate_file_path_s3(f"data/{FILE_KEY_OUT_S3}")
 
 
+print("Importing data")
 # Create a non-persistent connection (the database exists only while the connection is alive and disappears when it is closed)
 con = duckdb.connect(database=":memory:")
 
@@ -59,6 +60,7 @@ trans = con.sql(
 
 trans = trans[trans["prop_loc_dep"].isin(["75", "77", "78", "91", "92", "93", "94", "95"])]
 
+print("Pre-processing")
 # Exercice 2: Analyzing data inputs
 trans["price_sqm"] = trans["price"] / trans["farea"]
 
@@ -109,6 +111,7 @@ df['prop_year_harm_10'] = df['prop_year_harm_10'].where(df['prop_year_harm_10'] 
 # Dropping old column
 df = df.drop(columns=["prop_year_harm"])
 
+print("Pipeline")
 def date_to_days(X: pd.Series, ref_date:pd.Timestamp):
     # converts a date to a difference to ref_date :
     diff_dt = pd.to_datetime(X) - ref_date
@@ -146,22 +149,8 @@ y_transformer = FunctionTransformer(
     func=log_transform,
     inverse_func=inverse_log_transform)
 
-
-BEST_ITER = 1000
-BEST_LR = 0.2
-BEST_DEPTH = 8
-BEST_MIN_LEAF = 20
-BEST_L2 = 0
-
-gb_final = HistGradientBoostingRegressor(
-    max_iter=BEST_ITER,
-    learning_rate=BEST_LR,
-    max_depth=BEST_DEPTH,
-    min_samples_leaf=BEST_MIN_LEAF,
-    l2_regularization=BEST_L2,
-    random_state=RANDOM_STATE,
-)
-
+print("Setting training data sets and storing it")
+# X = df.drop(columns=["price_sqm"])
 X = df.drop(columns=["price_sqm",  "predicted_price"])
 y = df["price_sqm"]
 
@@ -179,6 +168,23 @@ for name, data in datasets.items():
         data.to_parquet(file_out, index=True)
 
 
+print("Fitting GB model")
+BEST_ITER = 1000
+BEST_LR = 0.2
+BEST_DEPTH = 8
+BEST_MIN_LEAF = 20
+BEST_L2 = 0
+
+gb_final = HistGradientBoostingRegressor(
+    max_iter=BEST_ITER,
+    learning_rate=BEST_LR,
+    max_depth=BEST_DEPTH,
+    min_samples_leaf=BEST_MIN_LEAF,
+    l2_regularization=BEST_L2,
+    random_state=RANDOM_STATE,
+)
+
+
 # Wrap in the same pipeline / TransformedTargetRegressor as the RF section
 gb_pipeline_best = Pipeline([
     ("preprocessor", preprocessor),  # same preprocessor as defined in the preprocessing section
@@ -192,10 +198,13 @@ gb_model_final = TransformedTargetRegressor(
 
 gb_model_final.fit(X_train, y_train)
 
+print("Saving fitted GB model")
 # Save the model to a file
 with fs.open(generate_file_path_s3_models("final_gb_model.joblib"), 'wb') as file_out:
     dump(gb_model_final, file_out)
 
+
+print("Fitting RF model")
 # create RandomForestRegressor with tuned hyperparameters
 rf_final = RandomForestRegressor(
     n_estimators=80,
@@ -216,7 +225,7 @@ rf_model_final = TransformedTargetRegressor(
 # Train the model
 rf_model_final.fit(X_train, y_train)
 
-
+print("Saving fitted RF model")
 # Save the model to a file
 with fs.open(generate_file_path_s3_models("final_rf_model.joblib"), 'wb') as file_out:
     dump(rf_model_final, file_out)
