@@ -61,33 +61,11 @@ y_transformer = FunctionTransformer(
     inverse_func=inverse_log_transform)
 
 
-# rf_params = {
-#     "n_estimators": 100,
-#     "max_depth": 5,
-#     "max_features": "sqrt",
-#     "min_samples_split": 2,
-#     "min_samples_leaf": 10,
-#     "random_state": RANDOM_STATE,
-#     "oob_score": True,
-#     "n_jobs": -1,  # The number of jobs to run in parallel, -1 using all processors
-# }
-
-# rf_pipeline = Pipeline([
-#     ('preprocessing', preprocessor),
-#     ('RF', RandomForestRegressor(**rf_params))
-# ])
-
-# model = TransformedTargetRegressor(
-#     regressor=rf_pipeline,
-#     transformer=y_transformer
-# )
-
-
-# Importing finetuded models
+# Importing fine-tuned models
 FILE_PATH_S3 = "projet-funathon/2026/project1/models/final_rf_model.joblib" 
 
 with fs.open(FILE_PATH_S3, mode="rb") as model:
-    rf_best = load(model)
+    rf_model_final = load(model)
 
 FILE_PATH_S3 = "projet-funathon/2026/project1/models/final_gb_model.joblib" 
 

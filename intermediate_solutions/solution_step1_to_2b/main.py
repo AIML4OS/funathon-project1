@@ -453,16 +453,16 @@ print(grid_search.best_params_)
 
 # %%
 
-rf_best = grid_search.best_estimator_
-print(type(rf_best))
+rf_model_final = grid_search.best_estimator_
+print(type(rf_model_final))
 
-rf_best.fit(X_train, y_train)
+rf_model_final.fit(X_train, y_train)
 
 
 # Exercice 6: Model evaluation
 # %%
 
-y_pred_test = rf_best.predict(X_test)
+y_pred_test = rf_model_final.predict(X_test)
 
 # %%
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score

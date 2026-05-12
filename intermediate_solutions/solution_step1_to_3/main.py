@@ -302,14 +302,14 @@ grid_search = GridSearchCV(
 # Train
 grid_search.fit(X_train, y_train)
 
-rf_best = grid_search.best_estimator_
-print(type(rf_best))
+rf_model_final = grid_search.best_estimator_
+print(type(rf_model_final))
 
-rf_best.fit(X_train, y_train)
+rf_model_final.fit(X_train, y_train)
 
 # %%
 
-y_pred = rf_best.predict(X_test)
+y_pred = rf_model_final.predict(X_test)
 
 rmse = np.sqrt(mean_squared_error(y_test, y_pred))
 mae  = mean_absolute_error(y_test, y_pred)

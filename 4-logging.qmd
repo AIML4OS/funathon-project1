@@ -159,7 +159,7 @@ The `GridSearchCV` object exposes the best hyperparameter combination via `grid_
 
 ::: {.callout-tip collapse="true" title="Hint"}
 
-First generate predictions with `rf_best.predict(X_test)`, then compute the three metrics using `root_mean_squared_error`, `mean_absolute_error` and `r2_score` from `sklearn.metrics`. Build a dictionary and pass it on to `mlflow.log_metrics()`.
+First generate predictions with `rf_model_final.predict(X_test)`, then compute the three metrics using `root_mean_squared_error`, `mean_absolute_error` and `r2_score` from `sklearn.metrics`. Build a dictionary and pass it on to `mlflow.log_metrics()`.
 
 :::
 
@@ -170,7 +170,7 @@ First generate predictions with `rf_best.predict(X_test)`, then compute the thre
 #| eval: false
     from sklearn.metrics import root_mean_squared_error, r2_score, mean_absolute_error
 
-    y_pred = rf_best.predict(X_test)
+    y_pred = rf_model_final.predict(X_test)
     residuals = y_test - y_pred
 
     metrics = {
@@ -210,7 +210,7 @@ Each call to `mlflow.log_figure()` requires a figure object and a destination fi
     mlflow.log_figure(target_distribution(y_pred), "y_pred_distrib.png")
     mlflow.log_figure(
         permutation_importance(
-            calculate_importance(X_test, y_test, RANDOM_STATE, rf_best, "r2")
+            calculate_importance(X_test, y_test, RANDOM_STATE, rf_model_final, "r2")
         ),
         "importance.png"
     )
@@ -226,9 +226,9 @@ Note that the model signature describes the expected schema for model inputs and
 
 Use `mlflow.sklearn.log_model()` with the following arguments:
 
--   `sk_model`: the fitted model object (`rf_best`);
+-   `sk_model`: the fitted model object (`rf_model_final`);
 -   `name`: the artifact subdirectory name `RF`;
--   `signature`: inferred using `infer_signature(X_train, rf_best.predict(X_train))`;
+-   `signature`: inferred using `infer_signature(X_train, rf_model_final.predict(X_train))`;
 -   `input_example`: a few rows of training data (e.g. `X_train.head(5)`) that illustrate the expected input format;
 -   `registered_model_name`: a versioned name in the MLflow model registry, e.g. `"rf-run"`.
 
@@ -242,10 +242,10 @@ Use `mlflow.sklearn.log_model()` with the following arguments:
     import mlflow.sklearn
     from mlflow.models.signature import infer_signature
 
-    signature = infer_signature(X_train, rf_best.predict(X_train))
+    signature = infer_signature(X_train, rf_model_final.predict(X_train))
 
     mlflow.sklearn.log_model(
-        sk_model=rf_best,
+        sk_model=rf_model_final,
         name="RF",
         signature=signature,
         input_example=X_train.head(5),
