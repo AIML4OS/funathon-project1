@@ -12,7 +12,7 @@ mkdir -p $(dirname "$FILE_3")
 bash temp/extract.sh "1-preprocessing.qmd" $FILE_1
 
 # File step2a - GB
-bash temp/extract.sh "2-GB_model.qmd" "temp.py" && cat $FILE_1 temp.py > $FILE_2A && rm temp.py
+bash temp/extract.sh "2-GB_model.qmd" $FILE_2A
 
 # File step2b - RF
 bash temp/extract.sh "2-RF_model.qmd" "temp.py" && cat $FILE_1 temp.py > $FILE_2B && rm temp.py

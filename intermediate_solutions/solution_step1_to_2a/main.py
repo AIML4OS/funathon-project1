@@ -1,185 +1,21 @@
-
-## Exercice 1: Understanding data inputs
 # %%
-
-import duckdb
-import os
-
-# Create a non-persistent connection (the database exists only while the connection is alive and disappears when it is closed)
-con = duckdb.connect(database=":memory:")
-
-# You need to create a secret table with all the S3 credentials
-con.execute(
-    f"""
-    CREATE SECRET secret_s3 (
-    TYPE S3,
-    KEY_ID '{os.environ["AWS_ACCESS_KEY_ID"]}',
-    SECRET '{os.environ["AWS_SECRET_ACCESS_KEY"]}',
-    ENDPOINT '{os.environ["AWS_S3_ENDPOINT"]}',
-    SESSION_TOKEN '{os.environ["AWS_SESSION_TOKEN"]}',
-    REGION 'eu-west-1',
-    URL_STYLE 'path',
-    SCOPE 's3://projet-funathon/'
-    );
-    """
-)
-
-RANDOM_STATE = 202605
-
-# %%
-
-# We load all transactions made in France between 2010 and 2022
-trans = con.sql(
-    """
-        SELECT * FROM read_parquet('s3://projet-funathon/2026/project1/data/1_input/transactions_EN.parquet')
-    """).to_df()
-
-
-
-# %%
-import pandas as pd
-
-trans = trans[trans["prop_loc_dep"].isin(["75", "77", "78", "91", "92", "93", "94", "95"])]
-
-
-## Exercice 2: Analyzing data inputs
-# %%
-
-trans["price_sqm"] = trans["price"] / trans["farea"]
-
-# %%
-
+import pandas as pd 
 import numpy as np
-import matplotlib.pyplot as plt
-
-y = trans["price_sqm"]
-p = np.percentile(y, 99.5)
-
-fig, axes = plt.subplots(4, 1, figsize=(12, 15))
-
-for ax, (data, label) in zip(axes, [(y, "Y"), (y[y <= p], "Y filtered"), (np.log(y), "log(Y)"), (np.log(y[y <= p]), "log(Y) filtered")]):
-    ax.hist(data, bins="auto", edgecolor="white", color="#334887", alpha=0.95)
-    ax.set_title(label)
-    ax.set_xlabel("Price per square meter")
-    ax.set_ylabel("Number of transactions")
-
-plt.tight_layout()
-plt.show()
-
-# %%
-
-fig, axes = plt.subplots(2, 1, figsize=(12, 15))
-
-for ax, (data, label) in zip(axes, [(y[y <= 2000], "Y below 2000€ per sqm"), (y[y <= 500], "Y below 500€ per sqm")]):
-    ax.hist(data, bins="auto", edgecolor="white", color="#334887", alpha=0.95)
-    ax.set_title(label)
-    ax.set_xlabel("Price per square meter")
-    ax.set_ylabel("Number of transactions")
-
-plt.tight_layout()
-plt.show()
-
-# %%
-
-n0 = trans.shape[0]
-print(f"{n0} rows before filtering")
-
-# Apply some deterministic threshold on the dataframe
-trans = trans[(trans["price_sqm"] < 200000) & (trans["price_sqm"] > 100)]
-
-print(f"{trans.shape[0]} rows after deterministic filtering")
-
-# Apply IQR methods for the outlier removal
-def outlier_transform(y, lower=0.1, upper=0.9):
-    """
-    Transform Y target to log(Y) and remove outliers with IQR method
-
-    Args :
-        y : target
-        lower: lower quantile for the IQR
-        upper: upper quantile for the IQR
-    """
-    Q_lower = np.quantile(y, lower)
-    Q_upper = np.quantile(y, upper)
-    IQR = Q_upper - Q_lower
-
-    mask = (y >= Q_lower - 1.5 * IQR) & (y <= Q_upper + 1.5 * IQR)
-    return mask
-
-mask = outlier_transform(trans["price_sqm"])
-trans = trans[mask].reset_index(drop=True)
-
-n1 = trans.shape[0]
-
-print(f"{n1} rows after deterministic and statistic filtering")
-
-
-# %%
-print(f'Applying these filters methods has dropped about {((n0 - n1)/n0)*100:.2f} % of the transactions.')
-
-# %%
-
-trans = trans.dropna(subset = "price_sqm")
-
-# %%
-
-df = trans.drop(columns=[
-    "price", "prop_loc_dep", "prop_loc_citycode", "dist_tosea"
-])
-
-
-# %%
-# Printing all rows containing at least one NA
-print(df[df.isna().any(axis=1)])
-
-# Filtering NA values
-df = df.dropna()
-
-# %%
-
-df["prop_type"] = pd.Categorical(
-    df["prop_type"],
-    categories=["1", "2"],
-    ordered=False
-).rename_categories({"1": "House", "2": "Flat"})
-
-# %%
-
-counts = df.value_counts("prop_year_harm").reset_index()
-counts[counts["prop_year_harm"] < 1850].describe() # there more than 500 different years of construction, going from 13th century to now. Maybe we can bundle together years before 1850 and group them by decade
-
-counts_10 = ((df["prop_year_harm"] // 10)*10).value_counts().reset_index()  # 82 modalities
-counts_10[counts_10["prop_year_harm"] < 1850].describe()  # years before 1850 represent 64 modalities with maximal class of about two thousands operations - ok
-counts_10[counts_10["prop_year_harm"] < 1850]["count"].sum()
-
-# Replacing year of construction by decade and merging together all years before 1850
-df['prop_year_harm_10'] = (df['prop_year_harm'] // 10)*10
-df['prop_year_harm_10'] = df['prop_year_harm_10'].where(df['prop_year_harm_10'] >= 1850, 1840)
-
-# Dropping old column
-df = df.drop(columns=["prop_year_harm"])
-
-# %%
-
-from sklearn.model_selection import train_test_split
-
-# Split features / target
-X = df.drop(columns="price_sqm")  # X must contain only the features we'll learn from
-y = df["price_sqm"]  # target must be a dataframe with 1 column
-
-# Split train / test set
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y,
-    test_size=0.2,
-    random_state=RANDOM_STATE
-)
-
-
-## Exercice 3: The scikit-learn pipeline
-# %%
-from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
+from sklearn.compose import ColumnTransformer, TransformedTargetRegressor
+from sklearn.pipeline import Pipeline
 
+RANDOM_STATE=202605
+
+def log_transform(y):
+    return np.log10(y)
+
+def inverse_log_transform(y):
+    return 10 ** y
+
+y_transformer = FunctionTransformer(
+    func=log_transform,
+    inverse_func=inverse_log_transform)
 
 def date_to_days(X: pd.Series, ref_date:pd.Timestamp):
     # converts a date to a difference to ref_date :
@@ -204,61 +40,19 @@ preprocessor = ColumnTransformer(
     remainder="passthrough"  # to keep features not transformed
 )
 
-# %%
-from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
-from sklearn.compose import ColumnTransformer, TransformedTargetRegressor
-from sklearn.pipeline import Pipeline
-from sklearn.ensemble import RandomForestRegressor
-
-def log_transform(y):
-    return np.log10(y)
-
-def inverse_log_transform(y):
-    return 10 ** y
-
-y_transformer = FunctionTransformer(
-    func = log_transform,
-    inverse_func = inverse_log_transform)
-
-# Other option with Numpy :
-# y_transformer = FunctionTransformer(
-#     func=np.log,
-#     inverse_func=np.exp)
-
-rf_params = {
-    "n_estimators": 100,
-    "max_depth": 5,
-    "max_features": "sqrt",
-    "min_samples_split": 2,
-    "min_samples_leaf": 10,
-    "random_state": RANDOM_STATE,
-    "oob_score": True,
-    "n_jobs": -1,  # The number of jobs to run in parallel, -1 using all processors
-}
-
-rf_pipeline = Pipeline([
-    ('preprocessing', preprocessor),
-    ('RF', RandomForestRegressor(**rf_params))
-])
-
-model = TransformedTargetRegressor(
-    regressor=rf_pipeline,
-    transformer=y_transformer
-)
-
-
 
 ### Exercice 7: Train your first Gradient Boosting model
 # %%
 from sklearn.ensemble import HistGradientBoostingRegressor
 
-X = df.drop(columns=["price_sqm", "trans_date", "prop_type"])
-y = df["price_sqm"]
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y,
-    test_size=0.2,
-    random_state=RANDOM_STATE
-)
+X_train = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/X_train.parquet')
+X_test  = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/X_test.parquet')
+
+X_train = X_train.drop(columns=["prop_type", "trans_date"])
+X_test  =  X_test.drop(columns=["prop_type", "trans_date"])
+
+y_train = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/y_train.parquet')["price_sqm"]
+y_test  = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/y_test.parquet')["price_sqm"]
 
 gb_baseline = HistGradientBoostingRegressor(random_state=RANDOM_STATE)
 gb_baseline.fit(X_train, y_train)
@@ -290,16 +84,10 @@ for split, X, y in list:
 ### Exercice 8: Tuning Gradient Boosting hyperparameters
 # %%
 
-# Split features / target
-X = df.drop(columns="price_sqm")
-y = df["price_sqm"]
-
-# Split train / test set
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y,
-    test_size=0.2,
-    random_state=RANDOM_STATE
-)
+X_train = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/X_train.parquet')
+X_test  = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/X_test.parquet')
+y_train = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/y_train.parquet')["price_sqm"]
+y_test  = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/y_test.parquet')["price_sqm"]
 
 gb_pipeline = Pipeline([
     ('preprocessing', preprocessor),
@@ -386,7 +174,7 @@ plot_results_cv("max_iter", df_step1)
 
 # %%
 BEST_ITER = 1000  # to automatically catch the best hyperparameter, set to : gs_step1.best_params_["regressor__GB__max_iter"]
-BEST_LR = 0.2  # to automatically catch the best hyperparameter, set to : gs_step1.best_params_["regressor__GB__learning_rate"]
+BEST_LR = 0.3  # to automatically catch the best hyperparameter, set to : gs_step1.best_params_["regressor__GB__learning_rate"]
 
 # %%
 param_grid_step2 = {
@@ -431,8 +219,8 @@ df_step2 = results_to_df(gs_step2.cv_results_)
 plot_results_cv("min_samples_leaf", df_step2)
 
 # %%
-BEST_DEPTH = 8 # to automatically catch the best hyperparameter, set to : gs_step2.best_params_["regressor__GB__max_depth"]
-BEST_MIN_LEAF = 20 # to automatically catch the best hyperparameter, set to : gs_step2.best_params_["regressor__GB__min_samples_leaf"]
+BEST_DEPTH = 20 # to automatically catch the best hyperparameter, set to : gs_step2.best_params_["regressor__GB__max_depth"]
+BEST_MIN_LEAF = 50 # to automatically catch the best hyperparameter, set to : gs_step2.best_params_["regressor__GB__min_samples_leaf"]
 
 # %%
 
@@ -543,7 +331,6 @@ plt.xscale('log')
 plt.yscale('log')
 plt.tight_layout()
 plt.show()
-
 
 # %%
 

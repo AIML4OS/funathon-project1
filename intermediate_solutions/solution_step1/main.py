@@ -164,7 +164,7 @@ df = df.drop(columns=["prop_year_harm"])
 from sklearn.model_selection import train_test_split
 
 # Split features / target
-X = df.drop(columns="price_sqm")  # X must contain only the features we'll learn from
+X = df.drop(columns=["price_sqm"])  # X must contain only the features we'll learn from
 y = df["price_sqm"]  # target must be a dataframe with 1 column
 
 # Split train / test set
@@ -217,8 +217,8 @@ def inverse_log_transform(y):
     return 10 ** y
 
 y_transformer = FunctionTransformer(
-    func = log_transform,
-    inverse_func = inverse_log_transform)
+    func=log_transform,
+    inverse_func=inverse_log_transform)
 
 # Other option with Numpy :
 # y_transformer = FunctionTransformer(

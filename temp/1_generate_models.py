@@ -170,9 +170,9 @@ for name, data in datasets.items():
 # %%
 print("Fitting GB model")
 BEST_ITER = 1000
-BEST_LR = 0.2
-BEST_DEPTH = 8
-BEST_MIN_LEAF = 20
+BEST_LR = 0.3
+BEST_DEPTH = 20
+BEST_MIN_LEAF = 50
 BEST_L2 = 0
 
 gb_final = HistGradientBoostingRegressor(
