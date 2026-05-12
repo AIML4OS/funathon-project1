@@ -79,7 +79,6 @@ mapping_fr_en = {
   "nb_terrasses":"n_terrace",
   "nb_greniers":"n_attic",
   "nb_caves":"n_basmt",
-#   "predicted_price":"predicted_price",
   "nb_autresdep":"n_otherannex"}
 
 data_fr_raw_to_en(

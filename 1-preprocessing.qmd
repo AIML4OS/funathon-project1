@@ -439,7 +439,7 @@ df = df.drop(columns=["prop_year_harm"])
 from sklearn.model_selection import train_test_split
 
 # Split features / target
-X = df.drop(columns=["price_sqm", "predicted_price"])  # X must contain only the features we'll learn from
+X = df.drop(columns=["price_sqm"])  # X must contain only the features we'll learn from
 y = df["price_sqm"]  # target must be a dataframe with 1 column
 
 # Split train / test set

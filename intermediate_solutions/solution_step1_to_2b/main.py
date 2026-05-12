@@ -124,7 +124,7 @@ trans = trans.dropna(subset = "price_sqm")
 # %%
 
 df = trans.drop(columns=[
-    "price", "prop_loc_dep", "prop_loc_citycode", "dist_tosea", "predicted_price"
+    "price", "prop_loc_dep", "prop_loc_citycode", "dist_tosea"
 ])
 
 
@@ -494,24 +494,4 @@ plt.yscale('log')
 plt.tight_layout()
 plt.show()
 
-# %%
-fig, ax = plt.subplots(figsize=(7, 7))
-
-other_pred = (trans["predicted_price"]/trans["farea"])[X_test.index]
-
-ax.scatter(y_test, y_pred_test, alpha=0.1, s=5, c="blue", label="Actual vs model")
-ax.scatter(other_pred, y_pred_test, alpha=0.3, s=5, c="green", label="CROSPINT vs this model")
-
-lims = [min(other_pred.min(), y_pred_test.min(), y_test.min(),),
-        max(other_pred.max(), y_pred_test.max(), y_test.max(),)]
-ax.plot(lims, lims, "r--", linewidth=1.5, label="Perfect prediction")
-
-ax.set_xlabel("Actual or CROSPINT predicted values (log, price per sqm)")
-ax.set_ylabel("Predicted values (log, price per sqm)")
-ax.set_title("Comparison of predicted, and CROSPINT values vs actual values on the test set\n(Gradient Boosting)")
-ax.legend()
-plt.xscale('log')
-plt.yscale('log')
-plt.tight_layout()
-plt.show()
 

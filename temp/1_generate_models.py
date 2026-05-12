@@ -150,8 +150,7 @@ y_transformer = FunctionTransformer(
     inverse_func=inverse_log_transform)
 
 print("Setting training data sets and storing it")
-# X = df.drop(columns=["price_sqm"])
-X = df.drop(columns=["price_sqm",  "predicted_price"])
+X = df.drop(columns=["price_sqm"])
 y = df["price_sqm"]
 
 X_train, X_test, y_train, y_test = train_test_split(

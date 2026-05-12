@@ -587,34 +587,6 @@ plt.tight_layout()
 plt.show()
 ```
 
-We trained another gradient boosting model using [CROSPINT's package](https://github.com/oliviermeslin/crospint). 
-The CROSPINT package transforms the geographical coordinates of a properties to predict with higher precision the final price. 
-In-depth details is available on its webpage. 
-The result is stored under the `predicted_value` column in the transaction dataframe. 
-Using that column, we can also compare our model, CROSPINT's model vs the actual values. 
-
-```{python}
-fig, ax = plt.subplots(figsize=(7, 7))
-
-other_pred = (trans["predicted_price"]/trans["farea"])[X_test.index]
-
-ax.scatter(y_test, y_pred_test, alpha=0.1, s=5, c="blue", label="Actual vs model")
-ax.scatter(other_pred, y_pred_test, alpha=0.3, s=5, c="green", label="CROSPINT vs this model")
-
-lims = [min(other_pred.min(), y_pred_test.min(), y_test.min(),),
-        max(other_pred.max(), y_pred_test.max(), y_pred_test.max(),)]
-ax.plot(lims, lims, "r--", linewidth=1.5, label="Perfect prediction")
-
-ax.set_xlabel("Actual or CROSPINT predicted values (log, price per sqm)")
-ax.set_ylabel("Predicted values (log, price per sqm)")
-ax.set_title("Comparison of predicted, and CROSPINT values vs actual values on the test set\n(Gradient Boosting)")
-ax.legend()
-plt.xscale('log')
-plt.yscale('log')
-plt.tight_layout()
-plt.show()
-```
-
 
 
 ```{python}

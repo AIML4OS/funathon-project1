@@ -124,7 +124,7 @@ trans = trans.dropna(subset = "price_sqm")
 # %%
 
 df = trans.drop(columns=[
-    "price", "prop_loc_dep", "prop_loc_citycode", "dist_tosea", "predicted_price"
+    "price", "prop_loc_dep", "prop_loc_citycode", "dist_tosea"
 ])
 
 
