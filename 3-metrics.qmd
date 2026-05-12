@@ -155,11 +155,11 @@ gb_model = gb_model_final
 
 # best RF
 y_pred_RF = rf_best.predict(X_test)
-RF_residuals = y_test - y_pred_RF
+rf_residuals = y_test - y_pred_RF
 
 # best GB
 y_pred_GB = gb_model_final.predict(X_test)
-GB_residuals = y_test - y_pred_GB
+gb_residuals = y_test - y_pred_GB
 
 ```
 
@@ -268,8 +268,8 @@ Pass the residuals series and the RMSE value computed in Exercise 8. The RMSE va
 #| eval: false
 
 fig, ax = plt.subplots()
-residuals_distribution(RF_residuals, rmse_rf, ax=ax, label=f"RF (RMSE={rmse_rf:.3f})", color="steelblue")
-residuals_distribution(GB_residuals, rmse_gb, ax=ax, label=f"GB (RMSE={rmse_gb:.3f})", color="darkorange")
+residuals_distribution(rf_residuals, rmse_rf, ax=ax, label=f"RF (RMSE={rmse_rf:.3f})", color="steelblue")
+residuals_distribution(gb_residuals, rmse_gb, ax=ax, label=f"GB (RMSE={rmse_gb:.3f})", color="darkorange")
 plt.show()
 ```
 

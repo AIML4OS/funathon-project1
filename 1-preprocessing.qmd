@@ -465,8 +465,8 @@ You can fetch it back by running the following code :
 ```python
 X_train = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/X_train.parquet')
 X_test  = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/X_test.parquet')
-y_train = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/y_train.parquet')
-y_test  = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/y_test.parquet')
+y_train = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/y_train.parquet').values
+y_test  = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/y_test.parquet').values
 df      = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/df.parquet')
 ```
 
@@ -623,8 +623,8 @@ def inverse_log_transform(y):
     return 10 ** y
 
 y_transformer = FunctionTransformer(
-    func = log_transform,
-    inverse_func = inverse_log_transform)
+    func=log_transform,
+    inverse_func=inverse_log_transform)
 
 # Other option with Numpy :
 # y_transformer = FunctionTransformer(
