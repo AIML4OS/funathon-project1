@@ -82,7 +82,7 @@ mapping_fr_en = {
   "nb_autresdep":"n_otherannex"}
 
 data_fr_raw_to_en(
-    ["transactions_houses_FR_raw.parquet", "transactions_flats_FR_raw.parquet"], 
+    ["transactions_houses.parquet", "transactions_flats.parquet"], 
     mapping_fr_en, 
     "transactions_EN.parquet")
 
