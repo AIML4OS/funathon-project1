@@ -440,10 +440,10 @@ grid_search.myfittedparam_
 #| code-overflow: scroll
 #| eval: false
 
-rf_best = grid_search.best_estimator_
-print(type(rf_best))
+rf_model_final = grid_search.best_estimator_
+print(type(rf_model_final))
 
-rf_best.fit(X_train, y_train)
+rf_model_final.fit(X_train, y_train)
 ```
 
 Congrats ! You have optimized your RF model. Now, you need to evaluate its accuracy — that is, how close the model's predictions are to the actual values..
@@ -468,7 +468,7 @@ fs = s3fs.S3FileSystem(client_kwargs={'endpoint_url': S3_ENDPOINT_URL})
 FILE_PATH_S3 = "projet-funathon/2026/project1/models/final_rf_model.joblib" 
 
 with fs.open(FILE_PATH_S3, mode="rb") as model:
-    rf_best = load(model)
+    rf_model_final = load(model)
 
 ```
 :::
@@ -489,7 +489,7 @@ Several metrics are commonly used to evaluate regression models:
 #| code-overflow: scroll
 #| eval: false
 
-y_pred_test = rf_best.predict(X_test)
+y_pred_test = rf_model_final.predict(X_test)
 ```
 
 2.  Calculate the three evaluation metrics on the test set.

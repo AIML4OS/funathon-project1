@@ -120,7 +120,7 @@ fs = s3fs.S3FileSystem(client_kwargs={'endpoint_url': S3_ENDPOINT_URL})
 FILE_PATH_S3 = "projet-funathon/2026/project1/models/final_rf_model.joblib" 
 
 with fs.open(FILE_PATH_S3, mode="rb") as model:
-    rf_best = load(model)
+    rf_model_final = load(model)
 
 FILE_PATH_S3 = "projet-funathon/2026/project1/models/final_gb_model.joblib" 
 
@@ -130,25 +130,13 @@ with fs.open(FILE_PATH_S3, mode="rb") as model:
 ```
 
 You can also also fall back to the current state by running the script in `temp/2_fallback.py`.
-It will load the model and all parameters and data necessary to keep on going through the next exercices.  
+It will load the model,  all parameters and data necessary to keep on going through the next exercices.  
 
 :::
 
-```{python}
-#| code-fold: true
-#| code-summary: See the solution
-#| code-overflow: scroll
-#| eval: false
 
-# best RF
-rf_model = rf_best
-
-# best GB
-gb_model = gb_model_final
-
-```
-
-1.  Generate predictions on the test set using the best RF model from Exercise 5 and compute the residuals.
+1.  Generate predictions on the test set using the best RF and GB models from exercise 5 and compute their residuals.
+It is normal if the prediction takes some time. 
 
 
 ```{python}
@@ -158,7 +146,7 @@ gb_model = gb_model_final
 #| eval: false
 
 # best RF
-y_pred_RF = rf_best.predict(X_test)
+y_pred_RF = rf_model_final.predict(X_test)
 rf_residuals = y_test - y_pred_RF
 
 # best GB
@@ -415,7 +403,7 @@ plt.show()
 ```
 :::
 
-7. (Only for RF model) Write a `calculate_importance(X_test, y_test, RANDOM_STATE, rf_best, SCORING)` function, which returns a sorted Series of importance scores with features name as index. The parameters are the test set (`X_test` and `y_test`), the RF model `rf_best` trained in last section and the scoring chosen for the impurity reduction.
+7. (Only for RF model) Write a `calculate_importance(X_test, y_test, RANDOM_STATE, rf_model_final, SCORING)` function, which returns a sorted Series of importance scores with features name as index. The parameters are the test set (`X_test` and `y_test`), the RF model `rf_model_final` trained in last section and the scoring chosen for the impurity reduction.
 
 Note that permutation importance is computationally expensive on a large test set. The `calculate_importance()` function automatically subsamples up to 100,000 observations before computing importance scores. This subsample does not change the result.
 
@@ -492,7 +480,7 @@ Calculate the importance with the train set and the final RF model. The `SCORING
 score = "r2"
 RANDOM_STATE = 202605
 
-importances = calculate_importance(X_test, y_test, RANDOM_STATE, rf_best, score)
+importances = calculate_importance(X_test, y_test, RANDOM_STATE, rf_model_final, score)
 fig_importance = importance_plot(importances)
 plt.show()
 ```
