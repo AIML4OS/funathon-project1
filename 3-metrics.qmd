@@ -128,6 +128,10 @@ with fs.open(FILE_PATH_S3, mode="rb") as model:
     gb_model_final = load(model)
 
 ```
+
+You can also also fall back to the current state by running the script in `temp/2_fallback.py`.
+It will load the model and all parameters and data necessary to keep on going through the next exercices.  
+
 :::
 
 ```{python}
