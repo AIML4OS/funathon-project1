@@ -43,9 +43,64 @@ For more information, you can read the detailed presentation of the gradient boo
 
 To allow for comparison with the random forest section, we chose to use the same conditions : dropping the `trans_date` and `prop_type` features and working with the **non transformed target** (i.e.price per square meter) and not use the transformed target (i.e. log of the price per square meter) defined at the end of the pre-processing. We will come back to this later on and chain it with the preprocessing steps.
 
+
+::: {.callout-note title="Fall back code"}
+In case you start from here, here is the parameters you need from past sections : 
+
+
+```{python}
+import pandas as pd 
+import numpy as np
+from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
+from sklearn.compose import ColumnTransformer, TransformedTargetRegressor
+from sklearn.pipeline import Pipeline
+
+RANDOM_STATE=202605
+
+def log_transform(y):
+    return np.log10(y)
+
+def inverse_log_transform(y):
+    return 10 ** y
+
+y_transformer = FunctionTransformer(
+    func=log_transform,
+    inverse_func=inverse_log_transform)
+
+def date_to_days(X: pd.Series, ref_date:pd.Timestamp):
+    # converts a date to a difference to ref_date :
+    diff_dt = pd.to_datetime(X) - ref_date
+    # Extract days part from datetime object
+    diff_dt = diff_dt.dt.days
+    # Transform it from a Pandas series to a Numpy nd array, used by scikit learn for input
+    diff_dt = diff_dt.to_numpy().reshape(-1, 1)
+
+    return diff_dt
+
+date_transformer = FunctionTransformer(
+    date_to_days,
+    kw_args={"ref_date": pd.Timestamp('2010-01-01 00:00')}
+    )
+
+preprocessor = ColumnTransformer(
+    transformers=[
+        ("cat", OneHotEncoder(handle_unknown="ignore"), ["prop_type", "prop_year_harm_10"]),  # one-hot encoder on feature
+        ("dat", date_transformer, "trans_date") # feature time since 01-01-2010
+    ],
+    remainder="passthrough"  # to keep features not transformed
+)
+```
+
+
+
+:::
+
 ### Exercice 7: Train your first Gradient Boosting model
 
-1.  Using the `HistGradientBoostingRegressor` class and its [scikit-learn documentation page](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html), define and train a baseline model with **default hyperparameters** using the same training set `X_train` and `y_train` defined in the preprocessing section.
+1.  Using the `HistGradientBoostingRegressor` class and its [scikit-learn documentation page](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html), define and train a baseline model with **default hyperparameters**. 
+For convenience, load the training and testing datasets `X_train, X_test, y_train, y_test` that were already defined at the end of the [pre-processing section](1-preprocessing.qmd).
+Drop the features `prop_type`, `trans_date` from `X_train` and `X_test`. 
+It will simplify the scikit learn code - in real life you wouldn't drop these features and that's what we'll do later on.
 
 **Note that just like for `RandomForestRegressor`, all parameters have default values — you do not need to pass any argument to get a working model.**
 
@@ -57,13 +112,14 @@ To allow for comparison with the random forest section, we chose to use the same
 #| eval: false
 from sklearn.ensemble import HistGradientBoostingRegressor
 
-X = df.drop(columns=["price_sqm", "trans_date", "prop_type"])
-y = df["price_sqm"]
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y,
-    test_size=0.2,
-    random_state=RANDOM_STATE
-)
+X_train = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/X_train.parquet')
+X_test  = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/X_test.parquet')
+
+X_train = X_train.drop(columns=["prop_type", "trans_date"])
+X_test  =  X_test.drop(columns=["prop_type", "trans_date"])
+
+y_train = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/y_train.parquet')["price_sqm"]
+y_test  = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/y_test.parquet')["price_sqm"]
 
 gb_baseline = HistGradientBoostingRegressor(random_state=RANDOM_STATE)
 gb_baseline.fit(X_train, y_train)
@@ -156,14 +212,12 @@ We use the same `X_train`, `X_test`, `y_train`, `y_test` splits defined in the p
 
 ### Exercice 8: Tuning Gradient Boosting hyperparameters
 
-0.  For convenience, we prepare the data and pipeline with the following instructions :
-    -   Drop the features `prop_type`, `trans_date` of the dataframe;
+0. Prepare the pipeline. this time, we will use all of the features : 
 
-    -   Create `X` dataframe and `y` Pandas Serie for training our model on prices per square meters.
+- Load the training and testing datasets `X_train, X_test, y_train, y_test` that we saved earlier. 
+  
 
-    -   Define the new training and testing datasets `X_train, X_test, y_train, y_test`.
-
-    -   Update the definition of our previous pipeline structure (with `TransformedTargetRegressor`) with a Gradient Boosting model with `random state` and `early stopping` parameters.
+- Update the definition of our previous pipeline structure (with `TransformedTargetRegressor`) with a Gradient Boosting model with `random state` and `early stopping` parameters.
 
 Note that we will tune the hyperparameters using the whole pipeline and this set of training and test sets.
 
@@ -173,16 +227,10 @@ Note that we will tune the hyperparameters using the whole pipeline and this set
 #| code-overflow: scroll
 #| eval: false
 
-# Split features / target
-X = df.drop(columns="price_sqm")
-y = df["price_sqm"]
-
-# Split train / test set
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y,
-    test_size=0.2,
-    random_state=RANDOM_STATE
-)
+X_train = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/X_train.parquet')
+X_test  = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/X_test.parquet')
+y_train = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/y_train.parquet')["price_sqm"]
+y_test  = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/y_test.parquet')["price_sqm"]
 
 gb_pipeline = Pipeline([
     ('preprocessing', preprocessor),
@@ -332,7 +380,7 @@ plot_results_cv("max_iter", df_step1)
 If the best value of `max_iter` is the largest value tested (500), consider extending the grid before moving to the next step.
 
 In the end, we chose the hyperparameters 1000 fot he number of iterations : going beyond doesn't improve the score. 
-For the learning rate, 0.2 is the maximum with which the model still learns. 
+For the learning rate, 0.3 is the maximum with which the model still learns. 
 
 ```{python}
 #| code-fold: true
@@ -340,7 +388,7 @@ For the learning rate, 0.2 is the maximum with which the model still learns.
 #| code-overflow: scroll
 #| eval: false
 BEST_ITER = 1000  # to automatically catch the best hyperparameter, set to : gs_step1.best_params_["regressor__GB__max_iter"]
-BEST_LR = 0.2  # to automatically catch the best hyperparameter, set to : gs_step1.best_params_["regressor__GB__learning_rate"]
+BEST_LR = 0.3  # to automatically catch the best hyperparameter, set to : gs_step1.best_params_["regressor__GB__learning_rate"]
 ```
 
 #### Step 2 — Jointly optimise the tree structure
@@ -410,8 +458,8 @@ Let's set the max depth and minimal size of terminal leaves.
 #| code-summary: See the solution
 #| code-overflow: scroll
 #| eval: false
-BEST_DEPTH = 8 # to automatically catch the best hyperparameter, set to : gs_step2.best_params_["regressor__GB__max_depth"]
-BEST_MIN_LEAF = 20 # to automatically catch the best hyperparameter, set to : gs_step2.best_params_["regressor__GB__min_samples_leaf"]
+BEST_DEPTH = 20 # to automatically catch the best hyperparameter, set to : gs_step2.best_params_["regressor__GB__max_depth"]
+BEST_MIN_LEAF = 50 # to automatically catch the best hyperparameter, set to : gs_step2.best_params_["regressor__GB__min_samples_leaf"]
 ```
 
 #### Step 3 — Optimise the regularisation parameters
