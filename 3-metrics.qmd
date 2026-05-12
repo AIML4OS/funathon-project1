@@ -136,8 +136,6 @@ It will load the model,  all parameters and data necessary to keep on going thro
 
 
 1.  Generate predictions on the test set using the best RF and GB models from exercise 5 and compute their residuals.
-It is normal if the prediction takes some time. 
-
 
 ```{python}
 #| code-fold: true
@@ -182,7 +180,7 @@ def print_metrics(model, split, X=X_train, y=y_train):
     r2  = r2_score(y, y_pred)
     print(f"{split} — RMSE: {rmse:.2f}  |  MAE: {mae:.2f}  |  R²: {r2:.4f}")
 
-models = [("RF", rf_model), ("GB", gb_model)]
+models = [("RF", rf_model_final), ("GB", gb_model_final)]
 
 for name, model in models:
     print_metrics(model, name, X_test, y_test)
