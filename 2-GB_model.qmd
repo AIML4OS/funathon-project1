@@ -532,7 +532,7 @@ import s3fs
 # Create filesystem object
 S3_ENDPOINT_URL = "https://" + os.environ["AWS_S3_ENDPOINT"]
 fs = s3fs.S3FileSystem(client_kwargs={'endpoint_url': S3_ENDPOINT_URL})
-FILE_PATH_S3 = "projet-funathon/2026/project1/models/final_gb_model.joblib" 
+FILE_PATH_S3 = "projet-funathon/2026/project1/models/gb_model_final.joblib" 
 
 with fs.open(FILE_PATH_S3, mode="rb") as model:
     gb_model_final = load(model)
@@ -622,7 +622,7 @@ plt.show()
 from joblib import dump
 
 # Save the model to a file
-dump(gb_model_final, 'final_gb_model.joblib')
+dump(gb_model_final, 'gb_model_final.joblib')
 ```
 
 # Summary

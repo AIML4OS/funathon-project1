@@ -200,7 +200,7 @@ gb_model_final.fit(X_train, y_train)
 
 print("Saving fitted GB model")
 # Save the model to a file
-with fs.open(generate_file_path_s3_models("final_gb_model.joblib"), 'wb') as file_out:
+with fs.open(generate_file_path_s3_models("gb_model_final.joblib"), 'wb') as file_out:
     dump(gb_model_final, file_out)
 
 
@@ -227,6 +227,6 @@ rf_model_final.fit(X_train, y_train)
 
 print("Saving fitted RF model")
 # Save the model to a file
-with fs.open(generate_file_path_s3_models("final_rf_model.joblib"), 'wb') as file_out:
+with fs.open(generate_file_path_s3_models("rf_model_final.joblib"), 'wb') as file_out:
     dump(rf_model_final, file_out)
 

@@ -62,12 +62,12 @@ y_transformer = FunctionTransformer(
 
 
 # Importing fine-tuned models
-FILE_PATH_S3 = "projet-funathon/2026/project1/models/final_rf_model.joblib" 
+FILE_PATH_S3 = "projet-funathon/2026/project1/models/rf_model_final.joblib" 
 
 with fs.open(FILE_PATH_S3, mode="rb") as model:
     rf_model_final = load(model)
 
-FILE_PATH_S3 = "projet-funathon/2026/project1/models/final_gb_model.joblib" 
+FILE_PATH_S3 = "projet-funathon/2026/project1/models/gb_model_final.joblib" 
 
 with fs.open(FILE_PATH_S3, mode="rb") as model:
     gb_model_final = load(model)

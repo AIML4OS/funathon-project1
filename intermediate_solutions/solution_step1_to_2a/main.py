@@ -570,5 +570,5 @@ plt.show()
 from joblib import dump
 
 # Save the model to a file
-dump(gb_model_final, 'final_gb_model.joblib')
+dump(gb_model_final, 'gb_model_final.joblib')
 
