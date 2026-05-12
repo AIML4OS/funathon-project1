@@ -15,7 +15,7 @@ bash temp/extract.sh "1-preprocessing.qmd" $FILE_1
 bash temp/extract.sh "2-GB_model.qmd" $FILE_2A
 
 # File step2b - RF
-bash temp/extract.sh "2-RF_model.qmd" "temp.py" && cat $FILE_1 temp.py > $FILE_2B && rm temp.py
+bash temp/extract.sh "2-RF_model.qmd" $FILE_2B
 
 # File step3 - metrics
 bash temp/extract.sh "3-metrics.qmd" "temp.py" && cat starting_point/0_fallback.py temp.py > $FILE_3 && rm temp.py
