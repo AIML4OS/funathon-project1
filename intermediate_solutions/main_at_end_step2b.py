@@ -2,23 +2,27 @@
 # Exercice 4: Train your first Random Forest model
 # %%
 
-import pandas as pd 
+import pandas as pd
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
 from sklearn.compose import ColumnTransformer, TransformedTargetRegressor
 from sklearn.pipeline import Pipeline
 
-RANDOM_STATE=202605
+RANDOM_STATE = 202605
+
 
 def log_transform(y):
     return np.log10(y)
 
+
 def inverse_log_transform(y):
     return 10 ** y
+
 
 y_transformer = FunctionTransformer(
     func=log_transform,
     inverse_func=inverse_log_transform)
+
 
 def date_to_days(X: pd.Series, ref_date:pd.Timestamp):
     # converts a date to a difference to ref_date :
@@ -29,6 +33,7 @@ def date_to_days(X: pd.Series, ref_date:pd.Timestamp):
     diff_dt = diff_dt.to_numpy().reshape(-1, 1)
 
     return diff_dt
+
 
 date_transformer = FunctionTransformer(
     date_to_days,
@@ -43,6 +48,26 @@ preprocessor = ColumnTransformer(
     remainder="passthrough"  # to keep features not transformed
 )
 
+rf_params = {
+    "n_estimators": 100,
+    "max_depth": 5,
+    "max_features": "sqrt",
+    "min_samples_split": 2,
+    "min_samples_leaf": 10,
+    "random_state": RANDOM_STATE,
+    "oob_score": True,
+    "n_jobs": -1,  # The number of jobs to run in parallel, -1 using all processors
+}
+
+rf_pipeline = Pipeline([
+    ('preprocessing', preprocessor),
+    ('RF', RandomForestRegressor(**rf_params))
+])
+
+model = TransformedTargetRegressor(
+    regressor=rf_pipeline,
+    transformer=y_transformer
+)
 
 # %%
 from sklearn.ensemble import RandomForestRegressor
@@ -96,7 +121,6 @@ X_sub = X_train.filter(items=y_sub.index, axis=0 )  # sampling X_train
 
 
 # %%
-import numpy as np
 import warnings
 
 metric = "r2"
@@ -269,20 +293,27 @@ print(f"MAE  : {mae:.2f}")
 print(f"R²   : {r2:.4f}")
 
 # %%
+import matplotlib.pyplot as plt
 
-fig, ax = plt.subplots(figsize=(7, 7))
 
-ax.scatter(y_test, y_pred_test, alpha=0.3, s=5, label="Predictions")
+def predicted_actual_plot(y_test, y_pred_test, model_name):
+    fig, ax = plt.subplots(figsize=(7, 7))
 
-lims = [min(y_test.min(), y_pred_test.min()), max(y_test.max(), y_pred_test.max())]
-ax.plot(lims, lims, "r--", linewidth=1.5, label="Perfect prediction")
+    ax.scatter(y_test, y_pred_test, alpha=0.3, s=5, label="Predictions")
 
-ax.set_xlabel("Actual values (log, price per sqm)")
-ax.set_ylabel("Predicted values (log, price per sqm)")
-ax.set_title("Predicted vs. Actual values on the test set")
-ax.legend()
-plt.xscale('log')
-plt.yscale('log')
-plt.tight_layout()
-plt.show()
+    lims = [min(y_test.min(), y_pred_test.min()),
+            max(y_test.max(), y_pred_test.max())]
+    ax.plot(lims, lims, "r--", linewidth=1.5, label="Perfect prediction")
+
+    ax.set_xlabel("Actual values (log)")
+    ax.set_ylabel("Predicted values (log)")
+    ax.set_title(f"Comparison of predicted values vs. actual values on the test set\n({model_name})")
+    ax.legend()
+    plt.xscale('log')
+    plt.yscale('log')
+    plt.tight_layout()
+    return fig
+
+
+predicted_actual_plot(y_test, y_pred_test, "Random Forest")
 

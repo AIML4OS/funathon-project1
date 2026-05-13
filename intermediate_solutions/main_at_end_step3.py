@@ -177,8 +177,8 @@ def target_distribution(y: pd.Series):
     fig = plt.figure()
     plt.plot(axe, y_sorted)
     plt.xlabel("Percentile")
-    plt.ylabel("Valeur")
-    plt.title("Distribution ordonnée")
+    plt.ylabel("Value (EUR)")
+    plt.title("Distribution")
     return fig
 
 
@@ -259,7 +259,6 @@ def importance_plot(importances):
     ax.set_title("Permutation importance (top 20)")
     ax.set_xlabel("Mean increase in RMSE")
     plt.tight_layout()
-    plt.savefig("importances.png", dpi=150)
     return fig
 
 

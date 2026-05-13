@@ -1,4 +1,5 @@
 # %%
+
 import pandas as pd 
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
@@ -39,6 +40,29 @@ preprocessor = ColumnTransformer(
     ],
     remainder="passthrough"  # to keep features not transformed
 )
+
+import matplotlib.pyplot as plt
+
+
+def predicted_actual_plot(y_test, y_pred_test, model_name):
+    fig, ax = plt.subplots(figsize=(7, 7))
+
+    ax.scatter(y_test, y_pred_test, alpha=0.3, s=5, label="Predictions")
+
+    lims = [min(y_test.min(), y_pred_test.min()),
+            max(y_test.max(), y_pred_test.max())]
+    ax.plot(lims, lims, "r--", linewidth=1.5, label="Perfect prediction")
+
+    ax.set_xlabel("Actual values (log)")
+    ax.set_ylabel("Predicted values (log)")
+    ax.set_title(f"Comparison of predicted values vs. actual values on the test set\n({model_name})")
+    ax.legend()
+    plt.xscale('log')
+    plt.yscale('log')
+    plt.tight_layout()
+    return fig
+
+
 
 
 ### Exercice 7: Train your first Gradient Boosting model
@@ -311,31 +335,8 @@ for split, X, y in list:
     print_metrics(gb_model_final, split, X, y)
 
 # %%
-import matplotlib.pyplot as plt
 
 y_pred_test = gb_model_final.predict(X_test)
+predicted_actual_plot(y_test, y_pred_test, "Gradient Boosting")
 
-fig, ax = plt.subplots(figsize=(7, 7))
-
-ax.scatter(y_test, y_pred_test, alpha=0.3, s=5, label="Predictions")
-
-lims = [min(y_test.min(), y_pred_test.min()),
-        max(y_test.max(), y_pred_test.max())]
-ax.plot(lims, lims, "r--", linewidth=1.5, label="Perfect prediction")
-
-ax.set_xlabel("Actual values (log)")
-ax.set_ylabel("Predicted values (log)")
-ax.set_title("Comparison of predicted values vs. actual values on the test set\n(Gradient Boosting)")
-ax.legend()
-plt.xscale('log')
-plt.yscale('log')
-plt.tight_layout()
-plt.show()
-
-# %%
-
-from joblib import dump
-
-# Save the model to a file
-dump(gb_model_final, 'gb_model_final.joblib')
 
