@@ -86,16 +86,27 @@ def residuals_distribution(residuals: pd.Series, rmse: float, ax=None, label=Non
     return ax.get_figure()
 
 
-def target_distribution(y: pd.Series):
-    y_sorted = np.sort(y)
-    axe = np.linspace(0, 100, len(y_sorted))   # axe with percentiles
+def plot_combined_distribution(y_test: pd.Series, y_pred: pd.Series, ax=None, label=None, color=None, show_actual=True):
+    """
+    Plots the target distributions of actual and predicted values on the same graph.
+    """
+    if ax is None:
+        fig, ax = plt.subplots()
 
-    fig = plt.figure()
-    plt.plot(axe, y_sorted)
-    plt.xlabel("Percentile")
-    plt.ylabel("Valeur")
-    plt.title("Distribution ordonnée")
-    return fig
+    if show_actual:
+        y_sorted_actual = np.sort(y_test)
+        axe_actual = np.linspace(0, 100, len(y_sorted_actual))
+        ax.plot(axe_actual, y_sorted_actual, label="Actual Values", color="black")
+
+    y_sorted_pred = np.sort(y_pred)
+    axe_pred = np.linspace(0, 100, len(y_sorted_pred))
+    ax.plot(axe_pred, y_sorted_pred, label=label or "Predicted Values", color=color)
+
+    ax.set_xlabel("Percentile")
+    ax.set_ylabel("Price")
+    ax.set_title("Target distribution — actual vs predicted values")
+    ax.legend()
+    return ax
 
 
 def calculate_importance(X_test, y_test, RANDOM_STATE, model, SCORING):
@@ -127,7 +138,6 @@ def importance_plot(importances):
     ax.set_title("Permutation importance (top 20)")
     ax.set_xlabel("Mean increase in RMSE")
     plt.tight_layout()
-    plt.savefig("importances.png", dpi=150)
     return fig
 
 
@@ -136,13 +146,13 @@ def log_to_mlflow(exp_name, model, model_name, model_params, X_train, X_test, y_
     mlflow.set_experiment(exp_name)
     signature = infer_signature(X_train, model.predict(X_train))
 
-    with mlflow.start_run(run_name=exp_name):
+    with mlflow.start_run():
         mlflow.sklearn.log_model(
             sk_model=model,
             name=model_name,
             signature=signature,
             input_example=X_train.head(5),
-            registered_model_name=exp_name,
+            registered_model_name=model_name,
         )
 
         y_pred = model.predict(X_test)
@@ -157,16 +167,23 @@ def log_to_mlflow(exp_name, model, model_name, model_params, X_train, X_test, y_
         mlflow.log_metrics(model_metrics)
         mlflow.log_params(model_params)
 
+        # Distribution of residuals
         mlflow.log_figure(
                 residuals_distribution(residuals, model_metrics["r2"]),
                 "residuals_distrib.png"
             )
-        mlflow.log_figure(QQplot(y_test, y_pred), "qqplot.png")
-        mlflow.log_figure(target_distribution(y_test), "y_test_distrib.png")
-        mlflow.log_figure(target_distribution(y_pred), "y_pred_distrib.png")
 
+        # Distribution of y_test and y_pred
+        fig, ax = plt.subplots()
+        plot_combined_distribution(y_test, y_pred, ax=ax, label=f"{model_name} - predicted values", color="steelblue", show_actual=True)
+        mlflow.log_figure(fig, "y_distrib.png")
+
+        # QQ Plot
+        mlflow.log_figure(QQplot(y_test, y_pred), "qqplot.png")
+
+        # Importance plot
         mlflow.log_figure(
-            permutation_importance(
+            importance_plot(
                 calculate_importance(X_test, y_test, RANDOM_STATE, model, "r2")
             ),
             "importance.png"
@@ -343,12 +360,17 @@ gb_model_final.fit(X_train, y_train)
 # Saving model to MLFlow
 logger.info("Storing GB model to MLFlow")
 exp_name = "Funathon - project 1"
-model = gb_model_final
-model_name = "GB"
-model_params = gb_params
 
-log_to_mlflow(exp_name, model, model_name, model_params, X_train, X_test, y_train, y_test)
-
+log_to_mlflow(
+    exp_name=exp_name,
+    model=gb_model_final,
+    model_name="GB",
+    model_params=gb_params,
+    X_train=X_train,
+    X_test=X_test, 
+    y_train=y_train, 
+    y_test=y_test
+)
 # %%
 logger.info("Fitting RF model")
 # create RandomForestRegressor with tuned hyperparameters
@@ -375,10 +397,19 @@ rf_model_final = TransformedTargetRegressor(
 # Train the model
 rf_model_final.fit(X_train, y_train)
 
+#%%
 # Saving model to MLFlow
 logger.info("Storing RF model to MLFlow")
-model = rf_model_final
-model_name = "RF"
-model_params = rf_params
 
-log_to_mlflow(exp_name, model, model_name, model_params, X_train, X_test, y_train, y_test)
+log_to_mlflow(
+    exp_name=exp_name,
+    model=rf_model_final,
+    model_name="RF",
+    model_params=rf_params,
+    X_train=X_train,
+    X_test=X_test, 
+    y_train=y_train, 
+    y_test=y_test
+)
+
+# %%
