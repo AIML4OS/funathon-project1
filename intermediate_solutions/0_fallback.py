@@ -18,7 +18,6 @@ X_train = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessi
 X_test  = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/X_test.parquet')
 y_train = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/y_train.parquet')["price_sqm"]
 y_test  = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/y_test.parquet')["price_sqm"]
-df      = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/df.parquet')
 
 
 # Pipeline

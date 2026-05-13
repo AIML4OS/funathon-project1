@@ -18,7 +18,7 @@ bash temp/extract.sh "2-GB_model.qmd" $FILE_2A
 bash temp/extract.sh "2-RF_model.qmd" $FILE_2B
 
 # File step3 - metrics
-bash temp/extract.sh "3-metrics.qmd" "temp.py" && cat starting_point/0_fallback.py temp.py > $FILE_3 && rm temp.py
+bash temp/extract.sh "3-metrics.qmd" "temp.py" && cat intermediate_solutions/0_fallback.py temp.py > $FILE_3 && rm temp.py
 
 # File step4 - logging
-bash temp/extract.sh "3-metrics.qmd" "temp.py" && cat starting_point/0_fallback.py temp.py > $FILE_3 && rm temp.py
+bash temp/extract.sh "3-metrics.qmd" "temp.py" && cat intermediate_solutions/0_fallback.py temp.py > $FILE_3 && rm temp.py
