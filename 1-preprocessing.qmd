@@ -455,7 +455,7 @@ Now that you are familiar with the main mechanisms of pre-processing for model t
 Scikit-learn has a very well crafted documentation, so please do not hesitate to go and have a look on [their website](https://scikit-learn.org/stable/api/index.html).
 
 
-::: {.callout-note title="Fall-back option"}
+::: {.callout-note title="Fall-back option" collapse="true"}
 
 Preprocessed data have been stored in case you need a fall-back. 
 This data includes the final `X_train`, `X_test`, `y_train` and `y_test` datasets. 

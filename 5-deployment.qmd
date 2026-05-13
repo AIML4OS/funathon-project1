@@ -33,7 +33,7 @@ graph TD
 
 
 
-::: {.callout-tip title="If you want to fetch back final RF and GB model"}
+::: {.callout-tip title="If you want to fetch back final RF and GB model" collapse="true"}
 
 You can fetch back the final trained models by executing the following code.
 The fetched models can then be used to predict any values and evaluate it. 
@@ -58,45 +58,6 @@ with fs.open(FILE_PATH_S3, mode="rb") as model:
     gb_model_final = load(model)
 
 
-# Pipeline
-def date_to_days(X: pd.Series, ref_date: pd.Timestamp):
-    # converts a date to a difference to ref_date :
-    diff_dt = pd.to_datetime(X) - ref_date
-    # Extract days part from datetime object
-    diff_dt = diff_dt.dt.days
-    # Transform it from a Pandas series to a Numpy nd array, used by scikit learn for input
-    diff_dt = diff_dt.to_numpy().reshape(-1, 1)
-
-    return diff_dt
-
-
-date_transformer = FunctionTransformer(
-    date_to_days,
-    kw_args={"ref_date": pd.Timestamp('2010-01-01 00:00')}
-    )
-
-preprocessor = ColumnTransformer(
-    transformers=[
-        ("cat", OneHotEncoder(handle_unknown="ignore"), ["prop_type", "prop_year_harm_10"]),  # one-hot encoder on feature
-        ("dat", date_transformer, "trans_date") # feature time since 01-01-2010
-    ],
-    remainder="passthrough"  # to keep features not transformed
-)
-
-
-def log_transform(y):
-    return np.log10(y)
-
-
-def inverse_log_transform(y):
-    return 10 ** y
-
-
-y_transformer = FunctionTransformer(
-    func=log_transform,
-    inverse_func=inverse_log_transform)
-
-
 ```
 
 :::
@@ -105,7 +66,7 @@ y_transformer = FunctionTransformer(
 
 1. We will first deploy a basic fastAPI. FastAPI allows you to define an HTTP endpoint in just a few lines of Python. Here is a minimal working example:
 
-```{.python}
+```{.python filename="api.py"}
 from fastapi import FastAPI
 
 app = FastAPI()
@@ -129,13 +90,17 @@ If you saved your file into a specific folder, you can access it with the follow
 uvicorn folder.script_name:app --reload
 ```
 
-For example, as a fall-back you can loach the api with : 
+For example, you can launch the api with the following code. 
+It serves as a fall-back option.   
 
 ```{.bash filename="terminal"}
 uvicorn intermediate_solutions.5_api:app --reload
 ```
 
 Then open [http://localhost:8000](http://localhost:8000) in your browser. You should see the JSON response `"Housing price prediction API is running"`.
+
+
+::: {.callout-tip title="Using the Terminal to test the API directly"}
 
 Without closing the Terminal where the API runs, you can also test the API from the Terminal. 
 Open a new Terminal and run a simple `GET` request on the default endpoint with the following `curl` command:
@@ -157,6 +122,9 @@ INFO:     Waiting for application startup.
 INFO:     Application startup complete.
 INFO:     127.0.0.1:60728 - "GET / HTTP/1.1" 200 OK
 ```
+
+:::
+
 
 If you want to close down the API, go to the Terminal where it has been laucnhed and press <kbd>CTRL</kbd>+<kbd>C</kbd> from your keyboard. 
 

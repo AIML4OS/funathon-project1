@@ -103,7 +103,7 @@ In this exercise, you will generate predictions from the best RF and GB model an
 
 0. Load the RF and GB models
 
-::: {.callout-tip title="If you want to fetch back final RF and GB model"}
+::: {.callout-tip title="If you want to fetch back final RF and GB model" collapse="true"}
 
 You can fetch back the final trained models by executing the following code.
 The fetched models can then be used to predict any values and evaluate it. 
