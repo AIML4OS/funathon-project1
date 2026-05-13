@@ -132,7 +132,7 @@ def importance_plot(importances):
 
 
 # MLFlow logging
-def log_to_mlflow(exp_name, model, is_rf, model_name, model_params, X_train, X_test, y_train, y_test):
+def log_to_mlflow(exp_name, model, model_name, model_params, X_train, X_test, y_train, y_test):
     mlflow.set_experiment(exp_name)
     signature = infer_signature(X_train, model.predict(X_train))
 
@@ -164,12 +164,12 @@ def log_to_mlflow(exp_name, model, is_rf, model_name, model_params, X_train, X_t
         mlflow.log_figure(QQplot(y_test, y_pred), "qqplot.png")
         mlflow.log_figure(target_distribution(y_test), "y_test_distrib.png")
         mlflow.log_figure(target_distribution(y_pred), "y_pred_distrib.png")
-        if is_rf: 
-            mlflow.log_figure(
-                permutation_importance(
-                    calculate_importance(X_test, y_test, RANDOM_STATE, model, "r2")
-                ),
-                "importance.png"
+
+        mlflow.log_figure(
+            permutation_importance(
+                calculate_importance(X_test, y_test, RANDOM_STATE, model, "r2")
+            ),
+            "importance.png"
         )
 
 # %%
@@ -346,9 +346,8 @@ exp_name = "Funathon - project 1"
 model = gb_model_final
 model_name = "GB"
 model_params = gb_params
-is_rf = True
 
-log_to_mlflow(exp_name, model, is_rf, model_name, model_params, X_train, X_test, y_train, y_test)
+log_to_mlflow(exp_name, model, model_name, model_params, X_train, X_test, y_train, y_test)
 
 # %%
 logger.info("Fitting RF model")
