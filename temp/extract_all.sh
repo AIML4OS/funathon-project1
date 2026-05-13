@@ -1,5 +1,5 @@
 #!/bin/bash
-FILE_1="intermediate_solutions/solution_step1/main.py"
+FILE_1="intermediate_solutions/main_at_end_step1.py"
 mkdir -p $(dirname "$FILE_1")
 FILE_2A="intermediate_solutions/solution_step1_to_2a/main.py"
 mkdir -p $(dirname "$FILE_2A")
