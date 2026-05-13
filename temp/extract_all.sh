@@ -1,11 +1,11 @@
 #!/bin/bash
-FILE_1="intermediate_solutions/main_at_end_step1.py"
+FILE_1="intermediate_solutions/1_main.py"
 mkdir -p $(dirname "$FILE_1")
-FILE_2A="intermediate_solutions/main_at_end_step2a.py"
+FILE_2A="intermediate_solutions/2a_main.py"
 mkdir -p $(dirname "$FILE_2A")
-FILE_2B="intermediate_solutions/main_at_end_step2b.py"
+FILE_2B="intermediate_solutions/2b_main.py"
 mkdir -p $(dirname "$FILE_2B")
-FILE_3="intermediate_solutions/main_at_end_step3.py"
+FILE_3="intermediate_solutions/3_main.py"
 mkdir -p $(dirname "$FILE_3")
 
 # Step 1 - preprocessing
