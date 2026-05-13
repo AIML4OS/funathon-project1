@@ -128,7 +128,7 @@ In this example, `GET /` just returns a static message — no body needed from t
 :::
 
 
-3. Building on this first basic API, modify the default endpoint to give back a message indicating what the API does, the model name and version. 
+2. Building on this first basic API, modify the default endpoint to give back a message indicating what the API does, the model name and version. 
 
 
 ::: {.callout-tip}
@@ -149,7 +149,7 @@ def show_welcome_page():
 
 :::
 
-4. Loading the trained model
+3. Loading the trained model
 
 We load the model **once at startup**, so that it does not need to be reloaded on every request. We retrieve it from MLFlow using the run ID saved in Part 4.
 
@@ -163,7 +163,7 @@ model = mlflow.sklearn.load_model(MODEL_URI)
 ```
 
 
-5. We will now write the prediction endpoint. To do so, we will predict and the loaded model into a `/predict` endpoint.
+4. We will now write the prediction endpoint. To do so, we will predict and the loaded model into a `/predict` endpoint.
 
 Create a file `api.py` with the following content:
 
@@ -223,7 +223,7 @@ def predict(prop_features: dict):
 
 
 
-6. We will check that the API runs locally. Predict the price of a property with the following characteristics using python's `requests` : 
+5. We will check that the API runs locally. Predict the price of a property with the following characteristics using python's `requests` : 
 - a flat (prop_type: 2):
   - a floor area of 65m²;
   - one shower;
