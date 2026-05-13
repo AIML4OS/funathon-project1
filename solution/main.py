@@ -1,17 +1,10 @@
 # %%
-import os
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor, HistGradientBoostingRegressor
 from preprocessing import load_data, outlier_transform, pre_process_raw_data
 from logging import log_to_mlflow
 from pipeline import set_pipeline
-import s3fs
 from utils import setup_logging, set_seed
-
-
-# Setting the S3 connection and path generators
-S3_ENDPOINT_URL = "https://" + os.environ["AWS_S3_ENDPOINT"]
-fs = s3fs.S3FileSystem(client_kwargs={'endpoint_url': S3_ENDPOINT_URL})
 
 
 logger = setup_logging()
