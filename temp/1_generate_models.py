@@ -209,7 +209,7 @@ print("Fitting RF model")
 rf_final = RandomForestRegressor(
     n_estimators=80,
     max_features="sqrt",
-    min_samples_leaf=50
+    min_samples_leaf=40
 )
 
 rf_pipeline_best = Pipeline([

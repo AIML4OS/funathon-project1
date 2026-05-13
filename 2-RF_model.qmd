@@ -41,23 +41,27 @@ In case you start from here, here is the parameters you need from past sections 
 #| code-overflow: scroll
 #| eval: false
 
-import pandas as pd 
+import pandas as pd
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
 from sklearn.compose import ColumnTransformer, TransformedTargetRegressor
 from sklearn.pipeline import Pipeline
 
-RANDOM_STATE=202605
+RANDOM_STATE = 202605
+
 
 def log_transform(y):
     return np.log10(y)
 
+
 def inverse_log_transform(y):
     return 10 ** y
+
 
 y_transformer = FunctionTransformer(
     func=log_transform,
     inverse_func=inverse_log_transform)
+
 
 def date_to_days(X: pd.Series, ref_date:pd.Timestamp):
     # converts a date to a difference to ref_date :
@@ -68,6 +72,7 @@ def date_to_days(X: pd.Series, ref_date:pd.Timestamp):
     diff_dt = diff_dt.to_numpy().reshape(-1, 1)
 
     return diff_dt
+
 
 date_transformer = FunctionTransformer(
     date_to_days,
@@ -82,6 +87,26 @@ preprocessor = ColumnTransformer(
     remainder="passthrough"  # to keep features not transformed
 )
 
+rf_params = {
+    "n_estimators": 100,
+    "max_depth": 5,
+    "max_features": "sqrt",
+    "min_samples_split": 2,
+    "min_samples_leaf": 10,
+    "random_state": RANDOM_STATE,
+    "oob_score": True,
+    "n_jobs": -1,  # The number of jobs to run in parallel, -1 using all processors
+}
+
+rf_pipeline = Pipeline([
+    ('preprocessing', preprocessor),
+    ('RF', RandomForestRegressor(**rf_params))
+])
+
+model = TransformedTargetRegressor(
+    regressor=rf_pipeline,
+    transformer=y_transformer
+)
 ```
 
 
@@ -97,11 +122,11 @@ preprocessor = ColumnTransformer(
 
     -   min_samples_leaf=10
 
-    Train the model with the remaining non transformed target (it should take about 5 minutes to train).
-
     As it's only a first step we chose to simplify the exercise. First, we will drop the `trans_date` and `prop_type` features. Secondly, we will work with the **non transformed target** (i.e.price per square meter) and not use the transformed target (i.e. log of the price per square meter) defined at the end of the pre-processing.
 
     We will come back to this later on and chain it with the preprocessing steps.
+
+    Train the model with the remaining non transformed target (it should take a few minutes to train).
 
     > **Note: All parameters of RandomForestRegressor have a default value - you only need to explicitly pass the ones you wish to override.**
 
@@ -261,7 +286,6 @@ X_sub = X_train.filter(items=y_sub.index, axis=0 )  # sampling X_train
 #| code-summary: See the solution
 #| code-overflow: scroll
 #| eval: false
-import numpy as np
 import warnings
 
 metric = "r2"
@@ -591,15 +615,14 @@ fig, ax = plt.subplots(figsize=(7, 7))
 
 ax.scatter(y_test, y_pred_test, alpha=0.3, s=5, label="Predictions")
 
-lims = [min(y_test.min(), y_pred_test.min()), max(y_test.max(), y_pred_test.max())]
 ax.plot(lims, lims, "r--", linewidth=1.5, label="Perfect prediction")
+plt.xscale('log')
+plt.yscale('log')
 
 ax.set_xlabel("Actual values (log, price per sqm)")
 ax.set_ylabel("Predicted values (log, price per sqm)")
 ax.set_title("Predicted vs. Actual values on the test set")
 ax.legend()
-plt.xscale('log')
-plt.yscale('log')
 plt.tight_layout()
 plt.show()
 ```
