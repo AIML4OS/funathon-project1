@@ -6,8 +6,6 @@ from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
 from sklearn.compose import ColumnTransformer
 import numpy as np
 
-logger.info("Importing data")
-
 
 def load_data():
     # Create a non-persistent connection (the database exists only while the connection is alive and disappears when it is closed)
@@ -55,7 +53,7 @@ def outlier_transform(y, lower=0.1, upper=0.9):
     return mask
 
 
-def pre_process_raw_data(df): 
+def pre_process_raw_data(df):
     # Filtering NA values
     df = df.dropna()
 
@@ -71,6 +69,8 @@ def pre_process_raw_data(df):
 
     # Dropping old column
     df = df.drop(columns=["prop_year_harm"])
+
+    return df
 
 
 def date_to_days(X: pd.Series, ref_date: pd.Timestamp):

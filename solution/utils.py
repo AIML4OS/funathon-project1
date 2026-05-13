@@ -10,7 +10,7 @@ def setup_logging():
         handlers=[
             logging.StreamHandler(),
             logging.FileHandler(
-                f'veille_ssphub_{datetime.datetime.now().strftime("%Y%m%d_%H%M%S")}.log'
+                f'funathon_aiml4os_project1_{datetime.datetime.now().strftime("%Y%m%d_%H%M%S")}.log'
             )
         ]
     )

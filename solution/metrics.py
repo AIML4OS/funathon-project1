@@ -111,4 +111,3 @@ def importance_plot(importances):
     ax.set_xlabel("Mean increase in RMSE")
     plt.tight_layout()
     return fig
-
