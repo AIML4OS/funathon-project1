@@ -86,6 +86,26 @@ def residuals_distribution(residuals: pd.Series, rmse: float, ax=None, label=Non
     return ax.get_figure()
 
 
+
+def predicted_actual_plot(y_test, y_pred_test, model_name):
+    fig, ax = plt.subplots(figsize=(7, 7))
+
+    ax.scatter(y_test, y_pred_test, alpha=0.3, s=5, label="Predictions")
+
+    lims = [min(y_test.min(), y_pred_test.min()),
+            max(y_test.max(), y_pred_test.max())]
+    ax.plot(lims, lims, "r--", linewidth=1.5, label="Perfect prediction")
+
+    ax.set_xlabel("Actual values (log)")
+    ax.set_ylabel("Predicted values (log)")
+    ax.set_title(f"Comparison of predicted values vs. actual values on the test set\n({model_name})")
+    ax.legend()
+    plt.xscale('log')
+    plt.yscale('log')
+    plt.tight_layout()
+    return fig
+
+
 def plot_combined_distribution(y_test: pd.Series, y_pred: pd.Series, ax=None, label=None, color=None, show_actual=True):
     """
     Plots the target distributions of actual and predicted values on the same graph.
@@ -166,6 +186,12 @@ def log_to_mlflow(exp_name, model, model_name, model_params, X_train, X_test, y_
 
         mlflow.log_metrics(model_metrics)
         mlflow.log_params(model_params)
+
+        # Predicted vs actual values
+        mlflow.log_figure(
+                        predicted_actual_plot(y_test, y_pred, model_name),
+                        "predicted_actual.png"
+                    )
 
         # Distribution of residuals
         mlflow.log_figure(
@@ -311,7 +337,7 @@ y_transformer = FunctionTransformer(
     func=log_transform,
     inverse_func=inverse_log_transform)
 
-logger.info("Setting training data sets and storing it")
+logger.info("Setting training data sets")
 X = df.drop(columns=["price_sqm"])
 y = df["price_sqm"]
 
@@ -370,6 +396,16 @@ log_to_mlflow(
     X_test=X_test, 
     y_train=y_train, 
     y_test=y_test
+)
+# %%
+logger.info("Setting training data sets")
+X = df.drop(columns=["price_sqm"])
+y = df["price_sqm"]
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y,
+    test_size=0.2,
+    random_state=RANDOM_STATE
 )
 # %%
 logger.info("Fitting RF model")
