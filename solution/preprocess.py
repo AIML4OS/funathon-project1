@@ -73,6 +73,31 @@ def pre_process_raw_data(df):
     return df
 
 
+def complete_pre_processing():
+    trans = load_data()
+
+    trans = trans[trans["prop_loc_dep"].isin(["75", "77", "78", "91", "92", "93", "94", "95"])]
+
+    trans["price_sqm"] = trans["price"] / trans["farea"]
+
+    # Apply some deterministic threshold on the dataframe
+    trans = trans[(trans["price_sqm"] < 200000) & (trans["price_sqm"] > 100)]
+
+
+    # Apply IQR methods for the outlier removal
+    mask = outlier_transform(trans["price_sqm"])
+    trans = trans[mask].reset_index(drop=True)
+
+    trans = trans.dropna(subset="price_sqm")
+    df = trans.drop(columns=[
+        "price", "prop_loc_dep", "prop_loc_citycode", "dist_tosea"
+    ])
+
+    df = pre_process_raw_data(df)
+
+    return df
+
+
 def date_to_days(X: pd.Series, ref_date: pd.Timestamp):
     # converts a date to a difference to ref_date :
     diff_dt = pd.to_datetime(X) - ref_date

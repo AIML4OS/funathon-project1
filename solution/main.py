@@ -1,7 +1,7 @@
 # %%
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor, HistGradientBoostingRegressor
-from preprocessing import load_data, outlier_transform, pre_process_raw_data
+from preprocess import complete_pre_processing
 from log_mlflow import log_to_mlflow
 from pipeline import set_pipeline
 from utils import setup_logging, set_seed
@@ -9,26 +9,9 @@ from utils import setup_logging, set_seed
 logger = setup_logging()
 # %%
 logger.info("Importing data")
-trans = load_data()
 
-trans = trans[trans["prop_loc_dep"].isin(["75", "77", "78", "91", "92", "93", "94", "95"])]
+df = complete_pre_processing()
 
-trans["price_sqm"] = trans["price"] / trans["farea"]
-
-# Apply some deterministic threshold on the dataframe
-trans = trans[(trans["price_sqm"] < 200000) & (trans["price_sqm"] > 100)]
-
-
-# Apply IQR methods for the outlier removal
-mask = outlier_transform(trans["price_sqm"])
-trans = trans[mask].reset_index(drop=True)
-
-trans = trans.dropna(subset="price_sqm")
-df = trans.drop(columns=[
-    "price", "prop_loc_dep", "prop_loc_citycode", "dist_tosea"
-])
-
-df = pre_process_raw_data(df)
 # %%
 # %%
 logger.info("Pipeline")

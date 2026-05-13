@@ -1,5 +1,5 @@
 from sklearn.pipeline import Pipeline
-from preprocessing import set_preprocessor, set_y_transformer
+from preprocess import set_preprocessor, set_y_transformer
 from sklearn.compose import TransformedTargetRegressor
 
 
