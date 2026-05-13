@@ -2,13 +2,13 @@
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor, HistGradientBoostingRegressor
 from preprocessing import load_data, outlier_transform, pre_process_raw_data
-from logging import log_to_mlflow
+from log_mlflow import log_to_mlflow
 from pipeline import set_pipeline
 from utils import setup_logging, set_seed
 
-
 logger = setup_logging()
-
+# %%
+logger.info("Importing data")
 trans = load_data()
 
 trans = trans[trans["prop_loc_dep"].isin(["75", "77", "78", "91", "92", "93", "94", "95"])]
@@ -96,7 +96,9 @@ X_train, X_test, y_train, y_test = train_test_split(
     test_size=0.2,
     random_state=set_seed()
 )
+
 # %%
+logger.info("Fitting RF model")
 rf_params = {
         "n_estimators": 80,
         "max_features": "sqrt",
