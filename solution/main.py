@@ -24,7 +24,7 @@ S3_ENDPOINT_URL = "https://" + os.environ["AWS_S3_ENDPOINT"]
 fs = s3fs.S3FileSystem(client_kwargs={'endpoint_url': S3_ENDPOINT_URL})
 
 # MLflow connection
-mlflow_server = os.getenv("MLFLOW_TRACKING_URI") # your environment feature for accessing to MLFlow server
+mlflow_server = os.getenv("MLFLOW_TRACKING_URI")  # your environment feature for accessing to MLFlow server
 mlflow.set_tracking_uri(mlflow_server)
 
 # Seed
@@ -48,6 +48,7 @@ def setup_logging():
 
 
 logger = setup_logging()
+
 
 # %%
 # Metrics
@@ -84,7 +85,6 @@ def residuals_distribution(residuals: pd.Series, rmse: float, ax=None, label=Non
     ax.set_title("Residuals distribution")
     ax.legend()
     return ax.get_figure()
-
 
 
 def predicted_actual_plot(y_test, y_pred_test, model_name):
@@ -215,6 +215,7 @@ def log_to_mlflow(exp_name, model, model_name, model_params, X_train, X_test, y_
             "importance.png"
         )
 
+
 # %%
 logger.info("Importing data")
 # Create a non-persistent connection (the database exists only while the connection is alive and disappears when it is closed)
@@ -253,6 +254,7 @@ trans["price_sqm"] = trans["price"] / trans["farea"]
 # Apply some deterministic threshold on the dataframe
 trans = trans[(trans["price_sqm"] < 200000) & (trans["price_sqm"] > 100)]
 
+
 # Apply IQR methods for the outlier removal
 def outlier_transform(y, lower=0.1, upper=0.9):
     """
@@ -269,6 +271,7 @@ def outlier_transform(y, lower=0.1, upper=0.9):
 
     mask = (y >= Q_lower - 1.5 * IQR) & (y <= Q_upper + 1.5 * IQR)
     return mask
+
 
 mask = outlier_transform(trans["price_sqm"])
 trans = trans[mask].reset_index(drop=True)
@@ -319,7 +322,7 @@ date_transformer = FunctionTransformer(
 preprocessor = ColumnTransformer(
     transformers=[
         ("cat", OneHotEncoder(handle_unknown="ignore"), ["prop_type", "prop_year_harm_10"]),  # one-hot encoder on feature
-        ("dat", date_transformer, "trans_date") # feature time since 01-01-2010
+        ("dat", date_transformer, "trans_date")  # feature time since 01-01-2010
     ],
     remainder="passthrough"  # to keep features not transformed
 )
@@ -357,7 +360,7 @@ BEST_MIN_LEAF = 50
 BEST_L2 = 0
 
 gb_params = {
-    "max_iter":BEST_ITER,
+    "max_iter": BEST_ITER,
     "learning_rate": BEST_LR,
     "max_depth": BEST_DEPTH,
     "min_samples_leaf": BEST_MIN_LEAF,
@@ -393,8 +396,8 @@ log_to_mlflow(
     model_name="GB",
     model_params=gb_params,
     X_train=X_train,
-    X_test=X_test, 
-    y_train=y_train, 
+    X_test=X_test,
+    y_train=y_train,
     y_test=y_test
 )
 # %%
@@ -433,7 +436,7 @@ rf_model_final = TransformedTargetRegressor(
 # Train the model
 rf_model_final.fit(X_train, y_train)
 
-#%%
+# %%
 # Saving model to MLFlow
 logger.info("Storing RF model to MLFlow")
 
@@ -443,8 +446,8 @@ log_to_mlflow(
     model_name="RF",
     model_params=rf_params,
     X_train=X_train,
-    X_test=X_test, 
-    y_train=y_train, 
+    X_test=X_test,
+    y_train=y_train,
     y_test=y_test
 )
 

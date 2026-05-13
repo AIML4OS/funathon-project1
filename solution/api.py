@@ -32,6 +32,7 @@ def show_welcome_page(MODEL_URI=MODEL_URI):
         "model_version": MODEL_URI,
     }
 
+
 @app.post("/predict")
 def predict(prop_features: dict):
     """
