@@ -53,7 +53,14 @@ This project includes five steps (listed in the banner at the top of the page):
 -   model logging with MLflow;
 -   deployment.
 
-**Every step is independent from the other** : one will be able to start from the next step if a step is too difficult by looking at the code stored in the `intermediaite_solutions` folder.
+**Every step is independent from the other** : one will be able to start from the next step if a step is too difficult by looking at the fall-back call-out note at the beginning of each page or by looking at the code stored in the `intermediaite_solutions` folder. 
+
+The final script is stored in the `solution/` folder.
+A `main.py` script calls on other sub-scripts, following the different steps of the project.
+If you want to toy around with hyperparameters,   
+To run it, just run `uv run solution/main.py` and it will execute all the steps at once. 
+
+To run the final API, run `uvicorn solution.app:app --reload`. 
 
 # Generalities about housing market in France
 

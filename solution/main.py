@@ -86,6 +86,7 @@ log_to_mlflow(
     y_train=y_train,
     y_test=y_test
 )
+
 # %%
 logger.info("Setting training data sets")
 X = df.drop(columns=["price_sqm"])
