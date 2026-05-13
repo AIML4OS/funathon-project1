@@ -13,7 +13,6 @@ author:
 format:
   html:
     number-sections: true
-editor: visual
 editor_options: 
   chunk_output_type: console
 ---
