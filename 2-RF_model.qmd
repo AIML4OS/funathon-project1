@@ -610,21 +610,29 @@ Use `matplotlib.pyplot` to create a scatter plot of `y_test` against `y_pred_tes
 #| code-summary: See the solution
 #| code-overflow: scroll
 #| eval: false
+import matplotlib.pyplot as plt
 
-fig, ax = plt.subplots(figsize=(7, 7))
 
-ax.scatter(y_test, y_pred_test, alpha=0.3, s=5, label="Predictions")
+def predicted_actual_plot(y_test, y_pred_test, model_name):
+    fig, ax = plt.subplots(figsize=(7, 7))
 
-ax.plot(lims, lims, "r--", linewidth=1.5, label="Perfect prediction")
-plt.xscale('log')
-plt.yscale('log')
+    ax.scatter(y_test, y_pred_test, alpha=0.3, s=5, label="Predictions")
 
-ax.set_xlabel("Actual values (log, price per sqm)")
-ax.set_ylabel("Predicted values (log, price per sqm)")
-ax.set_title("Predicted vs. Actual values on the test set")
-ax.legend()
-plt.tight_layout()
-plt.show()
+    lims = [min(y_test.min(), y_pred_test.min()),
+            max(y_test.max(), y_pred_test.max())]
+    ax.plot(lims, lims, "r--", linewidth=1.5, label="Perfect prediction")
+
+    ax.set_xlabel("Actual values (log)")
+    ax.set_ylabel("Predicted values (log)")
+    ax.set_title(f"Comparison of predicted values vs. actual values on the test set\n({model_name})")
+    ax.legend()
+    plt.xscale('log')
+    plt.yscale('log')
+    plt.tight_layout()
+    return fig
+
+
+predicted_actual_plot(y_test, y_pred_test, "Random Forest")
 ```
 
 
