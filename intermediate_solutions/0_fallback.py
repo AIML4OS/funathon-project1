@@ -1,62 +1,26 @@
 # %%
+import sys
+sys.path.append("..") 
+
 from joblib import load
 import os
 import s3fs
-import pandas as pd
-import numpy as np
-from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
-from sklearn.compose import ColumnTransformer
+from solution.utils import set_seed
+from solution.preprocess import set_date_transformer, set_preprocessor, set_y_transformer, complete_pre_processing
 
+RANDOM_STATE = set_seed()
+df = complete_pre_processing()
 
 # Create filesystem object
 S3_ENDPOINT_URL = "https://" + os.environ["AWS_S3_ENDPOINT"]
 fs = s3fs.S3FileSystem(client_kwargs={'endpoint_url': S3_ENDPOINT_URL})
-RANDOM_STATE = 202605
-
-# Importing pre-processed data
-X_train = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/X_train.parquet')
-X_test  = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/X_test.parquet')
-y_train = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/y_train.parquet')["price_sqm"]
-y_test  = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/y_test.parquet')["price_sqm"]
 
 
-# Pipeline
-def date_to_days(X: pd.Series, ref_date: pd.Timestamp):
-    # converts a date to a difference to ref_date :
-    diff_dt = pd.to_datetime(X) - ref_date
-    # Extract days part from datetime object
-    diff_dt = diff_dt.dt.days
-    # Transform it from a Pandas series to a Numpy nd array, used by scikit learn for input
-    diff_dt = diff_dt.to_numpy().reshape(-1, 1)
+date_transformer = set_date_transformer()
 
-    return diff_dt
+preprocessor = set_preprocessor()
 
-
-date_transformer = FunctionTransformer(
-    date_to_days,
-    kw_args={"ref_date": pd.Timestamp('2010-01-01 00:00')}
-    )
-
-preprocessor = ColumnTransformer(
-    transformers=[
-        ("cat", OneHotEncoder(handle_unknown="ignore"), ["prop_type", "prop_year_harm_10"]),  # one-hot encoder on feature
-        ("dat", date_transformer, "trans_date") # feature time since 01-01-2010
-    ],
-    remainder="passthrough"  # to keep features not transformed
-)
-
-
-def log_transform(y):
-    return np.log10(y)
-
-
-def inverse_log_transform(y):
-    return 10 ** y
-
-
-y_transformer = FunctionTransformer(
-    func=log_transform,
-    inverse_func=inverse_log_transform)
+y_transformer = set_y_transformer()
 
 
 # Importing fine-tuned models
