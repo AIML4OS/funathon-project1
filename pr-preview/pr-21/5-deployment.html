@@ -258,14 +258,16 @@ Note
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled" title="If you want to fetch back final RF and GB model">
-<div class="callout-header d-flex align-content-center">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
 <span class="screen-reader-only">Tip</span>If you want to fetch back final RF and GB model
 </div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>You can fetch back the final trained models by executing the following code. The fetched models can then be used to predict any values and evaluate it.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> joblib <span class="im">import</span> load</span>
@@ -284,46 +286,8 @@ Note
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> fs.<span class="bu">open</span>(FILE_PATH_S3, mode<span class="op">=</span><span class="st">"rb"</span>) <span class="im">as</span> model:</span>
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    gb_model_final <span class="op">=</span> load(model)</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Pipeline</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> date_to_days(X: pd.Series, ref_date: pd.Timestamp):</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># converts a date to a difference to ref_date :</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    diff_dt <span class="op">=</span> pd.to_datetime(X) <span class="op">-</span> ref_date</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Extract days part from datetime object</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    diff_dt <span class="op">=</span> diff_dt.dt.days</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Transform it from a Pandas series to a Numpy nd array, used by scikit learn for input</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    diff_dt <span class="op">=</span> diff_dt.to_numpy().reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>)</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> diff_dt</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>date_transformer <span class="op">=</span> FunctionTransformer(</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    date_to_days,</span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    kw_args<span class="op">=</span>{<span class="st">"ref_date"</span>: pd.Timestamp(<span class="st">'2010-01-01 00:00'</span>)}</span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>preprocessor <span class="op">=</span> ColumnTransformer(</span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    transformers<span class="op">=</span>[</span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>        (<span class="st">"cat"</span>, OneHotEncoder(handle_unknown<span class="op">=</span><span class="st">"ignore"</span>), [<span class="st">"prop_type"</span>, <span class="st">"prop_year_harm_10"</span>]),  <span class="co"># one-hot encoder on feature</span></span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>        (<span class="st">"dat"</span>, date_transformer, <span class="st">"trans_date"</span>) <span class="co"># feature time since 01-01-2010</span></span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    ],</span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>    remainder<span class="op">=</span><span class="st">"passthrough"</span>  <span class="co"># to keep features not transformed</span></span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> log_transform(y):</span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.log10(y)</span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> inverse_log_transform(y):</span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">10</span> <span class="op">**</span> y</span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>y_transformer <span class="op">=</span> FunctionTransformer(</span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>    func<span class="op">=</span>log_transform,</span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>    inverse_func<span class="op">=</span>inverse_log_transform)</span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 </section>
@@ -332,13 +296,18 @@ Note
 <ol type="1">
 <li>We will first deploy a basic fastAPI. FastAPI allows you to define an HTTP endpoint in just a few lines of Python. Here is a minimal working example:</li>
 </ol>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastapi <span class="im">import</span> FastAPI</span>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>api.py</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-filename="api.py"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastapi <span class="im">import</span> FastAPI</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>app <span class="op">=</span> FastAPI()</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="at">@app.get</span>(<span class="st">"/"</span>)</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> read_root():</span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {<span class="st">"message"</span>: <span class="st">"Housing price prediction API is running"</span>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <p>Save this as <code>api.py</code> and run it with:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
@@ -354,7 +323,7 @@ Note
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" data-filename="terminal"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uvicorn</span> folder.script_name:app <span class="at">--reload</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>For example, as a fall-back you can loach the api with :</p>
+<p>For example, you can launch the api with the following code. It serves as a fall-back option.</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>terminal</strong></pre>
@@ -362,6 +331,16 @@ Note
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" data-filename="terminal"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uvicorn</span> intermediate_solutions.5_api:app <span class="at">--reload</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Then open <a href="http://localhost:8000">http://localhost:8000</a> in your browser. You should see the JSON response <code>"Housing price prediction API is running"</code>.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Using the Terminal to test the API directly">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Using the Terminal to test the API directly
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <p>Without closing the Terminal where the API runs, you can also test the API from the Terminal. Open a new Terminal and run a simple <code>GET</code> request on the default endpoint with the following <code>curl</code> command:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
@@ -382,6 +361,8 @@ Note
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="ex">INFO:</span>     Waiting for application startup.</span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="ex">INFO:</span>     Application startup complete.</span>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="ex">INFO:</span>     127.0.0.1:60728 <span class="at">-</span> <span class="st">"GET / HTTP/1.1"</span> 200 OK</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
 </div>
 <p>If you want to close down the API, go to the Terminal where it has been laucnhed and press <kbd>CTRL</kbd>+<kbd>C</kbd> from your keyboard.</p>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -475,7 +456,7 @@ Tip
 <li>We will now write the prediction endpoint. To do so, we will predict and the loaded model into a <code>/predict</code> endpoint.</li>
 </ol>
 <p>Update your file <code>api.py</code> to insert this new endpoint. Don’t forget to transform data so that it matches the data types expected from the model. Input should have a similar format to <code>X_test</code>.</p>
-<div id="53442f29" class="cell" data-execution_count="1">
+<div id="9f95140d" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -609,7 +590,7 @@ Tip
 <span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a>    <span class="st">"stair"</span>: <span class="dv">1</span> </span>
 <span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>  }</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>You can now query your API with python’s <code>request</code>.</p>
-<div id="19299502" class="cell" data-execution_count="2">
+<div id="38bcaf1f" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>prop_features <span class="op">=</span> {</span>
