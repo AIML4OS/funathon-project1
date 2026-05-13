@@ -49,6 +49,7 @@ def setup_logging():
 
 logger = setup_logging()
 
+# %%
 # Metrics
 def QQplot(y_test: pd.Series, y_pred: pd.Series, ax=None, label=None, color=None):
     """
@@ -70,7 +71,7 @@ def QQplot(y_test: pd.Series, y_pred: pd.Series, ax=None, label=None, color=None
     ax.set_ylabel("Predicted quantiles")
     ax.set_title("QQ-plot: actual vs predicted")
     ax.legend()
-    return ax
+    return ax.get_figure()
 
 
 def residuals_distribution(residuals: pd.Series, rmse: float, ax=None, label=None, color=None):
@@ -82,7 +83,7 @@ def residuals_distribution(residuals: pd.Series, rmse: float, ax=None, label=Non
     ax.set_ylabel("Frequency")
     ax.set_title("Residuals distribution")
     ax.legend()
-    return ax
+    return ax.get_figure()
 
 
 def target_distribution(y: pd.Series):
@@ -97,12 +98,12 @@ def target_distribution(y: pd.Series):
     return fig
 
 
-def calculate_importance(X_test, y_test, RANDOM_STATE, final_rf, SCORING):
-    X_test_sample = X_test.sample(n=min(100_000, len(X_test)), random_state=RANDOM_STATE)
+def calculate_importance(X_test, y_test, RANDOM_STATE, model, SCORING):
+    X_test_sample = X_test.sample(n=min(100000, len(X_test)), random_state=RANDOM_STATE)
     y_test_sample = y_test.loc[X_test_sample.index]
 
     perm = permutation_importance(
-        final_rf, X_test_sample, y_test_sample,
+        model, X_test_sample, y_test_sample,
         n_repeats=5,
         scoring=SCORING,
         n_jobs=-1,
@@ -131,7 +132,7 @@ def importance_plot(importances):
 
 
 # MLFlow logging
-def log_to_mlflow(exp_name, model, model_name, model_params, X_train, X_test, y_train, y_test):
+def log_to_mlflow(exp_name, model, is_rf, model_name, model_params, X_train, X_test, y_train, y_test):
     mlflow.set_experiment(exp_name)
     signature = infer_signature(X_train, model.predict(X_train))
 
@@ -157,20 +158,21 @@ def log_to_mlflow(exp_name, model, model_name, model_params, X_train, X_test, y_
         mlflow.log_params(model_params)
 
         mlflow.log_figure(
-                residuals_distribution(residuals, metrics["r2"]),
+                residuals_distribution(residuals, model_metrics["r2"]),
                 "residuals_distrib.png"
             )
         mlflow.log_figure(QQplot(y_test, y_pred), "qqplot.png")
         mlflow.log_figure(target_distribution(y_test), "y_test_distrib.png")
         mlflow.log_figure(target_distribution(y_pred), "y_pred_distrib.png")
-        mlflow.log_figure(
-            permutation_importance(
-                calculate_importance(X_test, y_test, RANDOM_STATE, model, "r2")
-            ),
-            "importance.png"
+        if is_rf: 
+            mlflow.log_figure(
+                permutation_importance(
+                    calculate_importance(X_test, y_test, RANDOM_STATE, model, "r2")
+                ),
+                "importance.png"
         )
 
-
+# %%
 logger.info("Importing data")
 # Create a non-persistent connection (the database exists only while the connection is alive and disappears when it is closed)
 con = duckdb.connect(database=":memory:")
@@ -321,7 +323,7 @@ gb_params = {
 }
 
 gb_final = HistGradientBoostingRegressor(
-    gb_params
+    **gb_params
 )
 
 # Wrap in the same pipeline / TransformedTargetRegressor as the RF section
@@ -337,14 +339,16 @@ gb_model_final = TransformedTargetRegressor(
 
 gb_model_final.fit(X_train, y_train)
 
+# %%
 # Saving model to MLFlow
 logger.info("Storing GB model to MLFlow")
-exp_name = "gb_final"
+exp_name = "Funathon - project 1"
 model = gb_model_final
 model_name = "GB"
 model_params = gb_params
+is_rf = True
 
-log_to_mlflow(exp_name, model, model_name, model_params, X_train, X_test, y_train, y_test)
+log_to_mlflow(exp_name, model, is_rf, model_name, model_params, X_train, X_test, y_train, y_test)
 
 # %%
 logger.info("Fitting RF model")
@@ -356,7 +360,7 @@ rf_params = {
 }
 
 rf_final = RandomForestRegressor(
-    rf_params
+    **rf_params
 )
 
 rf_pipeline_best = Pipeline([
@@ -374,7 +378,6 @@ rf_model_final.fit(X_train, y_train)
 
 # Saving model to MLFlow
 logger.info("Storing RF model to MLFlow")
-exp_name = "rf_final"
 model = rf_model_final
 model_name = "RF"
 model_params = rf_params
