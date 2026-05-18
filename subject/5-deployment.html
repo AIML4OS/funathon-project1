@@ -112,6 +112,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <meta property="og:title" content="Deploying the model with a local API – AIML4OS Funathon - Project 1">
 <meta property="og:description" content="Predicting housing prices">
+<meta property="og:image" content="https://AIML4OS.github.io/funathon-project1/img/CheckpointSM3DL.webp">
 <meta property="og:site_name" content="AIML4OS Funathon - Project 1">
 </head>
 
@@ -133,7 +134,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-introduction">    
         <li>
-    <a class="dropdown-item" href="../subject/index.html">
+    <a class="dropdown-item" href="../subject/introduction.html">
  <span class="dropdown-text">Presentation</span></a>
   </li>  
         <li>
@@ -257,19 +258,24 @@ Note
 </ul>
 </div>
 </div>
-<div class="callout callout-style-default callout-tip callout-titled" title="If you want to fetch back final RF and GB model">
+<div class="callout callout-style-default callout-important callout-titled" title="If you want to fetch back final RF and GB model">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>If you want to fetch back final RF and GB model
+<span class="screen-reader-only">Important</span>If you want to fetch back final RF and GB model
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>You can fetch back the final trained models by executing the following code. The fetched models can then be used to predict any values and evaluate it.</p>
+<div style="display:flex;align-items:center;gap:0.4em;margin-bottom:0.8em;">
+<img src="../img/CheckpointSM3DL.webp" style="max-height:4em;width:auto;flex-shrink:0;">
+<div style="flex:1;margin:0;">
+You can fetch back the final trained models by executing the following code. The fetched models can then be used to predict any values and evaluate it.
+</div>
+</div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> joblib <span class="im">import</span> load</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> s3fs</span>
@@ -456,7 +462,7 @@ Tip
 <li>We will now write the prediction endpoint. To do so, we will predict and the loaded model into a <code>/predict</code> endpoint.</li>
 </ol>
 <p>Update your file <code>api.py</code> to insert this new endpoint. Don’t forget to transform data so that it matches the data types expected from the model. Input should have a similar format to <code>X_test</code>.</p>
-<div id="7b4f224d" class="cell" data-execution_count="1">
+<div id="25adf999" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -590,7 +596,7 @@ Tip
 <span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a>    <span class="st">"stair"</span>: <span class="dv">1</span> </span>
 <span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>  }</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>You can now query your API with python’s <code>request</code>.</p>
-<div id="c74aea86" class="cell" data-execution_count="2">
+<div id="04e699f3" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>prop_features <span class="op">=</span> {</span>

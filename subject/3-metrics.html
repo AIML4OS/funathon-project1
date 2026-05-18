@@ -138,6 +138,7 @@ window.Quarto = {
 
 <meta property="og:title" content="Evaluating and Comparing Tree-based Models – AIML4OS Funathon - Project 1">
 <meta property="og:description" content="Predicting housing prices">
+<meta property="og:image" content="https://AIML4OS.github.io/funathon-project1/img/CheckpointSM3DL.webp">
 <meta property="og:site_name" content="AIML4OS Funathon - Project 1">
 </head>
 
@@ -159,7 +160,7 @@ window.Quarto = {
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-introduction">    
         <li>
-    <a class="dropdown-item" href="../subject/index.html">
+    <a class="dropdown-item" href="../subject/introduction.html">
  <span class="dropdown-text">Presentation</span></a>
   </li>  
         <li>
@@ -326,19 +327,24 @@ window.Quarto = {
 <ol start="0" type="1">
 <li>Load the RF and GB models</li>
 </ol>
-<div class="callout callout-style-default callout-tip callout-titled" title="If you want to fetch back final RF and GB model">
+<div class="callout callout-style-default callout-important callout-titled" title="If you want to fetch back final RF and GB model">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>If you want to fetch back final RF and GB model
+<span class="screen-reader-only">Important</span>If you want to fetch back final RF and GB model
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>You can fetch back the final trained models by executing the following code. The fetched models can then be used to predict any values and evaluate it.</p>
+<div style="display:flex;align-items:center;gap:0.4em;margin-bottom:0.8em;">
+<img src="../img/CheckpointSM3DL.webp" style="max-height:4em;width:auto;flex-shrink:0;">
+<div style="flex:1;margin:0;">
+You can fetch back the final trained models by executing the following code. The fetched models can then be used to predict any values and evaluate it.
+</div>
+</div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> joblib <span class="im">import</span> load</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> s3fs</span>
@@ -362,7 +368,7 @@ window.Quarto = {
 <ol type="1">
 <li>Generate predictions on the test set using the best RF and GB models from exercise 5 and compute their residuals.</li>
 </ol>
-<div id="9690c7d9" class="cell" data-execution_count="1">
+<div id="9edb5151" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># best RF</span></span>
@@ -394,7 +400,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="9bdb4b69" class="cell" data-execution_count="2">
+<div id="b1a846ba" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> root_mean_squared_error, mean_absolute_error, r2_score</span>
@@ -437,7 +443,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="cc6dca32" class="cell" data-execution_count="3">
+<div id="d04fbf88" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Disponible à partir de scikit-learn &gt;= 0.24</span></span>
@@ -472,7 +478,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="445ba6e5" class="cell" data-execution_count="4">
+<div id="75c27239" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -508,7 +514,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="f7454689" class="cell" data-execution_count="5">
+<div id="31421a07" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
@@ -520,7 +526,7 @@ window.Quarto = {
 <ol start="3" type="1">
 <li>Write a <code>QQplot(y_test, y_pred)</code> function which computes 1000 quantile points for both series and plots them against each other. The parameters are <code>y_test</code>, <code>y_pred</code>, pandas series of observed and predicted target and the same parameters that question 1. for overlay plotting. The function should return the plot.</li>
 </ol>
-<div id="1e6678db" class="cell" data-execution_count="6">
+<div id="0588d96f" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -567,7 +573,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="731eb3a5" class="cell" data-execution_count="7">
+<div id="8f8c8b74" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
@@ -582,7 +588,7 @@ window.Quarto = {
 <ol start="5" type="1">
 <li>Define a <code>target_distribution()</code> function to plot the distribution of the parameter <code>y</code>, a pandas Serie.</li>
 </ol>
-<div id="676b8240" class="cell" data-execution_count="8">
+<div id="e198a8d5" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> target_distribution(y: pd.Series):</span>
@@ -616,7 +622,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="2463e4b8" class="cell" data-execution_count="9">
+<div id="33ce3e7e" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fig_actual <span class="op">=</span> target_distribution(y_test)</span>
@@ -643,7 +649,7 @@ Tip
 </div>
 <div class="callout-body-container callout-body">
 <p>If you want to plot both plots on a single figure, you can adapt the function :</p>
-<div id="783da8a8" class="cell" data-execution_count="10">
+<div id="123e6fca" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_combined_distribution(y_test: pd.Series, y_pred: pd.Series, ax<span class="op">=</span><span class="va">None</span>, label<span class="op">=</span><span class="va">None</span>, color<span class="op">=</span><span class="va">None</span>, show_actual<span class="op">=</span><span class="va">True</span>):</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Plots the target distributions of actual and predicted values on the same graph.</span></span>
@@ -694,7 +700,7 @@ Tip
 </div>
 </div>
 </div>
-<div id="c627f789" class="cell" data-execution_count="11">
+<div id="507c9d58" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.inspection <span class="im">import</span> permutation_importance</span>
@@ -721,7 +727,7 @@ Tip
 <ol start="8" type="1">
 <li>Write a <code>permutation_importance()</code> function to plot the bar chart of features importance.</li>
 </ol>
-<div id="0f02aa65" class="cell" data-execution_count="12">
+<div id="4aea3099" class="cell" data-execution_count="12">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> importance_plot(importances):</span>
@@ -756,7 +762,7 @@ Tip
 </div>
 </div>
 </div>
-<div id="f6187415" class="cell" data-execution_count="13">
+<div id="fc9d17b5" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>score <span class="op">=</span> <span class="st">"r2"</span></span>
