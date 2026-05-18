@@ -4,7 +4,7 @@
     "href": "subject/introduction.html",
     "title": "Project 1: predicting housing prices",
     "section": "",
-    "text": "Technical level\nTasks\n\n\n\n\nBeginner\nThe whole project is written for beginners, relying on clues and solutions if needed."
+    "text": "Technical level\nTasks\n\n\n\n\nBeginner\nThe whole project is written for beginners, relying on clues and solutions if needed.\n\n\nIntermediate\nTry to complete the exercises without checking the answers.\n\n\nExpert\nEnhance the pipeline and improve results: better-tuned hyperparameters, implementation of additional models (e.g. LightGBM, XGBoost, Crospint), and the development of a UI with an interactive map for price predictions, etc..."
   },
   {
     "objectID": "subject/introduction.html#how-to-buy-a-property-in-france",
