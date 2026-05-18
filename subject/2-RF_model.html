@@ -109,6 +109,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <meta property="og:title" content="Training a Random Forest model – AIML4OS Funathon - Project 1">
 <meta property="og:description" content="Predicting housing prices">
+<meta property="og:image" content="https://AIML4OS.github.io/funathon-project1/img/CheckpointSM3DL.webp">
 <meta property="og:site_name" content="AIML4OS Funathon - Project 1">
 </head>
 
@@ -245,18 +246,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="exercice-4-train-your-first-random-forest-model" class="level1" data-number="2">
 <h1 data-number="2"><span class="header-section-number">2</span> Exercice 4: Train your first Random Forest model</h1>
-<div class="callout callout-style-default callout-note callout-titled" title="Fall back code">
+<div class="callout callout-style-default callout-important callout-titled" title="Fall back code">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Fall back code
+<span class="screen-reader-only">Important</span>Fall back code
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>In case you start from here, here is the parameters you need from past sections :</p>
-<div id="b99811f3" class="cell" data-execution_count="1">
+<div style="display:flex;align-items:center;gap:0.4em;margin-bottom:0.8em;">
+<img src="../img/CheckpointSM3DL.webp" style="max-height:4em;width:auto;flex-shrink:0;">
+<div style="flex:1;margin:0;">
+In case you start from here, here is the parameters you need from past sections :
+</div>
+</div>
+<div id="e820662e" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -359,7 +365,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div></li>
 </ol>
-<div id="7e399380" class="cell" data-execution_count="2">
+<div id="a957ffb1" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> RandomForestRegressor</span>
@@ -402,7 +408,7 @@ Important
 <p>Scikit-learn distinguishes <strong>parameters</strong> from <strong>fitted attributes</strong>. Here, to access the attributes sent back by the training phase listed in the documentation, we need to search for the <code>oob_score_</code> attributes of the random forest.</p>
 </div>
 </div>
-<div id="6f5a256b" class="cell" data-execution_count="3">
+<div id="704ba933" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>rf.oob_score_</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -429,7 +435,7 @@ Important
 </div>
 </div></li>
 </ol>
-<div id="879f86cd" class="cell" data-execution_count="4">
+<div id="c88b76ea" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_squared_error</span>
@@ -472,7 +478,7 @@ Note
 <ol type="1">
 <li>Subsample a fraction ( <code>0.1</code> ) of the <code>df</code> dataset to reduce computation time and define X_sub and y_sub. To stick to the characteristics of the target, stratify the sampling to the target’s distribution thanks to <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.qcut.html#pandas.qcut">pandas’ <code>qcut</code> function</a>.</li>
 </ol>
-<div id="326d2c40" class="cell" data-execution_count="5">
+<div id="c91f01ab" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sample the train dataset using Pandas' index</span></span>
@@ -524,7 +530,7 @@ Note
 </div>
 </div></li>
 </ol>
-<div id="cd80b17c" class="cell" data-execution_count="6">
+<div id="cbb56a95" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
@@ -580,7 +586,7 @@ Note
 </div>
 </div></li>
 </ol>
-<div id="29631bca" class="cell" data-execution_count="7">
+<div id="85fa0003" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -656,7 +662,7 @@ Note
 </details>
 </div>
 <p>You can select the number of trees (<code>n_estimators</code>) now, with the OOB error plot. Which number do you choose ?</p>
-<div id="909d11a2" class="cell" data-execution_count="8">
+<div id="4c3a72f8" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>oob_error_ntrees <span class="op">=</span> rf_error_oob_plot(X_train<span class="op">=</span>X_train,</span>
@@ -676,7 +682,7 @@ Note
 <ol start="0" type="1">
 <li>For convenience, we dropped the features <code>prop_type</code>, <code>dtemut</code> and trained our model on absolute prices and not on the transformed ones. Get them back and define the new training and testing datasets <code>X_train, X_test, y_train, y_test</code>.</li>
 </ol>
-<div id="3765bc54" class="cell" data-execution_count="9">
+<div id="591254c9" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Split features / target</span></span>
@@ -710,7 +716,7 @@ Note
 </div>
 </div></li>
 </ol>
-<div id="1f5252fb" class="cell" data-execution_count="10">
+<div id="88ced0f1" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>param_grid <span class="op">=</span> {</span>
@@ -723,7 +729,7 @@ Note
 <ol start="2" type="1">
 <li>Using the <a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html">Grid Search documentation</a>, write the code to set up and run cross-validated hyperparameter tuning for the RF model. Note that training the model should last around 10 minutes.</li>
 </ol>
-<div id="a46d5060" class="cell" data-execution_count="11">
+<div id="409fce35" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> GridSearchCV</span>
@@ -745,7 +751,7 @@ Note
 <ol start="3" type="1">
 <li>From the fitted <code>grid_search</code> object, retrieve the best hyperparameters found for the model.</li>
 </ol>
-<div id="b8caff35" class="cell" data-execution_count="12">
+<div id="020b4eeb" class="cell" data-execution_count="12">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(grid_search.best_params_)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -768,7 +774,7 @@ Important
 <ol start="4" type="1">
 <li>From the fitted <code>grid_search</code> object, retrieve the best model. As it has only been trained on a fraction of the training set, retrain it on the full training set. Which type is <code>best_estimator_</code> attribute ?</li>
 </ol>
-<div id="85b1cf12" class="cell" data-execution_count="13">
+<div id="39f748e2" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>rf_model_final <span class="op">=</span> grid_search.best_estimator_</span>
@@ -816,7 +822,7 @@ Important
 <ol type="1">
 <li>Compute predictions on the test set using the best model retrieved from the previous exercise.</li>
 </ol>
-<div id="6440768b" class="cell" data-execution_count="14">
+<div id="68687f8f" class="cell" data-execution_count="14">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>y_pred_test <span class="op">=</span> rf_model_final.predict(X_test)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -841,7 +847,7 @@ Important
 </div>
 </div>
 </div>
-<div id="18a5b041" class="cell" data-execution_count="15">
+<div id="1fbb5686" class="cell" data-execution_count="15">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_squared_error, mean_absolute_error, r2_score</span>
@@ -875,7 +881,7 @@ Important
 </div>
 </div>
 </div>
-<div id="577f84ac" class="cell" data-execution_count="16">
+<div id="ffcb8df9" class="cell" data-execution_count="16">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
