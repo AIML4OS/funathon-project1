@@ -77,7 +77,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-10001ffb058a23507bc90342e4cf6f50.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-5a3d0b27430484980d075601037230b8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -326,36 +326,59 @@ window.Quarto = {
 <ol start="0" type="1">
 <li>Load the RF and GB models</li>
 </ol>
-<div id="e1ddec75" class="cell" data-execution_count="1">
-<details class="code-fold">
-<summary>See the solution</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># best RF</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>rf_model <span class="op">=</span> rf_best</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># best GB</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>gb_model <span class="op">=</span> gb_model_final</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
+<div class="callout callout-style-default callout-tip callout-titled" title="If you want to fetch back final RF and GB model">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>If you want to fetch back final RF and GB model
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>You can fetch back the final trained models by executing the following code. The fetched models can then be used to predict any values and evaluate it.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> joblib <span class="im">import</span> load</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> s3fs</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Create filesystem object</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>S3_ENDPOINT_URL <span class="op">=</span> <span class="st">"https://"</span> <span class="op">+</span> os.environ[<span class="st">"AWS_S3_ENDPOINT"</span>]</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>fs <span class="op">=</span> s3fs.S3FileSystem(client_kwargs<span class="op">=</span>{<span class="st">'endpoint_url'</span>: S3_ENDPOINT_URL})</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>FILE_PATH_S3 <span class="op">=</span> <span class="st">"projet-funathon/2026/project1/models/rf_model_final.joblib"</span> </span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> fs.<span class="bu">open</span>(FILE_PATH_S3, mode<span class="op">=</span><span class="st">"rb"</span>) <span class="im">as</span> model:</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    rf_model_final <span class="op">=</span> load(model)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>FILE_PATH_S3 <span class="op">=</span> <span class="st">"projet-funathon/2026/project1/models/gb_model_final.joblib"</span> </span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> fs.<span class="bu">open</span>(FILE_PATH_S3, mode<span class="op">=</span><span class="st">"rb"</span>) <span class="im">as</span> model:</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    gb_model_final <span class="op">=</span> load(model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>You can also also fall back to the current state by running the script in <code>intermediate_solutions/0_fallback.py</code>. It will load the model, all parameters and data necessary to keep on going through the next exercices.</p>
+</div>
+</div>
 </div>
 <ol type="1">
-<li>Generate predictions on the test set using the best RF model from Exercise 5 and compute the residuals.</li>
+<li>Generate predictions on the test set using the best RF and GB models from exercise 5 and compute their residuals.</li>
 </ol>
-<div id="b758a6fe" class="cell" data-execution_count="2">
+<div id="d9c48b0b" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># best RF</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>y_pred_RF <span class="op">=</span> rf_best.predict(X_test)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>RF_residuals <span class="op">=</span> y_test <span class="op">-</span> y_pred_RF</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>y_pred_RF <span class="op">=</span> rf_model_final.predict(X_test)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>rf_residuals <span class="op">=</span> y_test <span class="op">-</span> y_pred_RF</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># best GB</span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>y_pred_GB <span class="op">=</span> gb_model_final.predict(X_test)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>GB_residuals <span class="op">=</span> y_test <span class="op">-</span> y_pred_GB</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>gb_residuals <span class="op">=</span> y_test <span class="op">-</span> y_pred_GB</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <ol start="2" type="1">
 <li>Compute RMSE, MAE and R² using scikit-learn’s metrics module for the comparison of RF and GB models.</li>
 </ol>
 <div class="callout callout-style-default callout-tip callout-titled" title="Hint">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -364,14 +387,14 @@ window.Quarto = {
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Import <code>root_mean_squared_error</code>, <code>mean_absolute_error</code> and <code>r2_score</code> from <code>sklearn.metrics</code>. You can see the documentation of <code>sklearn.metrics</code> <a href="https://scikit-learn.org/stable/api/sklearn.metrics.html">here</a>.</p>
 <p>You can use the function <code>print-metrics</code> made in the last section on <em>GB model</em>.</p>
 </div>
 </div>
 </div>
-<div id="782f3f91" class="cell" data-execution_count="3">
+<div id="c2b190ad" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> root_mean_squared_error, mean_absolute_error, r2_score</span>
@@ -386,7 +409,7 @@ window.Quarto = {
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    r2  <span class="op">=</span> r2_score(y, y_pred)</span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>split<span class="sc">}</span><span class="ss"> — RMSE: </span><span class="sc">{</span>rmse<span class="sc">:.2f}</span><span class="ss">  |  MAE: </span><span class="sc">{</span>mae<span class="sc">:.2f}</span><span class="ss">  |  R²: </span><span class="sc">{</span>r2<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>models <span class="op">=</span> [(<span class="st">"RF"</span>, rf_model), (<span class="st">"GB"</span>, gb_model)]</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>models <span class="op">=</span> [(<span class="st">"RF"</span>, rf_model_final), (<span class="st">"GB"</span>, gb_model_final)]</span>
 <span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, model <span class="kw">in</span> models:</span>
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    print_metrics(model, name, X_test, y_test)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -399,7 +422,7 @@ window.Quarto = {
 <li>(Optional) Compute the MAPE to express the average prediction error as a percentage of the actual price.</li>
 </ol>
 <div class="callout callout-style-default callout-tip callout-titled" title="Hint">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -408,13 +431,13 @@ window.Quarto = {
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Use <code>mean_absolute_percentage_error</code> from <code>sklearn.metrics</code>. Make sure y_test contains no zero values before dividing. You can see the documentation <a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_absolute_percentage_error.html">here</a>.</p>
 </div>
 </div>
 </div>
-<div id="f0f28fa0" class="cell" data-execution_count="4">
+<div id="77976692" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Disponible à partir de scikit-learn &gt;= 0.24</span></span>
@@ -434,7 +457,7 @@ window.Quarto = {
 <li>Write a <code>residuals_distribution(residuals, rmse)</code> function to plot the histogram of the residuals. It takes <code>residuals</code> (a pandas Series) and <code>rmse</code> (a float), along with <code>ax</code>, <code>label</code> and <code>color</code> parameters for overlay plotting.</li>
 </ol>
 <div class="callout callout-style-default callout-tip callout-titled" title="Hint">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -443,13 +466,13 @@ window.Quarto = {
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Use <code>matplotlib.pyplot</code> module to plot the distribution. You can read the documentation <a href="https://matplotlib.org/stable/tutorials/pyplot.html">here</a>.</p>
 </div>
 </div>
 </div>
-<div id="9d97bdeb" class="cell" data-execution_count="5">
+<div id="5251eb7a" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -470,7 +493,7 @@ window.Quarto = {
 <li>Plot the residuals distribution of the RF and GB models. Look at whether the histogram is centered around zero and whether it is approximately symmetric.</li>
 </ol>
 <div class="callout callout-style-default callout-tip callout-titled" title="Hint">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -479,25 +502,25 @@ window.Quarto = {
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Pass the residuals series and the RMSE value computed in Exercise 8. The RMSE value is needed in the plot title. Call <code>plt.show()</code> to display the figure.</p>
 </div>
 </div>
 </div>
-<div id="54d4de5b" class="cell" data-execution_count="6">
+<div id="8b7ea2e5" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>residuals_distribution(RF_residuals, rmse_rf, ax<span class="op">=</span>ax, label<span class="op">=</span><span class="ss">f"RF (RMSE=</span><span class="sc">{</span>rmse_rf<span class="sc">:.3f}</span><span class="ss">)"</span>, color<span class="op">=</span><span class="st">"steelblue"</span>)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>residuals_distribution(GB_residuals, rmse_gb, ax<span class="op">=</span>ax, label<span class="op">=</span><span class="ss">f"GB (RMSE=</span><span class="sc">{</span>rmse_gb<span class="sc">:.3f}</span><span class="ss">)"</span>, color<span class="op">=</span><span class="st">"darkorange"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>residuals_distribution(rf_residuals, rmse_rf, ax<span class="op">=</span>ax, label<span class="op">=</span><span class="ss">f"RF (RMSE=</span><span class="sc">{</span>rmse_rf<span class="sc">:.3f}</span><span class="ss">)"</span>, color<span class="op">=</span><span class="st">"steelblue"</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>residuals_distribution(gb_residuals, rmse_gb, ax<span class="op">=</span>ax, label<span class="op">=</span><span class="ss">f"GB (RMSE=</span><span class="sc">{</span>rmse_gb<span class="sc">:.3f}</span><span class="ss">)"</span>, color<span class="op">=</span><span class="st">"darkorange"</span>)</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <ol start="3" type="1">
 <li>Write a <code>QQplot(y_test, y_pred)</code> function which computes 1000 quantile points for both series and plots them against each other. The parameters are <code>y_test</code>, <code>y_pred</code>, pandas series of observed and predicted target and the same parameters that question 1. for overlay plotting. The function should return the plot.</li>
 </ol>
-<div id="0225dcd0" class="cell" data-execution_count="7">
+<div id="7d8b6516" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -529,7 +552,7 @@ window.Quarto = {
 <li>Plot the QQ plot comparing the quantiles of the actual and predicted distributions for RF and GB models. Check whether the points align closely along the diagonal, especially in the tails.</li>
 </ol>
 <div class="callout callout-style-default callout-tip callout-titled" title="Hint">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -538,13 +561,13 @@ window.Quarto = {
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Points well above the diagonal in the upper tail indicate that the model underestimates high prices.</p>
 </div>
 </div>
 </div>
-<div id="a8005bd3" class="cell" data-execution_count="8">
+<div id="5c5d7f82" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
@@ -559,7 +582,7 @@ window.Quarto = {
 <ol start="5" type="1">
 <li>Define a <code>target_distribution()</code> function to plot the distribution of the parameter <code>y</code>, a pandas Serie.</li>
 </ol>
-<div id="069252c1" class="cell" data-execution_count="9">
+<div id="99278623" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> target_distribution(y: pd.Series):</span>
@@ -569,8 +592,8 @@ window.Quarto = {
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    fig <span class="op">=</span> plt.figure()</span>
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    plt.plot(axe, y_sorted)</span>
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(<span class="st">"Percentile"</span>)</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    plt.ylabel(<span class="st">"Valeur"</span>)</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="st">"Distribution ordonnée"</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    plt.ylabel(<span class="st">"Value (EUR)"</span>)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="st">"Distribution"</span>)</span>
 <span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> fig</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
@@ -578,7 +601,7 @@ window.Quarto = {
 <li>Plot and compare the target distributions for the actual test values and the predicted values side by side.</li>
 </ol>
 <div class="callout callout-style-default callout-tip callout-titled" title="Hint">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -587,13 +610,13 @@ window.Quarto = {
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Call it twice — once for <code>y_test</code> and once for <code>y_pred</code>. Display both figures. Compare the shapes: a compressed predicted distribution indicates regression to the mean, while a systematic vertical shift indicates a constant bias.</p>
 </div>
 </div>
 </div>
-<div id="7cea7b4a" class="cell" data-execution_count="10">
+<div id="79244d4f" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fig_actual <span class="op">=</span> target_distribution(y_test)</span>
@@ -620,7 +643,7 @@ Tip
 </div>
 <div class="callout-body-container callout-body">
 <p>If you want to plot both plots on a single figure, you can adapt the function :</p>
-<div id="03fb8131" class="cell" data-execution_count="11">
+<div id="e3c85c5a" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_combined_distribution(y_test: pd.Series, y_pred: pd.Series, ax<span class="op">=</span><span class="va">None</span>, label<span class="op">=</span><span class="va">None</span>, color<span class="op">=</span><span class="va">None</span>, show_actual<span class="op">=</span><span class="va">True</span>):</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Plots the target distributions of actual and predicted values on the same graph.</span></span>
@@ -652,11 +675,11 @@ Tip
 </div>
 </div>
 <ol start="7" type="1">
-<li>(Only for RF model) Write a <code>calculate_importance(X_test, y_test, RANDOM_STATE, rf_best, SCORING)</code> function, which returns a sorted Series of importance scores with features name as index. The parameters are the test set (<code>X_test</code> and <code>y_test</code>), the RF model <code>rf_best</code> trained in last section and the scoring chosen for the impurity reduction.</li>
+<li>(Only for RF model) Write a <code>calculate_importance(X_test, y_test, RANDOM_STATE, rf_model_final, SCORING)</code> function, which returns a sorted Series of importance scores with features name as index. The parameters are the test set (<code>X_test</code> and <code>y_test</code>), the RF model <code>rf_model_final</code> trained in last section and the scoring chosen for the impurity reduction.</li>
 </ol>
 <p>Note that permutation importance is computationally expensive on a large test set. The <code>calculate_importance()</code> function automatically subsamples up to 100,000 observations before computing importance scores. This subsample does not change the result.</p>
 <div class="callout callout-style-default callout-tip callout-titled" title="Hint">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -665,13 +688,13 @@ Tip
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Use <code>permutation_importance</code> function from scikit-learn. See <a href="https://scikit-learn.org/stable/modules/generated/sklearn.inspection.permutation_importance.html">here</a> for the documentation.</p>
 </div>
 </div>
 </div>
-<div id="3deb8a09" class="cell" data-execution_count="12">
+<div id="84130beb" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.inspection <span class="im">import</span> permutation_importance</span>
@@ -698,7 +721,7 @@ Tip
 <ol start="8" type="1">
 <li>Write a <code>permutation_importance()</code> function to plot the bar chart of features importance.</li>
 </ol>
-<div id="d87ee73b" class="cell" data-execution_count="13">
+<div id="41234bd4" class="cell" data-execution_count="12">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> importance_plot(importances):</span>
@@ -711,15 +734,14 @@ Tip
 <span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="st">"Permutation importance (top 20)"</span>)</span>
 <span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"Mean increase in RMSE"</span>)</span>
 <span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    plt.savefig(<span class="st">"importances.png"</span>, dpi<span class="op">=</span><span class="dv">150</span>)</span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> fig</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> fig</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <ol start="9" type="1">
 <li>Compute the permutation importance and plot the top 20 most important features.</li>
 </ol>
 <div class="callout callout-style-default callout-tip callout-titled" title="Hint">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -728,21 +750,20 @@ Tip
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Calculate the importance with the train set and the final RF model. The <code>SCORING</code> argument should match the metric used during training (e.g.&nbsp;<code>"r2"</code>).</p>
 </div>
 </div>
 </div>
-<div id="48e60533" class="cell" data-execution_count="14">
+<div id="b0e85494" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>score <span class="op">=</span> <span class="st">"r2"</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>RANDOM_STATE <span class="op">=</span> <span class="dv">202605</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>importances <span class="op">=</span> calculate_importance(X_test, y_test, RANDOM_STATE, rf_best, score)</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>fig_importance <span class="op">=</span> importance_plot(importances)</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>importances <span class="op">=</span> calculate_importance(X_test, y_test, RANDOM_STATE, rf_model_final, score)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>fig_importance <span class="op">=</span> importance_plot(importances)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
