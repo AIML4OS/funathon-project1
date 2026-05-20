@@ -24,22 +24,22 @@ def generate_file_path_s3_data(FILE_KEY_OUT_S3: str):
 
 
 # ── Storing datasets ────────────────────────────────────
-# datasets = {"df": df}
-# for name, data in datasets.items():
-#     with fs.open(generate_file_path_s3_data(f"2_preprocessing/{name}.parquet"), 'wb') as file_out:
-#         data.to_parquet(file_out, index=True)
+datasets = {"X_train": X_train, "X_test": X_test, "y_train": y_train.to_frame(), "y_test": y_test.to_frame(), "df": df}
+for name, data in datasets.items():
+    with fs.open(generate_file_path_s3_data(f"2_preprocessing/{name}.parquet"), 'wb') as file_out:
+        data.to_parquet(file_out, index=True)
 
 # ── Load GB from MLFlow ────────────────────────────────────
 MODEL_URI = "models:/GB@latest"
 gb_model_final = mlflow.sklearn.load_model(MODEL_URI)
-# ── Storing GB model ────────────────────────────────────
+# ── Storing GB model to S3 ─────────────────────────────────
 with fs.open(generate_file_path_s3_models("gb_model_final.joblib"), 'wb') as file_out:
     dump(gb_model_final, file_out)
 
 # ── Load RF from MLFlow ────────────────────────────────────
 MODEL_URI = "models:/RF@latest"
 rf_model_final = mlflow.sklearn.load_model(MODEL_URI)
-# ── Storing RF model ────────────────────────────────────
+# ── Storing RF model to S3 ─────────────────────────────────
 with fs.open(generate_file_path_s3_models("rf_model_final.joblib"), 'wb') as file_out:
     dump(rf_model_final, file_out)
 
