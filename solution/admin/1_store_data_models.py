@@ -1,4 +1,8 @@
+# Script to store data and models. 
+# Run the pre-processing and then store the data
+# You need to generate the models and then use the final lines to store them
 # %%
+
 import mlflow.sklearn
 import os
 import s3fs
