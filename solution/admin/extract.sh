@@ -13,8 +13,6 @@ if [ "$#" -ne 2 ]; then
     output_file="${input_file%.qmd}.py"
 else
     output_file="$2"
-    folder_output=$(dirname "$output_file")
-    mkdir -p "$folder_output" && echo "Folder '$folder_output' created."
 fi
 
 
