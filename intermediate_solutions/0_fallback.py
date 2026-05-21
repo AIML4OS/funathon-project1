@@ -2,10 +2,11 @@
 #  %%
 import sys
 sys.path.append("..")
+sys.path.append("../solution/pipeline.py")
 import pandas as pd
 from joblib import load
 from solution.utils import set_seed, set_s3fs, generate_file_path_s3_models
-from solution.preprocess import set_date_transformer, set_preprocessor, set_y_transformer
+from solution.pipeline import set_date_transformer, set_preprocessor, set_y_transformer
 
 RANDOM_STATE = set_seed()
 
