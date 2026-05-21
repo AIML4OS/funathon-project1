@@ -136,6 +136,40 @@ It will simplify the scikit learn code - in real life you wouldn't drop these fe
 **Note that just like for `RandomForestRegressor`, all parameters have default values — you do not need to pass any argument to get a working model.**
 
 
+<!-- check hash : 
+
+def check_data(df, verbose = False):
+
+    dataframe_name = [name for name, val in globals().items() if val is df][0]
+    
+    res = f"""\
+= {dataframe_name} ========= 
+hash              : {pd.util.hash_pandas_object(df).sum()}
+number of columns : {df.shape[1]} 
+number of rows    : {df.shape[0]} 
+
+"""
+    print(res)
+
+    if verbose: return res
+
+
+check_data(X_train)
+check_data(X_test)
+
+= X_train ========= 
+hash              : 9740245480247122702
+number of columns : 39 
+number of rows    : 1355428 
+
+
+= X_test ========= 
+hash              : 15218863447364480506
+number of columns : 39 
+number of rows    : 338857 
+
+-->
+
 ```{python}
 #| code-fold: true
 #| code-summary: See the solution
