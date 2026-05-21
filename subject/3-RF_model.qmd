@@ -11,11 +11,11 @@ In the first part of this project, we prepared the data to train the model. We r
 
 **Random Forests** (RF) is a powerful and widely used ensemble method for classification and regression tasks. It combines the simplicity of decision trees and the sampling of observations and variables with the power of aggregation to improve predictive performance and reduce the risk of overfitting.
 
-An Insee working document on ensemble methods is available [here](https://inseefrlab.github.io/DT_methodes_ensemblistes/chapters/chapter2/3-random_forest.html). If you are unfamiliar with ensemble methods, we recommend reading this document before processing.
+An Insee working document on ensemble methods is available [here](https://inseefrlab-github-io.translate.goog/DT_methodes_ensemblistes/chapters/chapter2/3-random_forest.html?_x_tr_sl=fr&_x_tr_tl=en&_x_tr_hl=en&_x_tr_pto=wapp). If you are unfamiliar with random forests, we recommend reading this document before processing.
 
 # Concepts of Random Forests
 
-**RF** extend [bagging](https://inseefrlab.github.io/DT_methodes_ensemblistes/chapters/chapter2/2-bagging.html) by introducing an additional level of randomness: at each node, the splitting rule is determined using only a **randomly selected subset of features**. This further **reduces correlation between trees**, thereby **lowering the variance of the aggregated model's predictions**.
+**RF** extend [bagging](https://inseefrlab-github-io.translate.goog/DT_methodes_ensemblistes/chapters/chapter2/2-bagging.html?_x_tr_sl=fr&_x_tr_tl=en&_x_tr_hl=en&_x_tr_pto=wapp) by introducing an additional level of randomness: at each node, the splitting rule is determined using only a **randomly selected subset of features**. This further **reduces correlation between trees**, thereby **lowering the variance of the aggregated model's predictions**.
 
 So, RF rely on four key elements : building **aggregated regression or classification trees**, with a **randomized subset of features** and a ***bootstrap*** **sample** - a random sample drawn with or without replacement from the original dataset, typically of the same size.
 
@@ -26,7 +26,7 @@ So, RF rely on four key elements : building **aggregated regression or classific
 -   **Data sample rate** : useful to speed up training on large dataset, otherwise keep it close to `1.0`;
 -   **Minimum number of observation per leaf** (terminal node) : setting a higher value can reduce training time, generally without any performance loss.
 
-For more information, you can read the paragraph on RF hyperparameters [here](https://inseefrlab.github.io/DT_methodes_ensemblistes/chapters/chapter3/2-guide_usage_RF.html#sec-hyperparam-rf)
+For more information, you can read the paragraph on RF hyperparameters [here](https://inseefrlab-github-io.translate.goog/DT_methodes_ensemblistes/chapters/chapter3/2-guide_usage_RF.html?_x_tr_sl=fr&_x_tr_tl=en&_x_tr_hl=en&_x_tr_pto=wapp#sec-hyperparam-rf)
 
 # Exercice 4: Train your first Random Forest model
 
