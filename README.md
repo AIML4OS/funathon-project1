@@ -98,6 +98,7 @@ This part covers:
 - [`uv`](https://docs.astral.sh/uv/)
 - [SSPCloud account](https://datalab.sspcloud.fr/)  (recommended)
 - GitHub account (recommended)
+- MLFlow
 
 ### Installation of this repo
 
@@ -126,6 +127,35 @@ Data are synthetic data.
 French version of the data is stored in two files in the `projet-funathon/2026/project1/data/0_raw/` folder : `2026/project1/data/0_raw/transactions_flats_FR_raw.parquet` and `2026/project1/data/0_raw/transactions_houses_FR_raw.parquet`.
 
 The script to convert French labelled data to English is stored in `temp/0_generate_input.py`.
+
+## Admin 
+A script transforms .qmd files from `subject/file.qmd` into `intermediate_solutions/script.py`. 
+The script extracts all code in the listed qmd files that are in **executable code cells**, meaning starting with the exact set of character: \`\`\`\{python.
+Code cell starting with \`\`\` python for example won't be pasted into the intermediate solution scripts.
+
+To run it : 
+
+``` bash
+bash solution/admin/extract_all.sh false  # extract and not testing scripts
+bash solution/admin/extract_all.sh        # extract and not testing scripts
+bash solution/admin/extract_all.sh true   # extract and testing scripts
+```
+
+The `extract_all.sh` can also test if the script run properly. 
+To do so, pass on a `true` argument to the script. Any other argument (and by default, none) will not test the scripts.
+
+## Solution
+The solution is coded with more advanced set-up that haven't been covered in the tutorial. 
+For example, it includes logging module, the logging to MLFlow is done along the training. 
+Function are split over several files to adopt a modular organization.
+**Solutions are updated by hand and not from a script.**
+
+In a similar way, the **fallback script is adapted manually.**
+
+To run the solution, run `uv run solution/main.py`. 
+**This script runs all subscripts, logs models to MLFlow, updates data and back-up models in the S3 storage. It doesn't launch a local API.**
+
+To **launch a local API**, run `uvicorn solution.api:app --reload`. You need to have your models stored in MLFlow for it to run properly.
 
 ## Contributing
 
