@@ -14,7 +14,7 @@ app = FastAPI(
 
 # ── Model loading (done once at startup) ────────────────────────────────────
 
-MODEL_URI = "models:/GB/6"
+MODEL_URI = "models:/GB@latest"
 model = mlflow.sklearn.load_model(MODEL_URI)
 
 
