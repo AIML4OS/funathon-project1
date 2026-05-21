@@ -3,7 +3,8 @@
 # %%
 
 import duckdb
-import os
+
+RANDOM_STATE = 202506
 
 # Create a non-persistent connection (the database exists only while the connection is alive and disappears when it is closed)
 con = duckdb.connect(database=":memory:")

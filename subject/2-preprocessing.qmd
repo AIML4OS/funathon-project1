@@ -46,7 +46,8 @@ You can have a look at the [official `duckdb` documentation](https://duckdb.org/
     #| code-overflow: scroll
 
     import duckdb
-    import os
+
+    RANDOM_STATE = 202506
 
     # Create a non-persistent connection (the database exists only while the connection is alive and disappears when it is closed)
     con = duckdb.connect(database=":memory:")
