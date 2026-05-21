@@ -8,24 +8,6 @@ import os
 # Create a non-persistent connection (the database exists only while the connection is alive and disappears when it is closed)
 con = duckdb.connect(database=":memory:")
 
-# You need to create a secret table with all the S3 credentials
-con.execute(
-    f"""
-    CREATE SECRET secret_s3 (
-    TYPE S3,
-    KEY_ID '{os.environ["AWS_ACCESS_KEY_ID"]}',
-    SECRET '{os.environ["AWS_SECRET_ACCESS_KEY"]}',
-    ENDPOINT '{os.environ["AWS_S3_ENDPOINT"]}',
-    SESSION_TOKEN '{os.environ["AWS_SESSION_TOKEN"]}',
-    REGION 'eu-west-1',
-    URL_STYLE 'path',
-    SCOPE 's3://projet-funathon/'
-    );
-    """
-)
-
-RANDOM_STATE = 202605
-
 # %%
 
 # We load all transactions made in France between 2010 and 2022
