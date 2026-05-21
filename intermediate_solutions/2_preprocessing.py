@@ -159,9 +159,6 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 ## Exercice 3: The scikit-learn pipeline
 # %%
-from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
-
 
 def date_to_days(X: pd.Series, ref_date: pd.Timestamp):
     # converts a date to a difference to ref_date :
@@ -172,6 +169,11 @@ def date_to_days(X: pd.Series, ref_date: pd.Timestamp):
     diff_dt = diff_dt.to_numpy().reshape(-1, 1)
 
     return diff_dt
+
+
+# %%
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
 
 date_transformer = FunctionTransformer(
     date_to_days,
