@@ -94,7 +94,6 @@ def generate_file_path_s3_data(FILE_KEY_OUT_S3: str):
 
 def store_datasets(datasets_to_store: dict):
     # ── Storing datasets ────────────────────────────────────
-    # datasets_to_store = {"X_train": X_train, "X_test": X_test, "y_train": y_train.to_frame(), "y_test": y_test.to_frame(), "df": df}
     fs = set_s3fs()
     for name, data in datasets_to_store.items():
         with fs.open(generate_file_path_s3_data(f"2_preprocessing/{name}.parquet"), 'wb') as file_out:
@@ -103,14 +102,9 @@ def store_datasets(datasets_to_store: dict):
 
 def store_model_mlflow_s3(model_uri: str, s3_name: str):
     # ── Load GB from MLFlow ────────────────────────────────────
-    # model_uri = "models:/GB@latest"
-    # s3_name = "gb_model_final.joblib"
     fs = set_s3fs()
     model = mlflow.sklearn.load_model(model_uri)
     # ── Storing GB model to S3 ─────────────────────────────────
     with fs.open(generate_file_path_s3_models(s3_name), 'wb') as file_out:
         dump(model, file_out)
 
-
-# store_model_mlflow_s3("models:/GB@latest", "gb_model_final.joblib")
-# store_model_mlflow_s3("models:/RF@latest", "rf_model_final.joblib")
