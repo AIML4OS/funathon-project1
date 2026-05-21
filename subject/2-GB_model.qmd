@@ -156,6 +156,7 @@ number of rows    : {df.shape[0]}
 
 check_data(X_train)
 check_data(X_test)
+check_data(df)
 
 = X_train ========= 
 hash              : 9740245480247122702
@@ -168,6 +169,10 @@ hash              : 15218863447364480506
 number of columns : 39 
 number of rows    : 338857 
 
+= df ========= 
+hash              : 17566835255591554045
+number of columns : 40 
+number of rows    : 1694285 
 -->
 
 ```{python}
