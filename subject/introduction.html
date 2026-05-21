@@ -131,51 +131,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
-  <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-introduction" role="link" data-bs-toggle="dropdown" aria-expanded="false">
- <span class="menu-text">0. Introduction</span>
-    </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-introduction">    
-        <li>
-    <a class="dropdown-item" href="../subject/introduction.html">
- <span class="dropdown-text">Presentation</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../subject/intro_data.html">
- <span class="dropdown-text">Data presentation</span></a>
-  </li>  
-    </ul>
-  </li>
   <li class="nav-item">
-    <a class="nav-link" href="../subject/1-preprocessing.html"> 
-<span class="menu-text">1. Preprocessing</span></a>
+    <a class="nav-link active" href="../subject/introduction.html" aria-current="page"> 
+<span class="menu-text">0. Introduction</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../subject/1-intro_data.html"> 
+<span class="menu-text">1. Data presentation</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../subject/2-preprocessing.html"> 
+<span class="menu-text">2. Preprocessing</span></a>
   </li>  
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-modelling" role="link" data-bs-toggle="dropdown" aria-expanded="false">
- <span class="menu-text">2. Modelling</span>
+ <span class="menu-text">3. Modelling</span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-modelling">    
         <li>
-    <a class="dropdown-item" href="../subject/2-RF_model.html">
+    <a class="dropdown-item" href="../subject/3-RF_model.html">
  <span class="dropdown-text">with a random forest</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../subject/2-GB_model.html">
+    <a class="dropdown-item" href="../subject/3-GB_model.html">
  <span class="dropdown-text">with a gradient boosting</span></a>
   </li>  
     </ul>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="../subject/3-metrics.html"> 
-<span class="menu-text">3. Model evaluation</span></a>
+    <a class="nav-link" href="../subject/4-metrics.html"> 
+<span class="menu-text">4. Model evaluation</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../subject/4-logging.html"> 
-<span class="menu-text">4. Model logging</span></a>
+    <a class="nav-link" href="../subject/5-logging.html"> 
+<span class="menu-text">5. Model logging</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../subject/5-deployment.html"> 
-<span class="menu-text">5. Deployment</span></a>
+    <a class="nav-link" href="../subject/6-deployment.html"> 
+<span class="menu-text">6. Deployment</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
@@ -201,20 +194,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
-  <li><a href="#structure-of-the-project" id="toc-structure-of-the-project" class="nav-link" data-scroll-target="#structure-of-the-project"><span class="header-section-number">2</span> Structure of the project</a></li>
-  <li><a href="#generalities-about-housing-market-in-france" id="toc-generalities-about-housing-market-in-france" class="nav-link" data-scroll-target="#generalities-about-housing-market-in-france"><span class="header-section-number">3</span> Generalities about housing market in France</a>
+  <li><a href="#project-structure" id="toc-project-structure" class="nav-link" data-scroll-target="#project-structure"><span class="header-section-number">2</span> Project structure</a></li>
+  <li><a href="#project-initialization" id="toc-project-initialization" class="nav-link" data-scroll-target="#project-initialization"><span class="header-section-number">3</span> Project initialization</a>
   <ul class="collapse">
-  <li><a href="#how-to-buy-a-property-in-france" id="toc-how-to-buy-a-property-in-france" class="nav-link" data-scroll-target="#how-to-buy-a-property-in-france"><span class="header-section-number">3.1</span> How to buy a property in France ?</a></li>
-  <li><a href="#specificity-of-the-data-set" id="toc-specificity-of-the-data-set" class="nav-link" data-scroll-target="#specificity-of-the-data-set"><span class="header-section-number">3.2</span> Specificity of the data set</a></li>
-  </ul></li>
-  <li><a href="#initialization-of-the-project" id="toc-initialization-of-the-project" class="nav-link" data-scroll-target="#initialization-of-the-project"><span class="header-section-number">4</span> Initialization of the project</a>
-  <ul class="collapse">
-  <li><a href="#technical-requirements" id="toc-technical-requirements" class="nav-link" data-scroll-target="#technical-requirements"><span class="header-section-number">4.1</span> Technical requirements</a></li>
-  <li><a href="#initialize-your-mlflow-service" id="toc-initialize-your-mlflow-service" class="nav-link" data-scroll-target="#initialize-your-mlflow-service"><span class="header-section-number">4.2</span> Initialize your MLFlow service</a></li>
-  <li><a href="#fork-the-project-with-git-b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c206661206272616e6473206769742d616c74203e7d7d" id="toc-fork-the-project-with-git-b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c206661206272616e6473206769742d616c74203e7d7d" class="nav-link" data-scroll-target="#fork-the-project-with-git-b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c206661206272616e6473206769742d616c74203e7d7d"><span class="header-section-number">4.3</span> Fork the project with <code>Git</code> <i class="fa-brands fa-git-alt" aria-label="git-alt"></i></a></li>
-  <li><a href="#open-a-vs-code-on-sspcloud" id="toc-open-a-vs-code-on-sspcloud" class="nav-link" data-scroll-target="#open-a-vs-code-on-sspcloud"><span class="header-section-number">4.4</span> Open a VS Code on SSPCloud</a></li>
-  <li><a href="#installation-of-dependencies" id="toc-installation-of-dependencies" class="nav-link" data-scroll-target="#installation-of-dependencies"><span class="header-section-number">4.5</span> Installation of dependencies</a></li>
-  <li><a href="#python-interpreter-configuration" id="toc-python-interpreter-configuration" class="nav-link" data-scroll-target="#python-interpreter-configuration"><span class="header-section-number">4.6</span> Python interpreter configuration</a></li>
+  <li><a href="#technical-requirements" id="toc-technical-requirements" class="nav-link" data-scroll-target="#technical-requirements"><span class="header-section-number">3.1</span> Technical requirements</a></li>
+  <li><a href="#initialize-your-mlflow-service" id="toc-initialize-your-mlflow-service" class="nav-link" data-scroll-target="#initialize-your-mlflow-service"><span class="header-section-number">3.2</span> Initialize your MLFlow service</a></li>
+  <li><a href="#fork-the-project-with-git-b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c206661206272616e6473206769742d616c74203e7d7d" id="toc-fork-the-project-with-git-b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c206661206272616e6473206769742d616c74203e7d7d" class="nav-link" data-scroll-target="#fork-the-project-with-git-b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c206661206272616e6473206769742d616c74203e7d7d"><span class="header-section-number">3.3</span> Fork the project with <code>Git</code> <i class="fa-brands fa-git-alt" aria-label="git-alt"></i></a></li>
+  <li><a href="#open-a-vs-code-on-sspcloud" id="toc-open-a-vs-code-on-sspcloud" class="nav-link" data-scroll-target="#open-a-vs-code-on-sspcloud"><span class="header-section-number">3.4</span> Open a VS Code on SSPCloud</a></li>
+  <li><a href="#installation-of-dependencies" id="toc-installation-of-dependencies" class="nav-link" data-scroll-target="#installation-of-dependencies"><span class="header-section-number">3.5</span> Installation of dependencies</a></li>
+  <li><a href="#python-interpreter-configuration" id="toc-python-interpreter-configuration" class="nav-link" data-scroll-target="#python-interpreter-configuration"><span class="header-section-number">3.6</span> Python interpreter configuration</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/AIML4OS/funathon-project1/edit/main/subject/introduction.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/AIML4OS/funathon-project1/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
@@ -280,13 +268,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="odd">
 <td><span class="level-button level-expert">Expert</span></td>
-<td>Enhance the pipeline and improve results: better-tuned hyperparameters, implementation of additional models (e.g. LightGBM, XGBoost, Crospint), and the development of a UI with an interactive map for price predictions, etc...</td>
+<td>Enhance the pipeline and improve results: better-tuned hyperparameters, implementation of additional models (e.g. LightGBM, XGBoost, crospint), and the development of a UI with an interactive map for price predictions, etc...</td>
 </tr>
 </tbody>
 </table>
 <section id="introduction" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
-<p>The project focuses on <strong>predicting housing prices in the Paris area</strong> (Île-de-France region). We will explore how to perform inference using only a limited number of data sources, specifically transaction records and cadastral data. The reason for this choice is that data sources are widely available across many countries. At the end of this project, you will be able to :</p>
+<p>The project focuses on <strong>predicting housing prices in the Paris area</strong> (Île-de-France region). We will explore how to perform inference using only a limited number of data sources, specifically real estate transactions and cadastral data. The reason for this choice is that data sources are widely available across many countries. At the end of this project, you will be able to :</p>
 <ul>
 <li>prepare your <strong>training data</strong>;</li>
 <li>train common <strong>machine learning (ML) models</strong>;</li>
@@ -294,11 +282,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>use some tools to ensure the <strong>reproductibility of the process</strong> (monitoring the model, deploy an API).</li>
 </ul>
 </section>
-<section id="structure-of-the-project" class="level1" data-number="2">
-<h1 data-number="2"><span class="header-section-number">2</span> Structure of the project</h1>
-<p>This project includes five steps (listed in the banner at the top of the page):</p>
+<section id="project-structure" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Project structure</h1>
+<p>This project includes four steps (listed in the banner at the top of the page):</p>
 <ul>
-<li>data generation : how to generate synthetic data from confidential data - this step can be skipped;</li>
 <li>data preprocessing : how to prepare data input for the training of ML models;</li>
 <li>model fitting and evaluation with two different models : Random Forest (RF) and Gradient Boosting (GB);</li>
 <li>model logging with MLflow;</li>
@@ -309,37 +296,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 To run it, just run <code>uv run solution/main.py</code> and it will execute all the steps at once.</p>
 <p>To run the final API, run <code>uvicorn solution.app:app --reload</code>.</p>
 </section>
-<section id="generalities-about-housing-market-in-france" class="level1" data-number="3">
-<h1 data-number="3"><span class="header-section-number">3</span> Generalities about housing market in France</h1>
-<section id="how-to-buy-a-property-in-france" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="how-to-buy-a-property-in-france"><span class="header-section-number">3.1</span> How to buy a property in France ?</h2>
-<p>A housing transaction is always formalized in front of a <strong>notary</strong> in France, who acts as a legal intermediary to ensure the transaction’s validity and compliance with civil law. The notary checks among other things that the property effectively belongs to the seller, calculates and collects the <strong>stamp duties</strong> (such as <em>droits de mutation</em>) based on the transaction’s details and the property’s characteristics.</p>
-<p>After collecting these taxes, the notary forwards the details of the transaction to the <strong>fiscal administration</strong>, including the sale price, the identities of the buyer and seller, the property’s cadastral reference and the notarized document. The fiscal administration then records this information in its databases and updates the <strong>land registry</strong> to reflect the new ownership.</p>
-</section>
-<section id="specificity-of-the-data-set" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="specificity-of-the-data-set"><span class="header-section-number">3.2</span> Specificity of the data set</h2>
-<p>Since 2019, the fiscal administration publishes <strong>all real estate transactions</strong> twice a year in open data format on data.gouv.fr. You can access and download the original datasets (<em>Demande de Valeurs Foncières - DVF</em> or request for property values) directly here (in French only - sadly 😞): <a href="https://www.data.gouv.fr/datasets/demandes-de-valeurs-foncieres">data.gouv.fr/datasets/demandes-de-valeurs-foncieres</a>.</p>
-<p><strong>Types of transaction stored</strong>:</p>
-<p>What transaction is stored in the DVF dataset is a vast question. It’s key to remember that the first goal of the dataset is to collect taxes. The dataset therefore is not fully complete and does not contain all the housing transactions in France that we would be interested in (the dataset remains of very high value and one of the most complete source of transaction as of today). For example, transactions involving selling shares of a <strong>real estate investment company</strong> (or <em>Sociétés Civiles Immobilières (SCIs)</em>) are excluded from housing transaction data, as they are not considered housing transactions from a legal perspective. However, in the way these companies are used, transfering the ownership of a SCI is very similar to buying a property.</p>
-<p>In addition, some transactions are registered in the data when they are of little interest to us. For example:</p>
-<ul>
-<li>The DVF records partial transaction, that is for example when a property is jointly owned and one of the owner sells its part to his/her brothers or sisters. The DVF dataset does not specify the <strong>share of ownership transferred</strong>, as only the total sale price is recorded ;</li>
-<li>The initial transfer of ownership from an individual to an SCI is recorded as a housing transaction, even if the SCI is usually owned by the same persons.</li>
-</ul>
-<p><strong>Geographic coverage of the data</strong> :</p>
-<p>The dataset includes <strong>overseas territories</strong> such as Guadeloupe, Martinique, and Réunion, but excludes <strong>Alsace-Moselle</strong> (the departments of Bas-Rhin, Haut-Rhin, and Moselle). This exclusion is due to the <strong>local civil law</strong> (<em>droit local</em>), which applies in Alsace-Moselle because these territories were part of Germany from 1870 to 1918. It is not an issue as we will focus on the Paris region but keep this in mind if you want to play around with the data.</p>
-<p><strong>Geographical codes</strong> :</p>
-<p>The French territory is split in 18 regions (excluding the special case of overseas collectivities). Each region is made of departments (101 departments nationwide). Each department is identified with a unique non numeric <strong>department code</strong>, such as <em>75</em> for Paris or <em>2A</em> for southern Corsica.</p>
-<p>The <strong>official geographic code</strong> — commonly referred to as the <strong>Insee code</strong> — is a unique five-digit identifier assigned by the National Institute of Statistics and Economic Studies (<a href="https://www.insee.fr/en/metadonnees/source/serie/s2084">Insee</a>) to each city, department, region and other administrative area. This code allows to uniquely identify a city (or equivalent) and remains constant even if the city’s name changes or if it merges with another municipality. The two first digits of the city’s Insee code is the department code. You can find the full COG data and documentation here: <a href="https://www.insee.fr/fr/information/2560452">Insee - Code Officiel Géographique (COG)</a> and in open data format here: <a href="https://www.data.gouv.fr/datasets/code-officiel-geographique-cog">data.gouv.fr - Code Officiel Géographique (COG)</a>.</p>
-<p>In everyday life, the zip code is more frequent to Insee code. It means that if you search for a city with its Insee code on Google maps for example, Google maps won’t find it as it uses the <strong>zip code</strong> (or postal code). The zip code is not a reliable identifier for a city as multiple cities share the same zip code, and a single city may have several zip codes depending on its districts or neighborhoods.</p>
-<p>For example, the city of Paris is identified by the department code <strong>75</strong>, the Insee code <strong>75056</strong> (Paris itself), and is associated with multiple zip codes (e.g., <strong>75001</strong>, <strong>75002</strong>, etc.). Montrouge’s Insee code is 92049 and 92 is the department code of Hauts-de-Seine, where Montrouge is located.</p>
-<p>In-depth details about the data is presented in the <a href="../subject/intro_data.html">dedicated page</a>.</p>
-</section>
-</section>
-<section id="initialization-of-the-project" class="level1" data-number="4">
-<h1 data-number="4"><span class="header-section-number">4</span> Initialization of the project</h1>
-<section id="technical-requirements" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="technical-requirements"><span class="header-section-number">4.1</span> Technical requirements</h2>
+<section id="project-initialization" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Project initialization</h1>
+<section id="technical-requirements" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="technical-requirements"><span class="header-section-number">3.1</span> Technical requirements</h2>
 <ul>
 <li>You need to have an account on <a href="https://datalab.sspcloud.fr/">Insee’s Onyxia platform</a>, called SSPCloud (for <em>cloud platform for the French Official Statistical System</em>). When you are on this webpage, you should see something similar to this image once you’re logged in. To change the language, you can do so on the bottom right part of the webpage (see the orange arrow on the screen shot below).</li>
 </ul>
@@ -353,12 +313,12 @@ To run it, just run <code>uv run solution/main.py</code> and it will execute all
 <li>You also need to have a Github account. Your Github credentials (username, email and token) should be registered in your <a href="https://datalab.sspcloud.fr/">Insee’s Onyxia</a> account in the My account/Git tab.</li>
 </ul>
 </section>
-<section id="initialize-your-mlflow-service" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="initialize-your-mlflow-service"><span class="header-section-number">4.2</span> Initialize your MLFlow service</h2>
+<section id="initialize-your-mlflow-service" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="initialize-your-mlflow-service"><span class="header-section-number">3.2</span> Initialize your MLFlow service</h2>
 <p>Launch a MLflow service by clicking on the below button with your Onyxia account opened: <a href="https://datalab.sspcloud.fr/launcher/automation/mlflow?autoLaunch=true" target="_blank" rel="noopener"><img src="https://custom-icon-badges.demolab.com/badge/SSP%20Cloud-Launch_MLFlow-blue?logo=mlflow&amp;logoColor=white" alt="Onyxia"></a></p>
 </section>
-<section id="fork-the-project-with-git-b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c206661206272616e6473206769742d616c74203e7d7d" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="fork-the-project-with-git-b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c206661206272616e6473206769742d616c74203e7d7d"><span class="header-section-number">4.3</span> Fork the project with <code>Git</code> <i class="fa-brands fa-git-alt" aria-label="git-alt"></i></h2>
+<section id="fork-the-project-with-git-b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c206661206272616e6473206769742d616c74203e7d7d" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="fork-the-project-with-git-b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c206661206272616e6473206769742d616c74203e7d7d"><span class="header-section-number">3.3</span> Fork the project with <code>Git</code> <i class="fa-brands fa-git-alt" aria-label="git-alt"></i></h2>
 <p>First, you need to fork the funathons’s project on Github by clicking on <a href="https://github.com/AIML4OS/funathon-project1/fork">this link</a>. For convenience, <strong>please not to change the repository name</strong>. Write down the owner’s name <code>OWNER_NAME</code> for the next step.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -367,8 +327,8 @@ To run it, just run <code>uv run solution/main.py</code> and it will execute all
 </figure>
 </div>
 </section>
-<section id="open-a-vs-code-on-sspcloud" class="level2" data-number="4.4">
-<h2 data-number="4.4" class="anchored" data-anchor-id="open-a-vs-code-on-sspcloud"><span class="header-section-number">4.4</span> Open a VS Code on SSPCloud</h2>
+<section id="open-a-vs-code-on-sspcloud" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="open-a-vs-code-on-sspcloud"><span class="header-section-number">3.4</span> Open a VS Code on SSPCloud</h2>
 <p>To launch the project, open a VS Code service with the following button: <a href="https://datalab.sspcloud.fr/launcher/ide/vscode-python?name=AIML4OS-funathon-project1&amp;version=2.5.5&amp;s3=region-79669f20&amp;git.cache=«5000»&amp;networking.user.enabled=true&amp;autoLaunch=true" target="_blank" rel="noopener"><img src="https://custom-icon-badges.demolab.com/badge/SSP%20Cloud-Launch_with_VSCode-blue?logo=vsc&amp;logoColor=white" alt="Onyxia"></a>.</p>
 <p>In the VS Code service, open a terminal (<code>CTRL</code> + <code>MAJ</code> + <code>C</code> or in the file menu go to <code>Terminal &gt; New Terminal</code>). Clone the project repository with the following command after replacing <code>OWNER_NAME</code> with your name on Github from the previous step:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="va">OWNER_NAME</span><span class="op">=</span><span class="st">"AIML4OS"</span>  <span class="co"># Change your Github name here</span></span>
@@ -389,8 +349,8 @@ To run it, just run <code>uv run solution/main.py</code> and it will execute all
 <li>The final solution is available in the <code>solution</code> folder.</li>
 </ul>
 </section>
-<section id="installation-of-dependencies" class="level2" data-number="4.5">
-<h2 data-number="4.5" class="anchored" data-anchor-id="installation-of-dependencies"><span class="header-section-number">4.5</span> Installation of dependencies</h2>
+<section id="installation-of-dependencies" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="installation-of-dependencies"><span class="header-section-number">3.5</span> Installation of dependencies</h2>
 <p>Install the project dependencies by running the following command in the terminal:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> funathon-project1</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> sync</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -420,10 +380,10 @@ To run it, just run <code>uv run solution/main.py</code> and it will execute all
 </div>
 </div>
 </section>
-<section id="python-interpreter-configuration" class="level2" data-number="4.6">
-<h2 data-number="4.6" class="anchored" data-anchor-id="python-interpreter-configuration"><span class="header-section-number">4.6</span> Python interpreter configuration</h2>
+<section id="python-interpreter-configuration" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="python-interpreter-configuration"><span class="header-section-number">3.6</span> Python interpreter configuration</h2>
 <p>After installing dependencies with <code>uv</code>, you need to configure the Python interpreter so that the installed packages are properly recognized. This will allow you to run Python scripts in parts, similar to working in a Jupyter notebook.</p>
-<p>To do this, open the command palette <code>Show and Run commands</code> then select <strong><code>Python: select interpreter</code></strong> , or press <code>Ctrl+Shift+P</code>. Finally, enter the following path, which corresponds to the Python interpreter generated by <code>uv</code> :</p>
+<p>To do this, open the command palette <code>Show and Run commands</code> or press <code>Ctrl+Shift+P</code>, then select <strong><code>Python: select interpreter</code></strong>, then click on <code>Enter interpreter path</code>. Finally, enter the following path, which corresponds to the Python interpreter generated by <code>uv</code>:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">/home/onyxia/work/funathon-project1/.venv/bin/python3.13</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 
