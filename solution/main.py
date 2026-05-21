@@ -30,10 +30,10 @@ X_train, X_test, y_train, y_test = train_test_split(
 # %%
 
 
-BEST_ITER = 1000
-BEST_LR = 0.3
+BEST_ITER = 500
+BEST_LR = 0.25
 BEST_DEPTH = 20
-BEST_MIN_LEAF = 50
+BEST_MIN_LEAF = 75
 BEST_L2 = 0
 
 gb_params = {
