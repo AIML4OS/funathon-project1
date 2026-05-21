@@ -524,7 +524,7 @@ Let's set the max depth and minimal size of terminal leaves.
 #| code-overflow: scroll
 #| eval: false
 BEST_DEPTH = 20 # to automatically catch the best hyperparameter, set to : gs_step2.best_params_["regressor__GB__max_depth"]
-BEST_MIN_LEAF = 50 # to automatically catch the best hyperparameter, set to : gs_step2.best_params_["regressor__GB__min_samples_leaf"]
+BEST_MIN_LEAF = 75 # to automatically catch the best hyperparameter, set to : gs_step2.best_params_["regressor__GB__min_samples_leaf"]
 ```
 
 ### Step 3 — Optimise the regularisation parameters
