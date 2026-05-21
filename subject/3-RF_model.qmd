@@ -150,6 +150,8 @@ y_test  = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessi
     -   `max_features="sqrt"`
     -   `min_samples_leaf=10`
     -   `oob_score=True`
+    -   `n_jobs=-1`
+    -   `verbose=2`
 
 **Note: All parameters of RandomForestRegressor have a default value - you only need to explicitly pass the ones you wish to override.** Have a careful look at the various hyperparameters in the documentation. Do you understand what they do? If no, you can read the paragraph on RF hyperparameters [here](https://inseefrlab-github-io.translate.goog/DT_methodes_ensemblistes/chapters/chapter3/2-guide_usage_RF.html?_x_tr_sl=fr&_x_tr_tl=en&_x_tr_hl=en&_x_tr_pto=wapp#sec-hyperparam-rf).
 
