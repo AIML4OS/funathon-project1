@@ -163,7 +163,7 @@ from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
 
 
-def date_to_days(X: pd.Series, ref_date:pd.Timestamp):
+def date_to_days(X: pd.Series, ref_date: pd.Timestamp):
     # converts a date to a difference to ref_date :
     diff_dt = pd.to_datetime(X) - ref_date
     # Extract days part from datetime object
