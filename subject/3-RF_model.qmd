@@ -15,9 +15,9 @@ An Insee working document on ensemble methods is available [here](https://inseef
 
 # Concepts of Random Forests
 
-**RF** extend [bagging](https://inseefrlab-github-io.translate.goog/DT_methodes_ensemblistes/chapters/chapter2/2-bagging.html?_x_tr_sl=fr&_x_tr_tl=en&_x_tr_hl=en&_x_tr_pto=wapp) by introducing an additional level of randomness: at each node, the splitting rule is determined using only a **randomly selected subset of features**. This further **reduces correlation between trees**, thereby **lowering the variance of the aggregated model's predictions**.
+**Random Forests** extend [bagging](https://inseefrlab-github-io.translate.goog/DT_methodes_ensemblistes/chapters/chapter2/2-bagging.html?_x_tr_sl=fr&_x_tr_tl=en&_x_tr_hl=en&_x_tr_pto=wapp) by introducing an additional level of randomness: at each node, the splitting rule is determined using only a **randomly selected subset of features**. This further **reduces correlation between trees**, thereby **lowering the variance of the aggregated model's predictions**.
 
-So, RF rely on four key elements : building **aggregated regression or classification trees**, with a **randomized subset of features** and a ***bootstrap*** **sample** - a random sample drawn with or without replacement from the original dataset, typically of the same size.
+So, RF rely on three key elements : building **aggregated regression or classification trees**, with a **randomized subset of features** and a ***bootstrap*** **sample** - a random sample drawn with or without replacement from the original dataset, typically of the same size.
 
 **You need to select several hyperparameters for training** (we cover the most important ones here) :
 
@@ -32,7 +32,7 @@ For more information, you can read the paragraph on RF hyperparameters [here](ht
 
 
 
-::: {.callout-important title="Fall back code"}
+::: {.callout-important title="Fallback code"}
 
 <div style="display:flex;align-items:center;gap:0.4em;margin-bottom:0.8em;">
 <img src="../img/CheckpointSM3DL.webp" style="max-height:4em;width:auto;flex-shrink:0;"/>
@@ -118,26 +118,11 @@ model = TransformedTargetRegressor(
 
 :::
 
-
-1.  Using the `RandomForestRegressor` class and its [scikit-learn documentation page](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html), define a basic model with the following hyperparameters :
-
-    -   n_estimators=50
-
-    -   max_features="sqrt"
-
-    -   min_samples_leaf=10
-
-    As it's only a first step we chose to simplify the exercise. First, we will drop the `trans_date` and `prop_type` features. Secondly, we will work with the **non transformed target** (i.e.price per square meter) and not use the transformed target (i.e. log of the price per square meter) defined at the end of the pre-processing.
-
-    We will come back to this later on and chain it with the preprocessing steps.
-
-    Train the model with the remaining non transformed target (it should take a few minutes to train).
-
-    > **Note: All parameters of RandomForestRegressor have a default value - you only need to explicitly pass the ones you wish to override.**
+1. Load the train and test datasets.
 
     ::: {.callout-tip collapse="true" title="Hint"}
 
-    Remember : in the [Preprocessing section](1-preprocessing.qmd), we created the training sets `X_train` and `y_train`.
+    Remember : in the [Preprocessing section](2-preprocessing.qmd), we created the training sets `X_train` and `y_train`.
 
     :::
 
@@ -146,15 +131,6 @@ model = TransformedTargetRegressor(
 #| code-summary: See the solution
 #| code-overflow: scroll
 #| eval: false
-from sklearn.ensemble import RandomForestRegressor
-
-# create RandomForestRegressor instance with selected hyperparameters
-rf = RandomForestRegressor(
-    n_estimators=50,
-    max_features="sqrt",
-    min_samples_leaf=10,
-    oob_score=True # for calculating total oob error for the RF
-)
 
 # Defining train and test sets
 X_train = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/X_train.parquet')
@@ -165,12 +141,51 @@ X_test  =  X_test.drop(columns=["prop_type", "trans_date"])
 
 y_train = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/y_train.parquet')["price_sqm"]
 y_test  = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/y_test.parquet')["price_sqm"]
+```
+
+
+2.  Using the `RandomForestRegressor` class from the `scikit-learn` package and its [documentation](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html), define a basic model with the following hyperparameters:
+
+    -   `n_estimators=50`
+    -   `max_features="sqrt"`
+    -   `min_samples_leaf=10`
+    -   `oob_score=True`
+
+**Note: All parameters of RandomForestRegressor have a default value - you only need to explicitly pass the ones you wish to override.** Have a careful look at the various hyperparameters in the documentation. Do you understand what they do? If no, you can read the paragraph on RF hyperparameters [here](https://inseefrlab-github-io.translate.goog/DT_methodes_ensemblistes/chapters/chapter3/2-guide_usage_RF.html?_x_tr_sl=fr&_x_tr_tl=en&_x_tr_hl=en&_x_tr_pto=wapp#sec-hyperparam-rf).
+
+```{python}
+#| code-fold: true
+#| code-summary: See the solution
+#| code-overflow: scroll
+#| eval: false
+
+from sklearn.ensemble import RandomForestRegressor
+
+# create RandomForestRegressor instance with selected hyperparameters
+rf = RandomForestRegressor(
+    n_estimators=50,
+    max_features="sqrt",
+    min_samples_leaf=10,
+    oob_score=True # for calculating total oob error for the RF
+)
+```
+
+
+3.  You will now train the model. Since it is your very first model, we simplify things in two ways. First, we will drop the `trans_date` and `prop_type` features. Second, we will work with the **non transformed target** (i.e. price/sqm) rather than the transformed target (i.e. log price/sqm) defined at the end of the pre-processing. We will come back to these two points later.
+
+Train the model with the non-transformed target using the training data (NOT the test data). It should take a few minutes to train.
+
+```{python}
+#| code-fold: true
+#| code-summary: See the solution
+#| code-overflow: scroll
+#| eval: false
 
 # Train the model
 rf.fit(X_train, y_train)
 ```
 
-2.  Print the `Out-of-Bag` error *(the concept of OOB error will be covered in the next exercise)*.
+4.  Print the `Out-of-Bag` error *(the concept of OOB error will be covered in the next exercise)*.
 
 ::: callout-important
 Scikit-learn distinguishes **parameters** from **fitted attributes**. Here, to access the attributes sent back by the training phase listed in the documentation, we need to search for the `oob_score_` attributes of the random forest.
@@ -186,15 +201,13 @@ print(f"OOB Score : {rf.oob_score_}")
 
 ```
 
-3.  Now, calculate the accuracy of the model on the test set - that is, how far off the prediction are from the actual values.
+5.  Now, calculate the mean squared error of the model on the test set - that is, how far off the prediction are from the actual values.
 
     Note that this is just an illustration of the evaluation process. More details on metrics will be covered in the [dedicated section](3-metrics.qmd).
 
     ::: {.callout-tip collapse="true" title="Hint"}
 
-    You can use the `mean_squared_error` function from the `sklearn.metrics` module.
-
-    Remember to use the test set for the evaluation, not the training set.
+    You will need to use the predict method of the model (see the [documentation]()). You can use the `mean_squared_error` function from the `sklearn.metrics` module. Remember to use the __test set__ for the evaluation, NOT the training set.
 
     :::
 
