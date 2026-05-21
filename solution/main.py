@@ -4,7 +4,7 @@ from sklearn.ensemble import RandomForestRegressor, HistGradientBoostingRegresso
 from preprocess import complete_pre_processing
 from log_mlflow import log_to_mlflow
 from pipeline import set_pipeline
-from utils import setup_logging, set_seed
+from utils import setup_logging, set_seed, check_data, store_datasets, store_model_mlflow_s3
 
 logger = setup_logging()
 # %%
@@ -12,7 +12,9 @@ logger.info("Importing data")
 
 df = complete_pre_processing()
 
-# %%
+logger.info(f'df : {check_data(df)["msg"]}')
+
+
 # %%
 logger.info("Pipeline")
 
@@ -26,14 +28,20 @@ X_train, X_test, y_train, y_test = train_test_split(
     random_state=set_seed()
 )
 
-
+logger.info(f'X_train : {check_data(X_train)["msg"]}')
+logger.info(f'X_test : {check_data(X_test)["msg"]}')
 # %%
 
+datasets_to_store = {"X_train": X_train, "X_test": X_test, "y_train": y_train.to_frame(), "y_test": y_test.to_frame(), "df": df}
+store_datasets(datasets_to_store=datasets_to_store)
+logger.info(f'Storing datasets to S3 : {datasets_to_store.keys()}')
 
-BEST_ITER = 1000
-BEST_LR = 0.3
+# %%
+# Fitting GB model
+BEST_ITER = 500
+BEST_LR = 0.25
 BEST_DEPTH = 20
-BEST_MIN_LEAF = 50
+BEST_MIN_LEAF = 75
 BEST_L2 = 0
 
 gb_params = {
@@ -55,7 +63,7 @@ gb_model_final.fit(X_train, y_train)
 
 
 # %%
-# Saving model to MLFlow
+# Saving GB model to MLFlow
 logger.info("Storing GB model to MLFlow")
 exp_name = "Funathon - project 1"
 
@@ -67,8 +75,14 @@ log_to_mlflow(
     X_train=X_train,
     X_test=X_test,
     y_train=y_train,
-    y_test=y_test
+    y_test=y_test,
+    logger=logger
 )
+
+# %%
+# Saving GB model to S3
+logger.info("Storing latest GB model from MLFLow to S3")
+store_model_mlflow_s3("models:/GB@latest", "gb_model_final.joblib")
 
 # %%
 logger.info("Setting training data sets")
@@ -109,7 +123,12 @@ log_to_mlflow(
     X_train=X_train,
     X_test=X_test,
     y_train=y_train,
-    y_test=y_test
+    y_test=y_test,
+    logger=logger
 )
 
+# %%
+# Saving RF model to S3
+logger.info("Storing latest RF model from MLFLow to S3")
+store_model_mlflow_s3("models:/RF@latest", "rf_model_final.joblib")
 # %%

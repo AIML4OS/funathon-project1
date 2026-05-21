@@ -77,7 +77,7 @@ DuckDB is not the only tool you can use to read the data. You can also use panda
 import pandas as pd
 
 # We load all transactions made in France between 2010 and 2022
-trans = pd.read_parquet('s3://projet-funathon/2026/project1/data/1_input/transactions_EN.parquet')
+trans = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/1_input/transactions_EN.parquet" 
 ```
 :::
 
@@ -452,12 +452,11 @@ Scikit-learn has a very well crafted documentation, so please do not hesitate to
 
 
 ```python
-X_train = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/X_train.parquet')
-X_test  = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/X_test.parquet')
-y_train = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/y_train.parquet')["price_sqm"]
-y_test  = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/y_test.parquet')["price_sqm"]
+X_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_train.parquet")
+X_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_test.parquet")
+y_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_train.parquet")["price_sqm"]
+y_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_test.parquet")["price_sqm"]
 ```
-
 
 :::
 
@@ -558,7 +557,7 @@ from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
 
 
-def date_to_days(X: pd.Series, ref_date:pd.Timestamp):
+def date_to_days(X: pd.Series, ref_date: pd.Timestamp):
     # converts a date to a difference to ref_date :
     diff_dt = pd.to_datetime(X) - ref_date
     # Extract days part from datetime object

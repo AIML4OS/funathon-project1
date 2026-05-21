@@ -191,7 +191,7 @@ We load the model **once at startup**, so that it does not need to be reloaded o
 import mlflow.sklearn
 
 MODEL_URI = "runs:/<mlflow_run_id>/run-relative/path/to/model"  # For example "runs:/04d6f9d4ac4941ebb56a6c9ef2de46c2/model"
-MODEL_URI = "models:/<model_name>/<model_version>"  # For example "models:/GB/6"
+MODEL_URI = "models:/<model_name>/<model_version>"  # For example "models:/GB/6" or "models:/GB@latest" to have the latest version you stored
 model = mlflow.sklearn.load_model(MODEL_URI)
 ```
 
@@ -223,7 +223,7 @@ app = FastAPI(
 
 # ── Model loading (done once at startup) ────────────────────────────────────
 
-MODEL_URI = "models:/GB/6"
+MODEL_URI = "models:/GB@latest"
 model = mlflow.sklearn.load_model(MODEL_URI)
 
 
