@@ -206,9 +206,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#exercice-3-the-scikit-learn-pipeline" id="toc-exercice-3-the-scikit-learn-pipeline" class="nav-link" data-scroll-target="#exercice-3-the-scikit-learn-pipeline"><span class="header-section-number">3.1</span> Exercice 3: The scikit-learn pipeline</a>
   <ul class="collapse">
-  <li><a href="#sec-scikit-learn-pipeline" id="toc-sec-scikit-learn-pipeline" class="nav-link" data-scroll-target="#sec-scikit-learn-pipeline"><span class="header-section-number">3.1.1</span> Step 1 : the Pipeline object</a></li>
-  <li><a href="#step-2-the-columntransformer-object" id="toc-step-2-the-columntransformer-object" class="nav-link" data-scroll-target="#step-2-the-columntransformer-object"><span class="header-section-number">3.1.2</span> Step 2 : the ColumnTransformer object</a></li>
-  <li><a href="#now-lets-go-prepare-the-pipeline-for-the-training" id="toc-now-lets-go-prepare-the-pipeline-for-the-training" class="nav-link" data-scroll-target="#now-lets-go-prepare-the-pipeline-for-the-training"><span class="header-section-number">3.1.3</span> Now let’s go : prepare the pipeline for the training</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction"><span class="header-section-number">3.1.1</span> Introduction</a></li>
+  <li><a href="#now-lets-go-prepare-the-pipeline-for-the-training" id="toc-now-lets-go-prepare-the-pipeline-for-the-training" class="nav-link" data-scroll-target="#now-lets-go-prepare-the-pipeline-for-the-training"><span class="header-section-number">3.1.2</span> Now let’s go : prepare the pipeline for the training</a></li>
   </ul></li>
   </ul></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">4</span> Summary</a></li>
@@ -269,14 +268,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong>Initialize a DuckDB connection.</strong></li>
 </ol>
 <p>To do so, you need to import the <code>duckdb</code> library and then open an in-memory connection.</p>
-<pre><code>::: {.callout-tip collapse="true" title="Hint"}
-
-You can have a look at the [official `duckdb` documentation](https://duckdb.org/docs/current/clients/python/overview#using-an-in-memory-database).
-
-:::
-
-
-::: {#d7f3b7ad .cell execution_count=1}
+<div class="callout callout-style-default callout-tip callout-titled" title="Hint">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Hint
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>You can have a look at the <a href="https://duckdb.org/docs/current/clients/python/overview#using-an-in-memory-database">official <code>duckdb</code> documentation</a>.</p>
+</div>
+</div>
+</div>
+<pre><code>::: {#4446c620 .cell execution_count=1}
 ``` {.python .cell-code .code-overflow-scroll code-fold="true" code-summary="See the solution"}
 import duckdb
 import os
@@ -288,7 +296,7 @@ con = duckdb.connect(database=":memory:")
 <ol start="2" type="1">
 <li><strong>Load, with DuckDB, all data inputs in a DataFrame <code>trans</code></strong> (for transactions).</li>
 </ol>
-<div id="efc09ca6" class="cell" data-execution_count="2">
+<div id="2552a974" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We load all transactions made in France between 2010 and 2022</span></span>
@@ -339,7 +347,7 @@ con = duckdb.connect(database=":memory:")
 <li><strong>Filter the dataframe to keep only housing transactions made inside the Paris area (the region called <em>Île de France</em>)</strong></li>
 </ol>
 <div class="callout callout-style-default callout-tip callout-titled" title="Hint">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -348,13 +356,13 @@ con = duckdb.connect(database=":memory:")
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>You need to filter with the feature <code>prop_loc_dep</code>, with the following department codes for Paris area : [‘75’, ‘77’, ‘78’, ‘91’, ‘92’, ‘93’, ‘94’, ‘95’]</p>
 </div>
 </div>
 </div>
-<div id="65baaa1d" class="cell" data-execution_count="3">
+<div id="e83efa3d" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -380,7 +388,7 @@ con = duckdb.connect(database=":memory:")
 <li>Feature importance scores are less distorted when size no longer absorbs a disproportionate share of variance reduction across splits.</li>
 </ul>
 <div class="callout callout-style-default callout-tip callout-titled" title="Hint">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -389,13 +397,13 @@ con = duckdb.connect(database=":memory:")
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>You need to create a new target <code>price_sqm</code> with features <code>price</code> (housing price) and <code>farea</code></p>
 </div>
 </div>
 </div>
-<div id="3f9bfef2" class="cell" data-execution_count="4">
+<div id="928e166f" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>trans[<span class="st">"price_sqm"</span>] <span class="op">=</span> trans[<span class="st">"price"</span>] <span class="op">/</span> trans[<span class="st">"farea"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -416,13 +424,13 @@ con = duckdb.connect(database=":memory:")
 <div class="callout-body-container callout-body">
 <pre><code>The reason why extreme values are detrimental to model quality differs depending on the model used :
 
--   For Random Forest (random forests), the final prediction is the mean value of Y across all observations contained in the leaf. Since the mean is not a robust statistic, extreme values can strongly influence the final prediction associated with that leaf.
--   For Gradient Boosting (gradient boosting), extreme values can lead to overfitting. Since gradient boosting iteratively reduces residuals by adding new trees, observations with very large residuals - often caused by extreme values - can have a disproportionate influence on the model.</code></pre>
+-   For random forests, the final prediction is the mean value of Y across all observations contained in the leaf. Since the mean is not a robust statistic, extreme values can strongly influence the final prediction associated with that leaf.
+-   For gradient boosting, extreme values can lead to overfitting. Since gradient boosting iteratively reduces residuals by adding new trees, observations with very large residuals - often caused by extreme values - can have a disproportionate influence on the model.</code></pre>
 </div>
 </div>
 <pre><code>The best way to look at the distribution of the target is to plot it. So: plot the price per square meter and the logarithm of price per square meter. If you want, you can remove extreme values before plotting. Look at the plots, and answer this question: what distribution looks closer to the normal one? Is it necessary to transform `y`?</code></pre>
 <div class="callout callout-style-default callout-tip callout-titled" title="Hint">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -431,13 +439,13 @@ con = duckdb.connect(database=":memory:")
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>You can use <code>matplotlib</code> to make the plots, and the <code>percentile</code> function of <code>numpy</code> to define thresholds for oulier removal.</p>
 </div>
 </div>
 </div>
-<pre><code>::: {#4f3877a0 .cell execution_count=5}
+<pre><code>::: {#698086f6 .cell execution_count=5}
 ``` {.python .cell-code .code-overflow-scroll code-fold="true" code-summary="See the solution"}
 import numpy as np
 import matplotlib.pyplot as plt
@@ -472,9 +480,9 @@ In this case, you can see the difference between `Y` and `log(Y)` distribution :
 <p>If you want to focus your study on tails phenomena, the way you deal with this issue will be very important because you want to disentangle the richness of the extreme data from bad data. If you’re more focused on predicting the median price, the risk associated with cleaning too abruptly extreme phenomena is smaller.</p>
 <p>In our case, one of the problems of the data is partial transactions (when somebody sells only a fraction of the property - leading to price per square meter that are way too low) and clear mistakes in the data (prices can sometimes be in cents instead of euros - leading to prices per square meter that are 100 times too high). No expert knowledge can give a threshold above which a price is for sure too low or too high.</p>
 <p>We will therefore apply first a simple deterministic method. For example, we can set a threshold when analyzing housing price distribution (see previous plots and the describe methode). If the price per square meter of the transaction exceeds €200.000 for example, the value can be considered erroneous.</p>
-<p>In the same way, we can have a look at the lower dristribution to see if there is an issue with the left part of the distribution.</p></li>
+<p>In the same way, <strong>have a look at the lower dristribution to see if there is an issue with low price per square meter</strong>. To do so, plot the distribution of the target y for y below 2000€ per square meter and below 500 € per sqm.</p></li>
 </ol>
-<div id="0fa0086d" class="cell" data-execution_count="6">
+<div id="5644110d" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">15</span>))</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, (data, label) <span class="kw">in</span> <span class="bu">zip</span>(axes, [(y[y <span class="op">&lt;=</span> <span class="dv">2000</span>], <span class="st">"Y below 2000€ per sqm"</span>), (y[y <span class="op">&lt;=</span> <span class="dv">500</span>], <span class="st">"Y below 500€ per sqm"</span>)]):</span>
@@ -488,8 +496,9 @@ In this case, you can see the difference between `Y` and `log(Y)` distribution :
 </div>
 <p>The graph is quite clean because the data are synthetic and cleaner than the original data. But with original data, we would have seen that the left tail gets bigger the closer we are to 0. It may indicate an issue with data around these points and the need to apply a filter for values that are too low. We will set a price ceiling of 100€ to micmic original issue, even if with the synthethic data it’s not warranted.</p>
 <p>The second step is to apply some statistic methods. For example, we can use the <strong>Interquartile Range (IQR)</strong> <em>to remove outlier target values</em>.</p>
+<p><strong>Drop observations where the target values is above 200 000 € per square meter or below 100 € per sqm. Drop also all observations where the target value is not in the interquartile range.</strong></p>
 <div class="callout callout-style-default callout-tip callout-titled" title="Hint">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -498,13 +507,13 @@ In this case, you can see the difference between `Y` and `log(Y)` distribution :
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>Interquartile Range</strong> method can keep all observations with target value between <code>Q1-1.5*(Q9-Q1)</code> and <code>Q9+1.5*(Q9-Q1)</code> .</p>
 </div>
 </div>
 </div>
-<div id="335bf16d" class="cell" data-execution_count="7">
+<div id="13de95d3" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>n0 <span class="op">=</span> trans.shape[<span class="dv">0</span>]</span>
@@ -544,8 +553,8 @@ In this case, you can see the difference between `Y` and `log(Y)` distribution :
 <li><strong>Handle missing values in the target variable</strong></li>
 </ol>
 <p>The target variable should not contain missing values when using machine learning algorithms. They should therefore be either dropped or imputed if you have reliable information to support the imputation.</p>
-<p>For our project, we will delete all observations with a missing target value. You can see <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.dropna.html#pandas.DataFrame.dropna">pandas documentation</a> for help.</p>
-<div id="0ccdaa12" class="cell" data-execution_count="9">
+<p>For our project, <strong>delete all observations with a missing target value</strong>. You can see <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.dropna.html#pandas.DataFrame.dropna">pandas documentation</a> for help.</p>
+<div id="5ad04bdd" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>trans <span class="op">=</span> trans.dropna(subset <span class="op">=</span> <span class="st">"price_sqm"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -595,9 +604,9 @@ In this case, you can see the difference between `Y` and `log(Y)` distribution :
 <section id="now-lets-go-prepare-the-dataframe-for-the-training" class="level3" data-number="2.1.3">
 <h3 data-number="2.1.3" class="anchored" data-anchor-id="now-lets-go-prepare-the-dataframe-for-the-training"><span class="header-section-number">2.1.3</span> Now let’s go : prepare the dataframe for the training</h3>
 <ol type="1">
-<li><p>Have a look at the list of variables available. Which ones do not bear any additionnal information and can be dropped ?</p>
+<li><p>Have a look at the list of variables available (called features in machine learning). <strong>Which feature do not bear any additionnal information and can be dropped ?</strong></p>
 <div class="callout callout-style-default callout-tip callout-titled" title="Hint">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -606,14 +615,14 @@ In this case, you can see the difference between `Y` and `log(Y)` distribution :
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>We chose to drop the following variables : <code>price</code> (already taken care of with our target), <code>prop_loc_dep</code> (geographical information is comprised in geographical coordinates prop_loc_x and prop_loc_y), <code>prop_loc_citycode</code> (geographical information is comprised in geographical coordinates prop_loc_x and prop_loc_y), <code>dist_tosea</code> has no meaningful information in the Paris area, far from the sea.</p>
 </div>
 </div>
 </div></li>
 </ol>
-<div id="c0fdc1a3" class="cell" data-execution_count="10">
+<div id="09565305" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> trans.drop(columns<span class="op">=</span>[</span>
@@ -622,9 +631,9 @@ In this case, you can see the difference between `Y` and `log(Y)` distribution :
 </details>
 </div>
 <ol start="2" type="1">
-<li>For convenience, filter the rows containing at least one missing value. You can check pandas’s <code>dropna</code> function on <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.dropna.html#pandas.DataFrame.dropna">their documentation</a>. Check before filtering the number of rows concerned.</li>
+<li>For convenience, <strong>filter the rows containing at least one missing value</strong>. You can check pandas’s <code>dropna</code> function on <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.dropna.html#pandas.DataFrame.dropna">their documentation</a>. Check before filtering the number of rows concerned.</li>
 </ol>
-<div id="0ebd83ea" class="cell" data-execution_count="11">
+<div id="a9eb945e" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Printing all rows containing at least one NA</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df[df.isna().<span class="bu">any</span>(axis<span class="op">=</span><span class="dv">1</span>)])</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -632,9 +641,9 @@ In this case, you can see the difference between `Y` and `log(Y)` distribution :
 <span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.dropna()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <ol start="3" type="1">
-<li>For convenience, we want to update the modalities of the <code>prop_type</code> variable : <code>1</code> means it’s a house and <code>2</code> it’s a flat. You can check pandas’s Categorical function on <a href="https://pandas.pydata.org/docs/reference/api/pandas.Categorical.html#pandas.Categorical">their documentation</a>.</li>
+<li>For convenience, <strong>update the modalities of the <code>prop_type</code> variable : <code>1</code> means it’s a house and <code>2</code> it’s a flat</strong>. You can check pandas’s Categorical function on <a href="https://pandas.pydata.org/docs/reference/api/pandas.Categorical.html#pandas.Categorical">their documentation</a>.</li>
 </ol>
-<div id="37554c9d" class="cell" data-execution_count="12">
+<div id="ee86e366" class="cell" data-execution_count="12">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"prop_type"</span>] <span class="op">=</span> pd.Categorical(</span>
@@ -645,9 +654,9 @@ In this case, you can see the difference between `Y` and `log(Y)` distribution :
 </details>
 </div>
 <ol start="4" type="1">
-<li>The codification of categorical variable can be computational intensive. <code>prop_type</code> has only two modalities but check the number of modalities of <code>prop_year_harm</code>. To speed-up the computation, can we regroup modalities together ? Does it make sense given how the variable has been transformed (see the <a href="../subject/introduction.html">presentation of the data</a>) ? How can we do it ?</li>
+<li>The codification of categorical variable can be computational intensive. <code>prop_type</code> has only two modalities but <strong>check the number of modalities of <code>prop_year_harm</code></strong>. To speed-up the computation, <strong>can we regroup some modalities together ?</strong> Does it make sense given how the variable has been transformed (see the <a href="../subject/introduction.html">presentation of the data</a>) ? How can we do it ?</li>
 </ol>
-<div id="d4131e2c" class="cell" data-execution_count="13">
+<div id="0fa4effa" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>counts <span class="op">=</span> df.value_counts(<span class="st">"prop_year_harm"</span>).reset_index()</span>
@@ -666,9 +675,9 @@ In this case, you can see the difference between `Y` and `log(Y)` distribution :
 </details>
 </div>
 <ol start="5" type="1">
-<li><p>Split the dataframe in train and test set.</p>
+<li><p>X is the dataframe with feature (without the target) and y is the target. <strong>Create X and y from df. Split X and y in train and test sets with a test size of 20% of the data</strong>.</p>
 <div class="callout callout-style-default callout-tip callout-titled" title="Hint">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -677,14 +686,14 @@ In this case, you can see the difference between `Y` and `log(Y)` distribution :
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>you can use the function <code>train_test_split</code> from the module <code>sklearn.model_selection</code> and its <a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split">documentation</a>.</p>
 </div>
 </div>
 </div></li>
 </ol>
-<div id="07892a85" class="cell" data-execution_count="14">
+<div id="8677f70a" class="cell" data-execution_count="14">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
@@ -701,10 +710,10 @@ In this case, you can see the difference between `Y` and `log(Y)` distribution :
 <span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<p>Now that you are familiar with the main mechanisms of pre-processing for model training, we will move on to using scikit-learn modules to prepare for training.</p>
+<p>Now that you are familiar with the main mechanisms of pre-processing for model training, let’s <strong>move on to using scikit-learn modules to prepare for training</strong>.</p>
 <p>Scikit-learn has a very well crafted documentation, so please do not hesitate to go and have a look on <a href="https://scikit-learn.org/stable/api/index.html">their website</a>.</p>
 <div class="callout callout-style-default callout-important callout-titled" title="Fall-back option">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -713,7 +722,7 @@ In this case, you can see the difference between `Y` and `log(Y)` distribution :
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div style="display:flex;align-items:center;gap:0.4em;margin-bottom:0.8em;">
 <img src="../img/CheckpointSM3DL.webp" style="max-height:4em;width:auto;flex-shrink:0;">
@@ -735,9 +744,11 @@ Preprocessed data have been stored in case you need a fall-back. This data inclu
 <h1 data-number="3"><span class="header-section-number">3</span> How do you prepare your data with scikit-learn?</h1>
 <section id="exercice-3-the-scikit-learn-pipeline" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="exercice-3-the-scikit-learn-pipeline"><span class="header-section-number">3.1</span> Exercice 3: The scikit-learn pipeline</h2>
-<p>You are going to made your first scikit-learn pipeline. To begin, you can go to the <a href="https://scikit-learn.org/stable/getting_started.html">scikit-learn quickstart page</a> for an overview.</p>
-<section id="sec-scikit-learn-pipeline" class="level3" data-number="3.1.1">
-<h3 data-number="3.1.1" class="anchored" data-anchor-id="sec-scikit-learn-pipeline"><span class="header-section-number">3.1.1</span> Step 1 : the Pipeline object</h3>
+<p>You are going to build your first scikit-learn pipeline. To begin, you can go to the <a href="https://scikit-learn.org/stable/getting_started.html">scikit-learn quickstart page</a> for an overview.</p>
+<section id="introduction" class="level3" data-number="3.1.1">
+<h3 data-number="3.1.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">3.1.1</span> Introduction</h3>
+<section id="sec-scikit-learn-pipeline" class="level4" data-number="3.1.1.1">
+<h4 data-number="3.1.1.1" class="anchored" data-anchor-id="sec-scikit-learn-pipeline"><span class="header-section-number">3.1.1.1</span> Step 1 : the Pipeline object</h4>
 <p>You need to create a <strong>pipeline</strong>, <em>ie.</em> an single object to chain multiple processing steps. First, you put your pre-processing step - all transformation you need for the data preparation - and the model you have chosen at the end. Instead of applying each step manually one after the other, the pipeline does it automatically in the right order, both during training and prediction.</p>
 <p>For the pipeline, two constructors are available :</p>
 <ul>
@@ -764,8 +775,8 @@ Preprocessed data have been stored in case you need a fall-back. This data inclu
 <span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"random forests"</span>, RandomForestRegressor(<span class="op">**</span>rf_params))</span>
 <span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="step-2-the-columntransformer-object" class="level3" data-number="3.1.2">
-<h3 data-number="3.1.2" class="anchored" data-anchor-id="step-2-the-columntransformer-object"><span class="header-section-number">3.1.2</span> Step 2 : the ColumnTransformer object</h3>
+<section id="step-2-the-columntransformer-object" class="level4" data-number="3.1.1.2">
+<h4 data-number="3.1.1.2" class="anchored" data-anchor-id="step-2-the-columntransformer-object"><span class="header-section-number">3.1.1.2</span> Step 2 : the ColumnTransformer object</h4>
 <p>When you create a pipeline, the first step is to prepare your data. The object <code>ColumnTransformer</code> can perform that : it allows you to apply different transformations to different columns of your dataset. It takes a list of <code>(name, transformer, columns)</code> tuples as input and outputs a single array with all transformed columns concatenated together.</p>
 <p>However, <strong><code>ColumnTransformer</code> delete all features which are not named inside the object</strong>.</p>
 <p>You can also check on scikit-learn documentation for the <a href="https://scikit-learn.org/stable/modules/generated/sklearn.compose.make_column_selector.html"><code>make_column_selector</code> function</a>. Instead of writing down all the categorical variables, you can use it to automatically detect categorical columns based on their data types.</p>
@@ -791,65 +802,57 @@ Preprocessed data have been stored in case you need a fall-back. This data inclu
 <span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"model"</span>, RandomForestRegressor())</span>
 <span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="now-lets-go-prepare-the-pipeline-for-the-training" class="level3" data-number="3.1.3">
-<h3 data-number="3.1.3" class="anchored" data-anchor-id="now-lets-go-prepare-the-pipeline-for-the-training"><span class="header-section-number">3.1.3</span> Now let’s go : prepare the pipeline for the training</h3>
+</section>
+<section id="now-lets-go-prepare-the-pipeline-for-the-training" class="level3" data-number="3.1.2">
+<h3 data-number="3.1.2" class="anchored" data-anchor-id="now-lets-go-prepare-the-pipeline-for-the-training"><span class="header-section-number">3.1.2</span> Now let’s go : prepare the pipeline for the training</h3>
 <p>We will now create our first pipeline to transform the data for the training phase. We will first use a Random Forest model and then compare with a gradient boosting model.</p>
 <ol type="1">
-<li><p>Create the <code>ColumnTransformer</code> instance for the preprocessing step. Go and check <a href="https://scikit-learn.org/stable/modules/generated/sklearn.compose.ColumnTransformer.html">scikit-learn’s documentation</a>.</p>
-<div class="callout callout-style-default callout-tip callout-titled" title="Hint">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Hint
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-11" class="callout-11-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>For the preprocessing step, you have to :</p>
-<ul>
-<li>transform the <code>trans_date</code> variable, a <code>Timestamp</code> feature to a elapsed feature (<code>ref_date = '2010-01-01 00:00'</code>). You can create a new function <code>date_to_days</code>, and apply it with <a href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.FunctionTransformer.html">scikit-learn’s <code>FunctionTransformer</code></a>. Note that the output of your <code>date_to_days</code> function should be a Python array and that <code>.to_numpy().reshape(-1, 1)</code> applied to a Pandas Series will transform it to the correct type ;</li>
-<li>apply the chosen encoding method (OneHotEncoder) on categorical features.</li>
-</ul>
-</div>
-</div>
-</div></li>
+<li><p>Using the function <code>date_to_days</code> <strong>create a <code>FunctionTransformer</code> called <code>date_transformer</code> that will apply the date_to_days function with January, 1st 2010 as argument.</strong></p></li>
+<li><p><strong>Create then a <code>ColumnTransformer</code> for the preprocessing step that applies <code>OneHotEncoder</code> to categorical features and our <code>date_transformer</code> to time feature</strong>. The other features should be kept with the <code>passthrough</code> option</p></li>
 </ol>
-<div id="1a24e83a" class="cell" data-execution_count="15">
+<p>Go and check <a href="https://scikit-learn.org/stable/modules/generated/sklearn.compose.ColumnTransformer.html">scikit-learn’s documentation</a>.</p>
+<pre><code>::: {.callout-tip collapse="true" title="Hint"}
+
+For the preprocessing step, you have to :
+
+-  applyt the new function `date_to_days` with [scikit-learn's `FunctionTransformer`](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.FunctionTransformer.html) ;
+-   apply the chosen encoding method (OneHotEncoder) on categorical features.
+
+:::</code></pre>
+<p>Here is the code for the new function <code>date_to_days</code> that will transform the <code>trans_date</code> variable, a <code>Timestamp</code>, to an elapsed feature (<code>ref_date = '2010-01-01 00:00'</code>). Note that the output of your <code>date_to_days</code> function is a Python array and that <code>.to_numpy().reshape(-1, 1)</code> applied to a Pandas Series will transform it to the correct type.</p>
+<div id="56370774" class="cell" data-execution_count="15">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> date_to_days(X: pd.Series, ref_date: pd.Timestamp):</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># converts a date to a difference to ref_date :</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    diff_dt <span class="op">=</span> pd.to_datetime(X) <span class="op">-</span> ref_date</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Extract days part from datetime object</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    diff_dt <span class="op">=</span> diff_dt.dt.days</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Transform it from a Pandas series to a Numpy nd array, used by scikit learn for input</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    diff_dt <span class="op">=</span> diff_dt.to_numpy().reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> diff_dt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="c75c2ee5" class="cell" data-execution_count="16">
 <details class="code-fold">
 <summary>See the solution</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.compose <span class="im">import</span> ColumnTransformer</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OneHotEncoder, FunctionTransformer</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> date_to_days(X: pd.Series, ref_date: pd.Timestamp):</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># converts a date to a difference to ref_date :</span></span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    diff_dt <span class="op">=</span> pd.to_datetime(X) <span class="op">-</span> ref_date</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Extract days part from datetime object</span></span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    diff_dt <span class="op">=</span> diff_dt.dt.days</span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Transform it from a Pandas series to a Numpy nd array, used by scikit learn for input</span></span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>    diff_dt <span class="op">=</span> diff_dt.to_numpy().reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>)</span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> diff_dt</span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>date_transformer <span class="op">=</span> FunctionTransformer(</span>
-<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>    date_to_days,</span>
-<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>    kw_args<span class="op">=</span>{<span class="st">"ref_date"</span>: pd.Timestamp(<span class="st">'2010-01-01 00:00'</span>)}</span>
-<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>preprocessor <span class="op">=</span> ColumnTransformer(</span>
-<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>    transformers<span class="op">=</span>[</span>
-<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>        (<span class="st">"cat"</span>, OneHotEncoder(handle_unknown<span class="op">=</span><span class="st">"ignore"</span>), [<span class="st">"prop_type"</span>, <span class="st">"prop_year_harm_10"</span>]),  <span class="co"># one-hot encoder on feature</span></span>
-<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>        (<span class="st">"dat"</span>, date_transformer, <span class="st">"trans_date"</span>) <span class="co"># feature time since 01-01-2010</span></span>
-<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>    ],</span>
-<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>    remainder<span class="op">=</span><span class="st">"passthrough"</span>  <span class="co"># to keep features not transformed</span></span>
-<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.compose <span class="im">import</span> ColumnTransformer</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OneHotEncoder, FunctionTransformer</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>date_transformer <span class="op">=</span> FunctionTransformer(</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    date_to_days,</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    kw_args<span class="op">=</span>{<span class="st">"ref_date"</span>: pd.Timestamp(<span class="st">'2010-01-01 00:00'</span>)}</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>preprocessor <span class="op">=</span> ColumnTransformer(</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>    transformers<span class="op">=</span>[</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>        (<span class="st">"cat"</span>, OneHotEncoder(handle_unknown<span class="op">=</span><span class="st">"ignore"</span>), [<span class="st">"prop_type"</span>, <span class="st">"prop_year_harm_10"</span>]),  <span class="co"># one-hot encoder on feature</span></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>        (<span class="st">"dat"</span>, date_transformer, <span class="st">"trans_date"</span>) <span class="co"># feature time since 01-01-2010</span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>    remainder<span class="op">=</span><span class="st">"passthrough"</span>  <span class="co"># to keep features not transformed</span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <ol start="2" type="1">
-<li><p>Create the Pipeline for training a RandomForestRegressor model. Go to the <a href="https://scikit-learn.org/stable/modules/compose.html#pipelines-and-composite-estimators">scikit-learn’s documentation</a> on the matter to understand how it works.</p>
+<li><p><strong>Create the Pipeline for training a RandomForestRegressor model.</strong> Go to the <a href="https://scikit-learn.org/stable/modules/compose.html#pipelines-and-composite-estimators">scikit-learn’s documentation</a> on the matter to understand how it works.</p>
 <div class="callout callout-style-default callout-tip callout-titled" title="Hint">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -873,49 +876,49 @@ Preprocessed data have been stored in case you need a fall-back. This data inclu
 </div>
 </div></li>
 </ol>
-<div id="f9bb2b91" class="cell" data-execution_count="16">
+<div id="352aad02" class="cell" data-execution_count="17">
 <details class="code-fold">
 <summary>See the solution</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OneHotEncoder, FunctionTransformer</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.compose <span class="im">import</span> ColumnTransformer, TransformedTargetRegressor</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> Pipeline</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> RandomForestRegressor</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> log_transform(y):</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.log10(y)</span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> inverse_log_transform(y):</span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">10</span> <span class="op">**</span> y</span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>y_transformer <span class="op">=</span> FunctionTransformer(</span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>    func<span class="op">=</span>log_transform,</span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>    inverse_func<span class="op">=</span>inverse_log_transform)</span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Other option with Numpy :</span></span>
-<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a><span class="co"># y_transformer = FunctionTransformer(</span></span>
-<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a><span class="co">#     func=np.log,</span></span>
-<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a><span class="co">#     inverse_func=np.exp)</span></span>
-<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>rf_params <span class="op">=</span> {</span>
-<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>    <span class="st">"n_estimators"</span>: <span class="dv">100</span>,</span>
-<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">"max_depth"</span>: <span class="dv">5</span>,</span>
-<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>    <span class="st">"max_features"</span>: <span class="st">"sqrt"</span>,</span>
-<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">"min_samples_split"</span>: <span class="dv">2</span>,</span>
-<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a>    <span class="st">"min_samples_leaf"</span>: <span class="dv">10</span>,</span>
-<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a>    <span class="st">"random_state"</span>: RANDOM_STATE,</span>
-<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a>    <span class="st">"oob_score"</span>: <span class="va">True</span>,</span>
-<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a>    <span class="st">"n_jobs"</span>: <span class="op">-</span><span class="dv">1</span>,  <span class="co"># The number of jobs to run in parallel, -1 using all processors</span></span>
-<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a>rf_pipeline <span class="op">=</span> Pipeline([</span>
-<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'preprocessing'</span>, preprocessor),</span>
-<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'RF'</span>, RandomForestRegressor(<span class="op">**</span>rf_params))</span>
-<span id="cb23-35"><a href="#cb23-35" aria-hidden="true" tabindex="-1"></a>])</span>
-<span id="cb23-36"><a href="#cb23-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-37"><a href="#cb23-37" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> TransformedTargetRegressor(</span>
-<span id="cb23-38"><a href="#cb23-38" aria-hidden="true" tabindex="-1"></a>    regressor<span class="op">=</span>rf_pipeline,</span>
-<span id="cb23-39"><a href="#cb23-39" aria-hidden="true" tabindex="-1"></a>    transformer<span class="op">=</span>y_transformer</span>
-<span id="cb23-40"><a href="#cb23-40" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OneHotEncoder, FunctionTransformer</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.compose <span class="im">import</span> ColumnTransformer, TransformedTargetRegressor</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> Pipeline</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> RandomForestRegressor</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> log_transform(y):</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.log10(y)</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> inverse_log_transform(y):</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">10</span> <span class="op">**</span> y</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>y_transformer <span class="op">=</span> FunctionTransformer(</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    func<span class="op">=</span>log_transform,</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>    inverse_func<span class="op">=</span>inverse_log_transform)</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Other option with Numpy :</span></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a><span class="co"># y_transformer = FunctionTransformer(</span></span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a><span class="co">#     func=np.log,</span></span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a><span class="co">#     inverse_func=np.exp)</span></span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>rf_params <span class="op">=</span> {</span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>    <span class="st">"n_estimators"</span>: <span class="dv">100</span>,</span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">"max_depth"</span>: <span class="dv">5</span>,</span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>    <span class="st">"max_features"</span>: <span class="st">"sqrt"</span>,</span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">"min_samples_split"</span>: <span class="dv">2</span>,</span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>    <span class="st">"min_samples_leaf"</span>: <span class="dv">10</span>,</span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a>    <span class="st">"random_state"</span>: RANDOM_STATE,</span>
+<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a>    <span class="st">"oob_score"</span>: <span class="va">True</span>,</span>
+<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a>    <span class="st">"n_jobs"</span>: <span class="op">-</span><span class="dv">1</span>,  <span class="co"># The number of jobs to run in parallel, -1 using all processors</span></span>
+<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-32"><a href="#cb25-32" aria-hidden="true" tabindex="-1"></a>rf_pipeline <span class="op">=</span> Pipeline([</span>
+<span id="cb25-33"><a href="#cb25-33" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'preprocessing'</span>, preprocessor),</span>
+<span id="cb25-34"><a href="#cb25-34" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'RF'</span>, RandomForestRegressor(<span class="op">**</span>rf_params))</span>
+<span id="cb25-35"><a href="#cb25-35" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb25-36"><a href="#cb25-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-37"><a href="#cb25-37" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> TransformedTargetRegressor(</span>
+<span id="cb25-38"><a href="#cb25-38" aria-hidden="true" tabindex="-1"></a>    regressor<span class="op">=</span>rf_pipeline,</span>
+<span id="cb25-39"><a href="#cb25-39" aria-hidden="true" tabindex="-1"></a>    transformer<span class="op">=</span>y_transformer</span>
+<span id="cb25-40"><a href="#cb25-40" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p>Congrats ! You have completed the data preparation exercises. Now you can choose one of the two model you’ll want to train - or do both ! 💪</p>
@@ -930,8 +933,8 @@ Tip
 </div>
 <div class="callout-body-container callout-body">
 <p>Scikit-learn allows you to access every step defined in the <code>rf_pipeline</code> (preprocessing or RF).</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>rf_pipeline[<span class="st">"preprocessing"</span>]   <span class="co"># access to the first step</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>rf_pipeline[<span class="st">"RF"</span>]   <span class="co"># access to the second step</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>rf_pipeline[<span class="st">"preprocessing"</span>]   <span class="co"># access to the first step</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>rf_pipeline[<span class="st">"RF"</span>]   <span class="co"># access to the second step</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>For more details, go to <a href="https://scikit-learn.org/stable/modules/compose.html#access-pipeline-steps">the documentation</a>.</p>
 </div>
 </div>
