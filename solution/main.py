@@ -4,13 +4,15 @@ from sklearn.ensemble import RandomForestRegressor, HistGradientBoostingRegresso
 from preprocess import complete_pre_processing
 from log_mlflow import log_to_mlflow
 from pipeline import set_pipeline
-from utils import setup_logging, set_seed
+from utils import setup_logging, set_seed, check_data, store_datasets, store_model_mlflow_s3
 
 logger = setup_logging()
 # %%
 logger.info("Importing data")
 
 df = complete_pre_processing()
+
+logger.info(check_data(df)["msg"])
 
 # %%
 # %%
@@ -26,10 +28,15 @@ X_train, X_test, y_train, y_test = train_test_split(
     random_state=set_seed()
 )
 
-
+logger.info(f'X_train : {check_data(X_train)["msg"]}')
+logger.info(f'X_test : {check_data(X_test)["msg"]}')
 # %%
 
+datasets_to_store = {"X_train": X_train, "X_test": X_test, "y_train": y_train.to_frame(), "y_test": y_test.to_frame(), "df": df}
+store_datasets(datasets_to_store=datasets_to_store)
+logger.info(f'Storing datasets to S3 : {datasets_to_store.keys()}')
 
+# %%
 BEST_ITER = 500
 BEST_LR = 0.25
 BEST_DEPTH = 20
@@ -69,6 +76,10 @@ log_to_mlflow(
     y_train=y_train,
     y_test=y_test
 )
+
+# %%
+# Saving model to S3
+store_model_mlflow_s3("models:/GB@latest", "gb_model_final.joblib")
 
 # %%
 logger.info("Setting training data sets")
