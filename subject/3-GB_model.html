@@ -303,13 +303,13 @@ window.Quarto = {
 <section id="training-a-baseline-gradient-boosting-model" class="level1" data-number="2">
 <h1 data-number="2"><span class="header-section-number">2</span> Training a baseline Gradient Boosting model</h1>
 <p>To allow for comparison with the random forest section, we chose to use the same conditions : dropping the <code>trans_date</code> and <code>prop_type</code> features and working with the <strong>non transformed target</strong> (i.e.price per square meter) and not use the transformed target (i.e.&nbsp;log of the price per square meter) defined at the end of the pre-processing. We will come back to this later on and chain it with the preprocessing steps.</p>
-<div class="callout callout-style-default callout-important callout-titled" title="Fall back code">
+<div class="callout callout-style-default callout-important callout-titled" title="Code from previous section necessary for this section">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Important</span>Fall back code
+<span class="screen-reader-only">Important</span>Code from previous section necessary for this section
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -319,7 +319,7 @@ window.Quarto = {
 In case you start from here, here is the parameters you need from past sections :
 </div>
 </div>
-<div id="62df077a" class="cell" data-execution_count="1">
+<div id="cf8f7e03" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd </span>
@@ -328,7 +328,7 @@ In case you start from here, here is the parameters you need from past sections 
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.compose <span class="im">import</span> ColumnTransformer, TransformedTargetRegressor</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> Pipeline</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>RANDOM_STATE<span class="op">=</span><span class="dv">202605</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>RANDOM_STATE <span class="op">=</span> <span class="dv">202605</span></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> log_transform(y):</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.log10(y)</span>
@@ -340,7 +340,7 @@ In case you start from here, here is the parameters you need from past sections 
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    func<span class="op">=</span>log_transform,</span>
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    inverse_func<span class="op">=</span>inverse_log_transform)</span>
 <span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> date_to_days(X: pd.Series, ref_date:pd.Timestamp):</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> date_to_days(X: pd.Series, ref_date: pd.Timestamp):</span>
 <span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># converts a date to a difference to ref_date :</span></span>
 <span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    diff_dt <span class="op">=</span> pd.to_datetime(X) <span class="op">-</span> ref_date</span>
 <span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Extract days part from datetime object</span></span>
@@ -393,19 +393,19 @@ In case you start from here, here is the parameters you need from past sections 
 <li>Using the <code>HistGradientBoostingRegressor</code> class and its <a href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html">scikit-learn documentation page</a>, define and train a baseline model with <strong>default hyperparameters</strong>. For convenience, load the training and testing datasets <code>X_train, X_test, y_train, y_test</code> that were already defined at the end of the <a href="1-preprocessing.qmd">pre-processing section</a>. Drop the features <code>prop_type</code>, <code>trans_date</code> from <code>X_train</code> and <code>X_test</code>. It will simplify the scikit learn code - in real life you wouldn’t drop these features and that’s what we’ll do later on.</li>
 </ol>
 <p><strong>Note that just like for <code>RandomForestRegressor</code>, all parameters have default values — you do not need to pass any argument to get a working model.</strong></p>
-<div id="94c953d3" class="cell" data-execution_count="2">
+<div id="c75cdc0d" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> HistGradientBoostingRegressor</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>X_train <span class="op">=</span> pd.read_parquet(<span class="st">'s3://projet-funathon/2026/project1/data/2_preprocessing/X_train.parquet'</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>X_test  <span class="op">=</span> pd.read_parquet(<span class="st">'s3://projet-funathon/2026/project1/data/2_preprocessing/X_test.parquet'</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>X_train <span class="op">=</span> pd.read_parquet(<span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_train.parquet"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>X_test  <span class="op">=</span> pd.read_parquet(<span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_test.parquet"</span>)</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>X_train <span class="op">=</span> X_train.drop(columns<span class="op">=</span>[<span class="st">"prop_type"</span>, <span class="st">"trans_date"</span>])</span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>X_test  <span class="op">=</span>  X_test.drop(columns<span class="op">=</span>[<span class="st">"prop_type"</span>, <span class="st">"trans_date"</span>])</span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>y_train <span class="op">=</span> pd.read_parquet(<span class="st">'s3://projet-funathon/2026/project1/data/2_preprocessing/y_train.parquet'</span>)[<span class="st">"price_sqm"</span>]</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>y_test  <span class="op">=</span> pd.read_parquet(<span class="st">'s3://projet-funathon/2026/project1/data/2_preprocessing/y_test.parquet'</span>)[<span class="st">"price_sqm"</span>]</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>y_train <span class="op">=</span> pd.read_parquet(<span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_train.parquet"</span>)[<span class="st">"price_sqm"</span>]</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>y_test  <span class="op">=</span> pd.read_parquet(<span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_test.parquet"</span>)[<span class="st">"price_sqm"</span>]</span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>gb_baseline <span class="op">=</span> HistGradientBoostingRegressor(random_state<span class="op">=</span>RANDOM_STATE)</span>
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>gb_baseline.fit(X_train, y_train)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -415,7 +415,7 @@ In case you start from here, here is the parameters you need from past sections 
 <li>Compute the three evaluation metrics — <strong>RMSE</strong>, <strong>MAE</strong> and <strong>R²</strong> — on both the <strong>training set</strong> and the <strong>test set</strong>. Compare both sets of scores: what do you observe?</li>
 </ol>
 <p>Note that computing metrics on the training set alongside the test set is important with gradient boosting because it reveals whether the model is overfitting.</p>
-<div id="e8080663" class="cell" data-execution_count="3">
+<div id="6711d01a" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> root_mean_squared_error, mean_absolute_error, r2_score</span>
@@ -500,13 +500,13 @@ Note
 <li><p>Update the definition of our previous pipeline structure (with <code>TransformedTargetRegressor</code>) with a Gradient Boosting model with <code>random state</code> and <code>early stopping</code> parameters.</p></li>
 </ul>
 <p>Note that we will tune the hyperparameters using the whole pipeline and this set of training and test sets.</p>
-<div id="554239f9" class="cell" data-execution_count="4">
+<div id="b28ded5d" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>See the solution</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>X_train <span class="op">=</span> pd.read_parquet(<span class="st">'s3://projet-funathon/2026/project1/data/2_preprocessing/X_train.parquet'</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>X_test  <span class="op">=</span> pd.read_parquet(<span class="st">'s3://projet-funathon/2026/project1/data/2_preprocessing/X_test.parquet'</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>y_train <span class="op">=</span> pd.read_parquet(<span class="st">'s3://projet-funathon/2026/project1/data/2_preprocessing/y_train.parquet'</span>)[<span class="st">"price_sqm"</span>]</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>y_test  <span class="op">=</span> pd.read_parquet(<span class="st">'s3://projet-funathon/2026/project1/data/2_preprocessing/y_test.parquet'</span>)[<span class="st">"price_sqm"</span>]</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>X_train <span class="op">=</span> pd.read_parquet(<span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_train.parquet"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>X_test  <span class="op">=</span> pd.read_parquet(<span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_test.parquet"</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>y_train <span class="op">=</span> pd.read_parquet(<span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_train.parquet"</span>)[<span class="st">"price_sqm"</span>]</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>y_test  <span class="op">=</span> pd.read_parquet(<span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_test.parquet"</span>)[<span class="st">"price_sqm"</span>]</span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>gb_pipeline <span class="op">=</span> Pipeline([</span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'preprocessing'</span>, preprocessor),</span>
@@ -544,7 +544,7 @@ Note
 </div>
 </div>
 </div>
-<div id="17b01c0b" class="cell" data-execution_count="5">
+<div id="f1576a18" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> GridSearchCV</span>
@@ -592,7 +592,7 @@ Note
 </div>
 </div>
 </div>
-<div id="19fc8867" class="cell" data-execution_count="6">
+<div id="e0aa4f52" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> results_to_df(results_: <span class="bu">dict</span>):</span>
@@ -608,7 +608,7 @@ Note
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> results_df_.sort_values(<span class="st">"cross_val_r2"</span>, ascending<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<div id="a51b0c09" class="cell" data-execution_count="7">
+<div id="fde43dd5" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>df_step1 <span class="op">=</span> results_to_df(gs_step1.cv_results_)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -632,7 +632,7 @@ Important
 <p>What do you observe about the interplay between the two hyperparameters?</p>
 <p>What value for the learning rate and the number of tree do you chose, taking into consideration computation efficiency ?</p></li>
 </ol>
-<div id="2299d2fc" class="cell" data-execution_count="8">
+<div id="c70c3030" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -659,7 +659,7 @@ Important
 <span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<div id="f710c677" class="cell" data-execution_count="9">
+<div id="0e5b63a9" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>plot_results_cv(<span class="st">"max_iter"</span>, df_step1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -667,7 +667,7 @@ Important
 </div>
 <p>If the best value of <code>max_iter</code> is the largest value tested (500), consider extending the grid before moving to the next step.</p>
 <p>In the end, we chose the hyperparameters 1000 fot he number of iterations : going beyond doesn’t improve the score. For the learning rate, 0.3 is the maximum with which the model still learns.</p>
-<div id="cf4e3f43" class="cell" data-execution_count="10">
+<div id="82feb388" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>BEST_ITER <span class="op">=</span> <span class="dv">500</span>  <span class="co"># to automatically catch the best hyperparameter, set to : gs_step1.best_params_["regressor__GB__max_iter"]</span></span>
@@ -680,7 +680,7 @@ Important
 <ol start="4" type="1">
 <li>Fix <code>max_iter</code> and <code>learning_rate</code> to the best values found in step 1, then run a second <code>GridSearchCV</code> over <code>max_depth</code> and <code>min_samples_leaf</code> with other settings unchanged.</li>
 </ol>
-<div id="10542b2b" class="cell" data-execution_count="11">
+<div id="6d45e608" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>param_grid_step2 <span class="op">=</span> {</span>
@@ -723,7 +723,7 @@ Important
 <li><p>Using our pre-defined functions, retrieve the cross-validation results as a DataFrame and plot the mean train and validation R² for each combination.</p>
 <p>Which combinations show signs of overfitting?</p></li>
 </ol>
-<div id="a344a9a3" class="cell" data-execution_count="12">
+<div id="532275e1" class="cell" data-execution_count="12">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>df_step2 <span class="op">=</span> results_to_df(gs_step2.cv_results_)</span>
@@ -732,11 +732,11 @@ Important
 </details>
 </div>
 <p>Let’s set the max depth and minimal size of terminal leaves.</p>
-<div id="a739060f" class="cell" data-execution_count="13">
+<div id="bafb63b5" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>BEST_DEPTH <span class="op">=</span> <span class="dv">20</span> <span class="co"># to automatically catch the best hyperparameter, set to : gs_step2.best_params_["regressor__GB__max_depth"]</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>BEST_MIN_LEAF <span class="op">=</span> <span class="dv">50</span> <span class="co"># to automatically catch the best hyperparameter, set to : gs_step2.best_params_["regressor__GB__min_samples_leaf"]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>BEST_MIN_LEAF <span class="op">=</span> <span class="dv">75</span> <span class="co"># to automatically catch the best hyperparameter, set to : gs_step2.best_params_["regressor__GB__min_samples_leaf"]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -746,7 +746,7 @@ Important
 <li><p>Using the best hyperparameters found in steps 1 and 2, train one model for each value of <code>l2_regularization</code> in <code>[0.0, 0.1, 0.3, 0.5, 1.0]</code>. To use our predefined function, make it as if it was a cross validation with <code>max_iter</code> set to the above chosen value. Using our pre-defined function, plot the result.</p>
 <p>Does regularisation help reduce the gap between train and test performance?</p></li>
 </ol>
-<div id="488cbd52" class="cell" data-execution_count="14">
+<div id="60914400" class="cell" data-execution_count="14">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>param_grid_step3 <span class="op">=</span> {</span>
@@ -789,7 +789,7 @@ Important
 <span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Best CV R² : </span><span class="sc">{</span>gs_step3<span class="sc">.</span>best_score_<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<div id="c66073d5" class="cell" data-execution_count="15">
+<div id="34e68852" class="cell" data-execution_count="15">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>BEST_L2 <span class="op">=</span> <span class="dv">0</span> <span class="co"># to automatically catch the best hyperparameter, set to : gs_step3.best_params_["regressor__GB__l2_regularization"]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
@@ -798,7 +798,7 @@ Important
 <ol start="7" type="1">
 <li>Train the final <code>HistGradientBoostingRegressor</code> using all the best hyperparameters identified in the previous steps. Then re-train it on the full training set.</li>
 </ol>
-<div id="0f22475a" class="cell" data-execution_count="16">
+<div id="cc3e1b01" class="cell" data-execution_count="16">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
@@ -812,7 +812,7 @@ Important
 <span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    random_state<span class="op">=</span>RANDOM_STATE,</span>
 <span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_parquet(<span class="st">'s3://projet-funathon/2026/project1/data/2_preprocessing/df.parquet'</span>)</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_parquet(<span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/df.parquet"</span>)</span>
 <span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df.drop(columns<span class="op">=</span>[<span class="st">"price_sqm"</span>])</span>
 <span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df[<span class="st">"price_sqm"</span>]</span>
@@ -877,7 +877,7 @@ If you’re stuck, you can fetch back the final trained model by executing the f
 <ol type="1">
 <li>Compute <strong>RMSE</strong>, <strong>MAE</strong> and <strong>R²</strong> on both the training and test sets for the final gradient boosting model using our <code>print_metrics</code> function.</li>
 </ol>
-<div id="945a5013" class="cell" data-execution_count="17">
+<div id="da730aa4" class="cell" data-execution_count="17">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="bu">list</span> <span class="op">=</span> [(<span class="st">"train"</span>, X_train, y_train), (<span class="st">"test"</span>, X_test, y_test)]</span>
@@ -889,7 +889,7 @@ If you’re stuck, you can fetch back the final trained model by executing the f
 <ol start="2" type="1">
 <li>Plot predicted values against actual values on the test set using the function <code>predicted_actual_plot</code> we defined in the section on <a href="2-RF_model.qmd">random forest</a>.</li>
 </ol>
-<div id="f92db62a" class="cell" data-execution_count="18">
+<div id="44f779d3" class="cell" data-execution_count="18">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>y_pred_test <span class="op">=</span> gb_model_final.predict(X_test)</span>
@@ -903,7 +903,7 @@ If you’re stuck, you can fetch back the final trained model by executing the f
 <ol type="1">
 <li>Create a function <code>build_feature_dict</code> that returns a dictionary of features ready for prediction</li>
 </ol>
-<div id="c1043003" class="cell" data-execution_count="19">
+<div id="340f2a84" class="cell" data-execution_count="19">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_feature_dict(loc_x, loc_y, fare_a, prop_type, feature_dict<span class="op">=</span><span class="va">None</span>):</span>
@@ -966,7 +966,7 @@ If you’re stuck, you can fetch back the final trained model by executing the f
 <ol start="2" type="1">
 <li>Create another dictionary with a few example properties to run predictions on</li>
 </ol>
-<div id="3f9fd3a9" class="cell" data-execution_count="20">
+<div id="7330be88" class="cell" data-execution_count="20">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>prediction_examples <span class="op">=</span> {</span>
@@ -981,7 +981,7 @@ If you’re stuck, you can fetch back the final trained model by executing the f
 <ol start="3" type="1">
 <li>Now, predict the price per square meter for each example</li>
 </ol>
-<div id="0c9fbd4d" class="cell" data-execution_count="21">
+<div id="7b5f17f2" class="cell" data-execution_count="21">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
