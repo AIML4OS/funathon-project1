@@ -41,7 +41,7 @@ For more information, you can read the detailed presentation of the gradient boo
 
 # Training a baseline Gradient Boosting model
 
-To allow for comparison with the random forest section, we chose to use the same conditions : dropping the `trans_date` and `prop_type` features and working with the **non transformed target** (i.e.price per square meter) and not use the transformed target (i.e. log of the price per square meter) defined at the end of the pre-processing. We will come back to this later on and chain it with the preprocessing steps.
+To allow for comparison with the random forest section, we chose to use the same conditions, without the `trans_date` and `prop_type` features. We will come back to this later on and chain it with the preprocessing steps.
 
 
 ::: {.callout-important title="Code from previous section necessary for this section"}
@@ -560,7 +560,7 @@ X_train, X_test, y_train, y_test = train_test_split(
     random_state=RANDOM_STATE
 )
 
-# Wrap in the same pipeline / TransformedTargetRegressor as the RF section
+# Wrap in the same pipeline as the RF section
 gb_model_final = Pipeline([
     ("preprocessor", preprocessor),  # same preprocessor as defined in the preprocessing section
     ("GB", gb_final),
