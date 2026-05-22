@@ -101,7 +101,7 @@ Features with near-zero or negative permutation importance can safely be removed
 
 In this exercise, you will generate predictions from the best RF and GB model and compute all four evaluation metrics on the test set.
 
-0. Load the RF and GB models
+0. **Load the RF and GB models.**
 
 ::: {.callout-important title="If you want to fetch back final RF and GB model" collapse="true"}
 
@@ -197,7 +197,7 @@ gb_model_final = load("gb_model_final.joblib")
 
 ```
 
-1.  Generate predictions on the test set using the best RF and GB models from exercise 5 and compute their residuals.
+1.  **Generate predictions on the test set using the best RF and GB models** from exercise 5 and compute their residuals.
 
 ```{python}
 #| code-fold: true
@@ -426,11 +426,11 @@ plt.show()
 ```
 
 
-::: {.callout-tip}
-If you want to plot both plots on a single figure, you can adapt the function : 
+::: {.callout-tip collapse="true"}
+
+If you want to **plot both plots on a single figure**, you can adapt the function : 
 
 ```{python}
-#| eval: false
 
 def plot_combined_distribution(y_test: pd.Series, y_pred: pd.Series, ax=None, label=None, color=None, show_actual=True):
     """
