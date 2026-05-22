@@ -160,3 +160,8 @@ To do this, open the command palette `Show and Run commands` or press `Ctrl+Shif
 ```{.bash}
 /home/onyxia/work/funathon-project1/.venv/bin/python3.13
 ```
+
+# Next step
+Congrats, you're all set-up now. 
+
+**Go to the next [section](1-intro_data.qmd)** to have a deeper introduction on the data and the topic we're working on.

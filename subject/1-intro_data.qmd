@@ -42,7 +42,6 @@ In everyday life, the zip code is more frequent to Insee code. It means that if 
 
 For example, the city of Paris is identified by the department code **75**, the Insee code **75056** (Paris itself), and is associated with multiple zip codes (e.g., **75001**, **75002**, etc.). Montrouge's Insee code is 92049 and 92 is the department code of Hauts-de-Seine, where Montrouge is located.
 
-In-depth details about the data is presented in the [dedicated page](intro_data.qmd).
 
 # General presentation of the data
 
@@ -119,3 +118,8 @@ Note that the variable year of the building has been harmonized to correct for t
 | 1200 ≤ prop_year ≤ 2022 | No change | 1200 → 1200 |
 
 More information about this transformation is available [online](https://doc-datafoncier.cerema.fr/doc/ff/pb40_pevprincipale/prop_year_harm) (in French).
+
+# Next step
+Now that you've discovered the data, we can start having a deeper look at it and pre-processing it for our model. 
+
+**Go to the [pre-processing section](2-preprocessing.qmd).**

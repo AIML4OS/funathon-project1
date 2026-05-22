@@ -40,18 +40,19 @@ You can have a look at the [official `duckdb` documentation](https://duckdb.org/
 
 :::
 
-    ```{python}
-    #| code-fold: true
-    #| code-summary: See the solution
-    #| code-overflow: scroll
+```{python}
+#| code-fold: true
+#| code-summary: See the solution
+#| code-overflow: scroll
 
-    import duckdb
+import duckdb
+import os
 
-    RANDOM_STATE = 202506
+RANDOM_STATE = 202506
 
-    # Create a non-persistent connection (the database exists only while the connection is alive and disappears when it is closed)
-    con = duckdb.connect(database=":memory:")
-    ```
+# Create a non-persistent connection (the database exists only while the connection is alive and disappears when it is closed)
+con = duckdb.connect(database=":memory:")
+```
 
 2.  **Load, with DuckDB, all data inputs in a DataFrame `trans`** (for transactions).
 
@@ -682,4 +683,4 @@ Congrats 🎉! In this section, you have successfully :
 - plotted the target variable and defined that it needs to be transformed,
 - and finally, defined the pre-processing steps of our machine learning with scikit-learn's pipeline.
 
-You can now have a look at how to train a [random forest model](2-RF_model.qmd) and a [gradient boosting model](2-GB_model.qmd).
+You can now have a look at how to train a [random forest model](3-RF_model.qmd) and a [gradient boosting model](3-GB_model.qmd).

@@ -294,7 +294,7 @@ def predict(prop_features: dict):
 
 
 To avoid typing everything, here is the list of variables.
-Don't forget to see how the variables are encoded in the [dedicated section](intro_data.qmd) ! 
+Don't forget to see how the variables are encoded in the [dedicated section](1-intro_data.qmd) ! 
 
 
 ``` python
