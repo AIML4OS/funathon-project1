@@ -1,9 +1,8 @@
 # Run this script to load the dataframe df and final tuned GB and RF models. 
 #  %%
 import sys
-import os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # When running with uv run or with interactive cells
-
+sys.path.append("..")
+sys.path.append("../solution")
 import pandas as pd
 from joblib import load
 from solution.utils import set_seed, set_s3fs, generate_file_path_s3_models
