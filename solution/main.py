@@ -86,8 +86,8 @@ logger.info("Storing latest GB model from MLFLow to S3")
 
 # %%
 logger.info("Setting training data sets")
-X = df.drop(columns=["price_sqm"])
-y = df["price_sqm"]
+X = df.drop(columns=["price_sqm_log"])
+y = df["price_sqm_log"]
 
 X_train, X_test, y_train, y_test = train_test_split(
     X, y,
