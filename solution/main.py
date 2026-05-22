@@ -104,7 +104,7 @@ rf_params = {
     }
 
 rf_model_final = set_pipeline(
-    "RF-log",
+    "RF",
     RandomForestRegressor(
         **rf_params
     )
@@ -118,7 +118,7 @@ logger.info("Storing RF model to MLFlow")
 log_to_mlflow(
     exp_name=exp_name,
     model=rf_model_final,
-    model_name="RF",
+    model_name="RF-log",
     model_params=rf_params,
     X_train=X_train,
     X_test=X_test,
