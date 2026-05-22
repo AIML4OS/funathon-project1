@@ -331,7 +331,7 @@ You can find more details on scikit-learn's [online documentation](https://inria
 
 You have also another method (not an encoding), namely the **native support for categorical feature**, used in gradient boosting : the aim is to find the best split of the modalities of a categorical feature into two subset. This method has several advantages: it reduces the number of splits, produces simpler trees and increase the computational efficiency of training.
 
-What is the list of variable that are categorical ? Which encoding should we use ? Do not write any code for now, we will do so later.
+What is the list of variable that are categorical ? Which encoding should we use ? Do not write any code for now.
 
 #### Numerical features
 
@@ -351,7 +351,8 @@ All datetime features must be preprocessed — you cannot use the `Timestamp` ty
 -   keep months feature to capture the seasonality of transactions and convert it to numeric ;
 -   keep years feature to capture years specifics patterns and convert it to numeric.
 
-You will see in the section {#sec-scikit-learn-pipeline} how preprocessing can be performed with scikit-learn.
+You will see in the section {#sec-scikit-learn-pipeline} how a simplified preprocessing can be performed. 
+More robust tools would use scikit-learn's built-in preprocessing tools. 
 
 ### Now let's go : prepare the dataframe for the training
 
@@ -384,22 +385,8 @@ print(df[df.isna().any(axis=1)])
 df = df.dropna()
 ```
 
-3.  For convenience, **update the modalities of the `prop_type` variable : `1` means it's a house and `2` it's a flat**. You can check pandas's Categorical function on [their documentation](https://pandas.pydata.org/docs/reference/api/pandas.Categorical.html#pandas.Categorical).
 
-```{python}
-#| code-fold: true
-#| code-summary: See the solution
-#| code-overflow: scroll
-
-df["prop_type"] = pd.Categorical(
-    df["prop_type"],
-    categories=["1", "2"],
-    ordered=False
-).rename_categories({"1": "House", "2": "Flat"})
-```
-
-
-4.  The codification of categorical variable can be computational intensive. `prop_type` has only two modalities but **check the number of modalities of `prop_year_harm`**. To speed-up the computation, **can we regroup some modalities together ?**  Does it make sense given how the variable has been transformed (see the [presentation of the data](introduction.qmd)) ? How can we do it ?
+3.  The codification of categorical variable can be computational intensive. `prop_type` has only two modalities but **check the number of modalities of `prop_year_harm`**. To speed-up the computation, **can we regroup some modalities together ?**  Does it make sense given how the variable has been transformed (see the [presentation of the data](introduction.qmd)) ? How can we do it ?
 
 ```{python}
 #| code-fold: true
@@ -421,7 +408,24 @@ df['prop_year_harm_10'] = df['prop_year_harm_10'].where(df['prop_year_harm_10'] 
 df = df.drop(columns=["prop_year_harm"])
 ```
 
-5.  X is the dataframe with feature (without the target) and y is the target. **Create X and y from df. Split X and y in train and test sets with a test size of 20% of the data**.
+5. **Transform the `trans_date` feature with the number of days between the transaction date and the reference date January, 1st 2010.**
+
+
+```{python}
+#| code-fold: true
+#| code-summary: See the solution
+#| code-overflow: scroll
+
+# Transforming date data into a difference to a reference date in days
+df["trans_date"] = (
+    pd.to_datetime(df["trans_date"]) - pd.Timestamp('2010-01-01 00:00')
+    ).dt.days
+
+```
+
+
+
+6.  X is the dataframe with feature (without the target) and y is the target. **Create X and y from df. Split X and y in train and test sets with a test size of 20% of the data**.
 
     ::: {.callout-tip collapse="true" title="Hint"}
 
@@ -476,11 +480,13 @@ y_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/pr
 
 You are going to build your first scikit-learn pipeline. To begin, you can go to the [scikit-learn quickstart page](https://scikit-learn.org/stable/getting_started.html) for an overview.
 
-### Introduction 
-
-#### Step 1 : the Pipeline object {#sec-scikit-learn-pipeline}
+### Introduction - the Pipeline object {#sec-scikit-learn-pipeline}
 
 You need to create a **pipeline**, *ie.* an single object to chain multiple processing steps. First, you put your pre-processing step - all transformation you need for the data preparation - and the model you have chosen at the end. Instead of applying each step manually one after the other, the pipeline does it automatically in the right order, both during training and prediction.
+
+In this simplified version of the tutorial, we have a very simple pipeline with one step and no pre-processing. 
+But in real life we would move some pre-processing we did (like dealing with categorical features and time features) into the pipeline. 
+Thanks to scikit-learn's logic, we would then just need to add a step before the random forest step with a few lines of code.  
 
 For the pipeline, two constructors are available :
 
@@ -491,10 +497,8 @@ For the pipeline, two constructors are available :
 ``` python
 from sklearn.pipeline import make_pipeline
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.preprocessing import OneHotEncoder
 
 pipe = make_pipeline(
-    OneHotEncoder(),
     RandomForestRegressor()
 )
 ```
@@ -508,111 +512,23 @@ from sklearn.pipeline import Pipeline
 from sklearn.ensemble import RandomForestRegressor
 
 rf_pipeline = Pipeline([
-    ("preprocessor", preprocessor),
     ("random forests", RandomForestRegressor(**rf_params))
 ])
 ```
 
-#### Step 2 : the ColumnTransformer object
-
-When you create a pipeline, the first step is to prepare your data. The object `ColumnTransformer` can perform that : it allows you to apply different transformations to different columns of your dataset. It takes a list of `(name, transformer, columns)` tuples as input and outputs a single array with all transformed columns concatenated together.
-
-However, **`ColumnTransformer` delete all features which are not named inside the object**.
-
-You can also check on scikit-learn documentation for the [`make_column_selector` function](https://scikit-learn.org/stable/modules/generated/sklearn.compose.make_column_selector.html). Instead of writing down all the categorical variables, you can use it to automatically detect categorical columns based on their data types.
-
-Here is an example of scikit-learn functions used for preprocessing. We will adapt these for the current project afterwards.
-
-``` python
-from sklearn.compose import ColumnTransformer, make_column_selector as selector
-from sklearn.preprocessing import StandardScaler, OneHotEncoder
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.pipeline import Pipeline
-
-# Example of code that can be used in machine learning scripts
-cols_cat = selector(dtype_exclude="number")  # Defines categorical features as all but non numerical
-cols_num = selector(dtype_include="number")  # Defines numerical features as columns with data types (dtypes) numerical
-
-preprocessor = ColumnTransformer([
-    ("num", StandardScaler(), cols_num), # scaling can be useful for some model but not for our project
-    ("cat", OneHotEncoder(), ["region", "job_type", "prop_year_harm_10"])
-    ],
-    remainder="passthrough" # the remainder parameter tells what to do with features not transformed. By default, non transformed data is dropped. Specifying "passthrough" passes on the data unchanged to the model.
-)
-
-pipeline = Pipeline([
-    ("preprocessor", preprocessor),
-    ("model", RandomForestRegressor())
-])
-```
 
 ### Now let's go : prepare the pipeline for the training
 
 We will now create our first pipeline to transform the data for the training phase. We will first use a Random Forest model and then compare with a gradient boosting model.
 
-1.  Using the function `date_to_days` **create a `FunctionTransformer` called `date_transformer` that will apply the date_to_days function with January, 1st 2010 as argument.**
 
-2. **Create then a `ColumnTransformer` for the preprocessing step that applies `OneHotEncoder` to categorical features and our `date_transformer` to time feature**. The other features should be kept with the `passthrough` option 
-
-Go and check [scikit-learn's documentation](https://scikit-learn.org/stable/modules/generated/sklearn.compose.ColumnTransformer.html).
-
-    ::: {.callout-tip collapse="true" title="Hint"}
-
-    For the preprocessing step, you have to :
-
-    -  applyt the new function `date_to_days` with [scikit-learn's `FunctionTransformer`](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.FunctionTransformer.html) ;
-    -   apply the chosen encoding method (OneHotEncoder) on categorical features.
-
-    :::
-
-Here is the code for the new function `date_to_days` that will transform the `trans_date` variable, a `Timestamp`, to an elapsed feature (`ref_date = '2010-01-01 00:00'`). 
-Note that the output of your `date_to_days` function is a Python array and that `.to_numpy().reshape(-1, 1)` applied to a Pandas Series will transform it to the correct type.
-
-```{python}
-#| code-fold: false
-#| code-overflow: scroll
-
-def date_to_days(X: pd.Series, ref_date: pd.Timestamp):
-    # converts a date to a difference to ref_date :
-    diff_dt = pd.to_datetime(X) - ref_date
-    # Extract days part from datetime object
-    diff_dt = diff_dt.dt.days
-    # Transform it from a Pandas series to a Numpy nd array, used by scikit learn for input
-    diff_dt = diff_dt.to_numpy().reshape(-1, 1)
-
-    return diff_dt
-
-```
-
-```{python}
-#| code-fold: true
-#| code-summary: See the solution
-#| code-overflow: scroll
-from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
-
-date_transformer = FunctionTransformer(
-    date_to_days,
-    kw_args={"ref_date": pd.Timestamp('2010-01-01 00:00')}
-    )
-
-preprocessor = ColumnTransformer(
-    transformers=[
-        ("cat", OneHotEncoder(handle_unknown="ignore"), ["prop_type", "prop_year_harm_10"]),  # one-hot encoder on feature
-        ("dat", date_transformer, "trans_date") # feature time since 01-01-2010
-    ],
-    remainder="passthrough"  # to keep features not transformed
-)
-```
-
-2.  **Create the Pipeline for training a RandomForestRegressor model.** Go to the [scikit-learn's documentation](https://scikit-learn.org/stable/modules/compose.html#pipelines-and-composite-estimators) on the matter to understand how it works.
+1.  **Create the Pipeline for training a RandomForestRegressor model.** Go to the [scikit-learn's documentation](https://scikit-learn.org/stable/modules/compose.html#pipelines-and-composite-estimators) on the matter to understand how it works.
 
     ::: {.callout-tip collapse="true" title="Hint"}
 
     For the pipeline steps, you have to :
 
-    -   create a `FunctionTransformer` instance for the `log` transformation of the target with either [`np.log`](https://numpy.org/doc/stable/reference/generated/numpy.log.html) or your own defined `log_transform` and `inverse_log_transform` functions ;
-    -   create a pipeline `rf_pipeline` with the preprocessing step `preprocessor` defined above and a RandomForestRegressor model ;
+    -   create a pipeline `rf_pipeline` with a RandomForestRegressor model ;
     -   Write all hyperparameters you want to use for the `RandomForestRegressor` instance - have a tour on [the documentation](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html) ;
 
     :::
@@ -621,8 +537,6 @@ preprocessor = ColumnTransformer(
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
-from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.ensemble import RandomForestRegressor
 
@@ -639,11 +553,8 @@ rf_params = {
 }
 
 rf_pipeline = Pipeline([
-    ('preprocessing', preprocessor),
     ('RF', RandomForestRegressor(**rf_params))
 ])
-
-
 
 ```
 
@@ -651,11 +562,10 @@ rf_pipeline = Pipeline([
 Congrats ! You have completed the data preparation exercises. Now you can choose one of the two model you'll want to train - or do both ! 💪
 
 ::: {.callout-tip}
-Scikit-learn allows you to access every step defined in the `rf_pipeline` (preprocessing or RF).
+Scikit-learn allows you to access every step defined in the `rf_pipeline` (preprocessing if we had one or RF).
 
 ```python
-rf_pipeline["preprocessing"]   # access to the first step
-rf_pipeline["RF"]   # access to the second step
+rf_pipeline["RF"]   # access to the RF step
 ```
 
 For more details, go to [the documentation](https://scikit-learn.org/stable/modules/compose.html#access-pipeline-steps).
