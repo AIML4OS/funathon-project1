@@ -124,14 +124,6 @@ df = df.dropna()
 
 # %%
 
-df["prop_type"] = pd.Categorical(
-    df["prop_type"],
-    categories=["1", "2"],
-    ordered=False
-).rename_categories({"1": "House", "2": "Flat"})
-
-# %%
-
 counts = df.value_counts("prop_year_harm").reset_index()
 counts[counts["prop_year_harm"] < 1850].describe() # there more than 500 different years of construction, going from 13th century to now. Maybe we can bundle together years before 1850 and group them by decade
 
@@ -145,6 +137,14 @@ df['prop_year_harm_10'] = df['prop_year_harm_10'].where(df['prop_year_harm_10'] 
 
 # Dropping old column
 df = df.drop(columns=["prop_year_harm"])
+
+# %%
+
+# Transforming date data into a difference to a reference date in days
+df["trans_date"] = (
+    pd.to_datetime(df["trans_date"]) - pd.Timestamp('2010-01-01 00:00')
+    ).dt.days
+
 
 # %%
 
@@ -164,38 +164,6 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 ## Exercice 3: The scikit-learn pipeline
 # %%
-
-def date_to_days(X: pd.Series, ref_date: pd.Timestamp):
-    # converts a date to a difference to ref_date :
-    diff_dt = pd.to_datetime(X) - ref_date
-    # Extract days part from datetime object
-    diff_dt = diff_dt.dt.days
-    # Transform it from a Pandas series to a Numpy nd array, used by scikit learn for input
-    diff_dt = diff_dt.to_numpy().reshape(-1, 1)
-
-    return diff_dt
-
-
-# %%
-from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
-
-date_transformer = FunctionTransformer(
-    date_to_days,
-    kw_args={"ref_date": pd.Timestamp('2010-01-01 00:00')}
-    )
-
-preprocessor = ColumnTransformer(
-    transformers=[
-        ("cat", OneHotEncoder(handle_unknown="ignore"), ["prop_type", "prop_year_harm_10"]),  # one-hot encoder on feature
-        ("dat", date_transformer, "trans_date") # feature time since 01-01-2010
-    ],
-    remainder="passthrough"  # to keep features not transformed
-)
-
-# %%
-from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
-from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.ensemble import RandomForestRegressor
 
@@ -212,10 +180,7 @@ rf_params = {
 }
 
 rf_pipeline = Pipeline([
-    ('preprocessing', preprocessor),
     ('RF', RandomForestRegressor(**rf_params))
 ])
-
-
 
 

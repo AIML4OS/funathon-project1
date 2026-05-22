@@ -2,44 +2,10 @@
 
 import pandas as pd 
 import numpy as np
-from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
-from sklearn.compose import ColumnTransformer, TransformedTargetRegressor
 from sklearn.pipeline import Pipeline
 
 RANDOM_STATE = 202605
 
-def log_transform(y):
-    return np.log10(y)
-
-def inverse_log_transform(y):
-    return 10 ** y
-
-y_transformer = FunctionTransformer(
-    func=log_transform,
-    inverse_func=inverse_log_transform)
-
-def date_to_days(X: pd.Series, ref_date: pd.Timestamp):
-    # converts a date to a difference to ref_date :
-    diff_dt = pd.to_datetime(X) - ref_date
-    # Extract days part from datetime object
-    diff_dt = diff_dt.dt.days
-    # Transform it from a Pandas series to a Numpy nd array, used by scikit learn for input
-    diff_dt = diff_dt.to_numpy().reshape(-1, 1)
-
-    return diff_dt
-
-date_transformer = FunctionTransformer(
-    date_to_days,
-    kw_args={"ref_date": pd.Timestamp('2010-01-01 00:00')}
-    )
-
-preprocessor = ColumnTransformer(
-    transformers=[
-        ("cat", OneHotEncoder(handle_unknown="ignore"), ["prop_type", "prop_year_harm_10"]),  # one-hot encoder on feature
-        ("dat", date_transformer, "trans_date") # feature time since 01-01-2010
-    ],
-    remainder="passthrough"  # to keep features not transformed
-)
 
 import matplotlib.pyplot as plt
 
@@ -69,14 +35,10 @@ def predicted_actual_plot(y_test, y_pred_test, model_name):
 # %%
 from sklearn.ensemble import HistGradientBoostingRegressor
 
-X_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_train.parquet")
-X_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_test.parquet")
-
-X_train = X_train.drop(columns=["prop_type", "trans_date"])
-X_test  =  X_test.drop(columns=["prop_type", "trans_date"])
-
-y_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_train.parquet")["price_sqm"]
-y_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_test.parquet")["price_sqm"]
+X_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_train_log.parquet")
+X_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_test_log.parquet")
+y_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_train_log.parquet")["price_sqm_log"]
+y_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_test_log.parquet")["price_sqm_log"]
 
 gb_baseline = HistGradientBoostingRegressor(random_state=RANDOM_STATE)
 gb_baseline.fit(X_train, y_train)
@@ -108,30 +70,25 @@ for split, X, y in list:
 ## Exercice 8: Tuning Gradient Boosting hyperparameters
 # %%
 
-X_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_train.parquet")
-X_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_test.parquet")
-y_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_train.parquet")["price_sqm"]
-y_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_test.parquet")["price_sqm"]
+X_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_train_log.parquet")
+X_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_test_log.parquet")
+y_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_train_log.parquet")["price_sqm_log"]
+y_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_test_log.parquet")["price_sqm_log"]
 
-gb_pipeline = Pipeline([
-    ('preprocessing', preprocessor),
+model = Pipeline([
     ('GB', HistGradientBoostingRegressor(
         random_state=RANDOM_STATE,
         early_stopping=True))
 ])
 
-model = TransformedTargetRegressor(
-    regressor=gb_pipeline,
-    transformer=y_transformer
-)
 
 
 # %%
 from sklearn.model_selection import GridSearchCV
 
 param_grid_step1 = {
-    "regressor__GB__max_iter": [200, 500],
-    "regressor__GB__learning_rate": [0.1, 0.15, 0.2],
+    "GB__max_iter": [200, 500],
+    "GB__learning_rate": [0.1, 0.15, 0.2],
 }
 
 gs_step1 = GridSearchCV(
@@ -151,7 +108,7 @@ print(f"Best CV R² : {gs_step1.best_score_:.4f}")
 # %%
 
 def results_to_df(results_: dict):
-    pattern = "param_regressor__GB__"
+    pattern = "param_GB__"
     pattern_len = len(pattern)
     params = [key for key in results_.keys() if key.startswith(pattern)]
     matching_keys = params + ["mean_train_score", "mean_test_score"]
@@ -197,17 +154,16 @@ def plot_results_cv(param_x:str, results_df_):
 plot_results_cv("max_iter", df_step1)
 
 # %%
-BEST_ITER = 500  # to automatically catch the best hyperparameter, set to : gs_step1.best_params_["regressor__GB__max_iter"]
-BEST_LR = 0.25  # to automatically catch the best hyperparameter, set to : gs_step1.best_params_["regressor__GB__learning_rate"]
+BEST_ITER = 500  # to automatically catch the best hyperparameter, set to : gs_step1.best_params_["GB__max_iter"]
+BEST_LR = 0.25  # to automatically catch the best hyperparameter, set to : gs_step1.best_params_["GB__learning_rate"]
 
 # %%
 param_grid_step2 = {
-    "regressor__GB__max_depth" : [3, 5, 8],
-    "regressor__GB__min_samples_leaf": [10, 20, 50],
+    "GB__max_depth" : [15, 20 , 25],
+    "GB__min_samples_leaf": [50, 75, 100],
 }
 
-gb_pipeline_step2 = Pipeline([
-    ('preprocessing', preprocessor),
+model_step2 = Pipeline([
     ('GB', HistGradientBoostingRegressor(
         max_iter=BEST_ITER,
         learning_rate=BEST_LR,
@@ -216,10 +172,6 @@ gb_pipeline_step2 = Pipeline([
     ))
 ])
 
-model_step2 = TransformedTargetRegressor(
-    regressor=gb_pipeline_step2,
-    transformer=y_transformer
-)
 
 gs_step2 = GridSearchCV(
     estimator=model_step2,
@@ -243,18 +195,17 @@ df_step2 = results_to_df(gs_step2.cv_results_)
 plot_results_cv("min_samples_leaf", df_step2)
 
 # %%
-BEST_DEPTH = 20 # to automatically catch the best hyperparameter, set to : gs_step2.best_params_["regressor__GB__max_depth"]
-BEST_MIN_LEAF = 75 # to automatically catch the best hyperparameter, set to : gs_step2.best_params_["regressor__GB__min_samples_leaf"]
+BEST_DEPTH = 20 # to automatically catch the best hyperparameter, set to : gs_step2.best_params_["GB__max_depth"]
+BEST_MIN_LEAF = 75 # to automatically catch the best hyperparameter, set to : gs_step2.best_params_["GB__min_samples_leaf"]
 
 # %%
 
 param_grid_step3 = {
-    "regressor__GB__l2_regularization" : [0.0, 0.1, 0.3, 0.5, 1.0],
-    "regressor__GB__max_iter" : [BEST_ITER],
+    "GB__l2_regularization" : [0.0, 0.1, 0.3],
+    "GB__max_iter" : [BEST_ITER],
 }
 
-gb_pipeline_step3 = Pipeline([
-    ('preprocessing', preprocessor),
+model_step3 = Pipeline([
     ('GB', HistGradientBoostingRegressor(
         learning_rate=BEST_LR,
         max_depth=BEST_DEPTH,
@@ -264,10 +215,6 @@ gb_pipeline_step3 = Pipeline([
     ))
 ])
 
-model_step3 = TransformedTargetRegressor(
-    regressor=gb_pipeline_step3,
-    transformer=y_transformer
-)
 
 gs_step3 = GridSearchCV(
     estimator=model_step3,
@@ -289,7 +236,7 @@ print(f"Best CV R² : {gs_step3.best_score_:.4f}")
 
 # %%
 
-BEST_L2 = 0 # to automatically catch the best hyperparameter, set to : gs_step3.best_params_["regressor__GB__l2_regularization"]
+BEST_L2 = 0 # to automatically catch the best hyperparameter, set to : gs_step3.best_params_["GB__l2_regularization"]
 
 
 # %%
@@ -305,26 +252,21 @@ gb_final = HistGradientBoostingRegressor(
     random_state=RANDOM_STATE,
 )
 
-df = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/df.parquet")
+df = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/df_log.parquet")
 
-X = df.drop(columns=["price_sqm"])
-y = df["price_sqm"]
+X = df.drop(columns=["price_sqm_log"])
+y = df["price_sqm_log"]
 X_train, X_test, y_train, y_test = train_test_split(
     X, y,
     test_size=0.2,
     random_state=RANDOM_STATE
 )
 
-# Wrap in the same pipeline / TransformedTargetRegressor as the RF section
-gb_pipeline_best = Pipeline([
-    ("preprocessor", preprocessor),  # same preprocessor as defined in the preprocessing section
+# Wrap in the same pipeline as the RF section
+gb_model_final = Pipeline([
     ("GB", gb_final),
 ])
 
-gb_model_final = TransformedTargetRegressor(
-    regressor=gb_pipeline_best,
-    transformer=y_transformer  # same targettransformer as defined in preprocessing section
-)
 
 gb_model_final.fit(X_train, y_train)
 print("Final model trained.")
@@ -359,15 +301,14 @@ def build_feature_dict(loc_x, loc_y, fare_a, prop_type, feature_dict=None):
     if feature_dict is not None:
         return feature_dict
 
-    _prop_type_map = {1: "House", 2: "Flat"}
-    prop_type_str = _prop_type_map.get(prop_type, str(prop_type))
+    trans_date_tr =   (pd.Timestamp('2023-02-01 00:00') - pd.Timestamp('2010-01-01 00:00')).days
 
     return {
         "farea": fare_a,
-        "trans_date": "01/02/2023",
+        "trans_date": trans_date_tr,
         "trans_year": 2023,
         "trans_month": 2,
-        "prop_type": prop_type_str,
+        "prop_type": prop_type,
         "prop_year_harm_10": 1870,
         "prop_loc_x": loc_x,
         "prop_loc_y": loc_y,
@@ -435,12 +376,11 @@ for key, infos in prediction_examples.items():
 
 X_examples = pd.DataFrame(rows)
 
-# Keep metadata aside; the model only sees the feature columns it was trained on.
+# Keep metadata aside
 meta_cols = ["id", "adresse"]
-feature_cols = [c for c in X_examples.columns if c not in meta_cols]
 
 # Predicted price per square meter
-predicted_price_sqm = gb_model_final.predict(X_examples[feature_cols])
+predicted_price_sqm = np.exp(gb_model_final.predict(X_examples[X_test.columns]))
 
 results = X_examples[meta_cols].copy()
 results["price_per_sqm"] = predicted_price_sqm.round(0)
