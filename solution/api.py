@@ -40,7 +40,7 @@ def predict(prop_features: dict):
     and the estimated total price.
     """
 
-    prop_features_df = pd.DataFrame([prop_features])
+    prop_features_df = pd.DataFrame([prop_features])[model.feature_names_in_]
 
     # Turning prop_type to Categorical data
     prop_features_df["prop_type"] = pd.Categorical(

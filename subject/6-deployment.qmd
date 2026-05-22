@@ -78,7 +78,7 @@ def read_root():
     return {"message": "Housing price prediction API is running"}
 ```
 
-Save this as `api.py` and run it with:
+**Save this file, name it `api.py` and run it with:**
 
 ```{.bash filename="terminal"}
 uvicorn api:app --reload
@@ -99,7 +99,7 @@ It serves as a fall-back option.
 uvicorn intermediate_solutions.5_api:app --reload
 ```
 
-Then open [http://localhost:8000](http://localhost:8000) in your browser. You should see the JSON response `"Housing price prediction API is running"`.
+**Then open [http://localhost:8000](http://localhost:8000) in your browser. You should see the JSON response `"Housing price prediction API is running"`.**
 
 
 ::: {.callout-tip title="Using the Terminal to test the API directly"}
@@ -162,7 +162,7 @@ In this example, `GET /` just returns a static message — no body needed from t
 :::
 
 
-2. Building on this first basic API, modify the default endpoint to give back a message indicating what the API does, the model name and version. 
+2. **Building on this first basic API, modify the default endpoint to give back a message indicating what the API does, the model name and version.**
 
 
 ::: {.callout-tip}
@@ -183,9 +183,9 @@ def show_welcome_page():
 
 :::
 
-3. Loading the trained model
+3. **Loading the trained model**
 
-We load the model **once at startup**, so that it does not need to be reloaded on every request. We retrieve it from MLFlow using the run ID saved in Part 4.
+Load the model **once at startup** using mlflow's `load_model` function using the run ID saved in Part 4. This way the model will be locally saved and not reloaded on every request to the API. 
 
 ``` python
 import mlflow.sklearn
@@ -196,11 +196,18 @@ model = mlflow.sklearn.load_model(MODEL_URI)
 ```
 
 
-4. We will now write the prediction endpoint. To do so, we will predict and the loaded model into a `/predict` endpoint.
+4. (*optionnal*) We will now write the prediction endpoint. To do so, **add a `/predict` endpoint** in you  file `api.py` with the following characteristics: 
 
-Update your file `api.py` to insert this new endpoint. 
-Don't forget to transform data so that it matches the data types expected from the model. 
-Input should have a similar format to `X_test`. 
+- it takes as input a dictionnary of features to run the prediction on;
+- Transform the input data into a panda's dataframe; 
+- Make sure that the data follows the same order as in `X_test` by using the `model.feature_names_in_` that gives back the list of features names the model was trained on;
+- Transform `prop_type` into categorical data and `trans_date` into datetime data, as expected by the model; 
+- Store the floor area;
+- Run the prediction to have a predicted price per square meter called `predicted_price_sqm`; 
+- Calculate the predicted total price, call it called `predicted_price`;
+- return a dictionnary with `predicted_price_sqm`, `predicted_price` and `farea`.
+
+In the end, **the input data should have a similar format (same names, same data types) as `X_test`**. 
 
 ```{python}
 #| code-fold: true
@@ -248,7 +255,7 @@ def predict(prop_features: dict):
     and the estimated total price.
     """
 
-    prop_features_df = pd.DataFrame([prop_features])
+    prop_features_df = pd.DataFrame([prop_features])[model.feature_names_in_]
 
     # Turning prop_type to Categorical data
     prop_features_df["prop_type"] = pd.Categorical(
@@ -277,7 +284,7 @@ def predict(prop_features: dict):
 
 
 
-5. We will check that the API runs locally. Predict the price of a property with the following characteristics using python's `requests` : 
+5. We will check that the API runs properly locally. **Predict the price of a property with the following characteristics using python's `requests` :** 
 - a flat (prop_type: 2):
   - a floor area of 65m²;
   - one shower;
@@ -293,7 +300,7 @@ def predict(prop_features: dict):
   - has stairs. 
 
 
-To avoid typing everything, here is the list of variables.
+To avoid typing everything, you can use the list of variables or use the `build_feature_dict` function from @sec-scikit-learn-pipeline and @sec-scikit-learn-pipeline.
 Don't forget to see how the variables are encoded in the [dedicated section](1-intro_data.qmd) ! 
 
 
