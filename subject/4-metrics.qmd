@@ -136,6 +136,16 @@ It will load the model,  all parameters and data necessary to keep on going thro
 
 :::
 
+```{python}
+#| echo: false
+#| output: false
+
+# Saving final model to reuse it in the metrics part
+from joblib import load
+rf_model_final = load("rf_model_final.joblib")
+gb_model_final = load("gb_model_final.joblib")
+
+```
 
 1.  Generate predictions on the test set using the best RF and GB models from exercise 5 and compute their residuals.
 
@@ -143,7 +153,6 @@ It will load the model,  all parameters and data necessary to keep on going thro
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
 
 # best RF
 y_pred_RF = rf_model_final.predict(X_test)
@@ -169,7 +178,7 @@ You can use the function `print-metrics` made in the last section on *GB model*.
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
+
 from sklearn.metrics import root_mean_squared_error, mean_absolute_error, r2_score
 
 def print_metrics(model, split, X=X_train, y=y_train):
@@ -203,8 +212,7 @@ Use `mean_absolute_percentage_error` from `sklearn.metrics`. Make sure y_test co
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
-# Disponible à partir de scikit-learn >= 0.24
+
 from sklearn.metrics import mean_absolute_percentage_error
 
 mape_pct_rf = mean_absolute_percentage_error(y_test, y_pred_RF) * 100
@@ -230,7 +238,7 @@ Use `matplotlib.pyplot` module to plot the distribution. You can read the docume
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
+
 import matplotlib.pyplot as plt
 
 def residuals_distribution(residuals: pd.Series, rmse: float, ax=None, label=None, color=None):
@@ -257,7 +265,6 @@ Pass the residuals series and the RMSE value computed in Exercise 8. The RMSE va
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
 
 fig, ax = plt.subplots()
 residuals_distribution(rf_residuals, rmse_rf, ax=ax, label=f"RF (RMSE={rmse_rf:.3f})", color="steelblue")
@@ -271,7 +278,7 @@ plt.show()
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
+
 import numpy as np
 
 def QQplot(y_test: pd.Series, y_pred: pd.Series, ax=None, label=None, color=None):
@@ -310,7 +317,6 @@ Points well above the diagonal in the upper tail indicate that the model underes
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
 
 fig, ax = plt.subplots()
 QQplot(y_test, y_pred_RF, ax=ax, label="Random Forest", color="steelblue")
@@ -326,7 +332,6 @@ plt.show()
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
 
 def target_distribution(y: pd.Series):
     y_sorted = np.sort(y)
@@ -353,7 +358,6 @@ Call it twice — once for `y_test` and once for `y_pred`. Display both figures.
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
 
 fig_actual = target_distribution(y_test)
 plt.title("Target distribution — actual values")
@@ -373,6 +377,8 @@ plt.show()
 If you want to plot both plots on a single figure, you can adapt the function : 
 
 ```{python}
+#| eval: false
+
 def plot_combined_distribution(y_test: pd.Series, y_pred: pd.Series, ax=None, label=None, color=None, show_actual=True):
     """
     Plots the target distributions of actual and predicted values on the same graph.
@@ -417,7 +423,6 @@ Use `permutation_importance` function from scikit-learn. See [here](https://scik
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
 
 from sklearn.inspection import permutation_importance
 
@@ -446,7 +451,6 @@ def calculate_importance(X_test, y_test, RANDOM_STATE, final_rf, SCORING):
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
 
 def importance_plot(importances):
     """
@@ -474,7 +478,6 @@ Calculate the importance with the train set and the final RF model. The `SCORING
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
 
 score = "r2"
 
