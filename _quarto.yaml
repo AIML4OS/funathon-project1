@@ -61,6 +61,6 @@ format:
       body-width: 1100px
 
 execute: 
-  eval: false
+  eval: true
   cache: false
   warning: false

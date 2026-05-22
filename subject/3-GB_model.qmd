@@ -128,8 +128,8 @@ def predicted_actual_plot(y_test, y_pred_test, model_name):
 
 ## Exercice 7: Train your first Gradient Boosting model
 
-1.  Using the `HistGradientBoostingRegressor` class and its [scikit-learn documentation page](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html), define and train a baseline model with **default hyperparameters**. 
-For convenience, load the training and testing datasets `X_train, X_test, y_train, y_test` that were already defined at the end of the [pre-processing section](2-preprocessing.qmd).
+1.  Using the `HistGradientBoostingRegressor` class and its [scikit-learn documentation page](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html), **define and train a baseline model with default hyperparameters**. 
+For convenience, load the training and testing datasets `X_train, X_test, y_train, y_test` that were already defined at the end of the [pre-processing section](2-preprocessing.qmd) using panda's `read_parquet`.
 Drop the features `prop_type`, `trans_date` from `X_train` and `X_test`. 
 It will simplify the scikit learn code - in real life you wouldn't drop these features and that's what we'll do later on.
 
@@ -140,7 +140,8 @@ It will simplify the scikit learn code - in real life you wouldn't drop these fe
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
+#| output: false
+
 from sklearn.ensemble import HistGradientBoostingRegressor
 
 X_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_train.parquet")
@@ -156,7 +157,7 @@ gb_baseline = HistGradientBoostingRegressor(random_state=RANDOM_STATE)
 gb_baseline.fit(X_train, y_train)
 ```
 
-2.  Compute the three evaluation metrics — **RMSE**, **MAE** and **R²** — on both the **training set** and the **test set**. Compare both sets of scores: what do you observe?
+2.  **Compute the three evaluation metrics — RMSE, MAE and R² — on both the training set and the test set**. Compare both sets of scores: what do you observe?
 
 Note that computing metrics on the training set alongside the test set is important with gradient boosting because it reveals whether the model is overfitting.
 
@@ -164,7 +165,7 @@ Note that computing metrics on the training set alongside the test set is import
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
+
 from sklearn.metrics import root_mean_squared_error, mean_absolute_error, r2_score
 
 
@@ -188,7 +189,7 @@ for split, X, y in list:
 
 ```
 
-3.  How does the default Gradient Boosting model compare with the best Random Forest model from Exercise 6?
+3.  **How does the default Gradient Boosting model compare with the best Random Forest model from Exercise 6?**
 
 
 # Key Hyperparameters of Gradient Boosting {#key-hyperparameters-of-gradient-boosting}
@@ -243,12 +244,10 @@ We use the same `X_train`, `X_test`, `y_train`, `y_test` splits defined in the p
 
 ## Exercice 8: Tuning Gradient Boosting hyperparameters
 
-0. Prepare the pipeline. this time, we will use all of the features : 
+0. Let's prepare the pipeline. This time, we will use all of the features : 
 
-- Load the training and testing datasets `X_train, X_test, y_train, y_test` that we saved earlier. 
-  
-
-- Update the definition of our previous pipeline structure (with `TransformedTargetRegressor`) with a Gradient Boosting model with `random state` and `early stopping` parameters.
+- **Load the training and testing datasets `X_train, X_test, y_train, y_test` that we saved earlier using panda's `read_parquet`.** 
+- **Update the definition of our previous pipeline structure (with `TransformedTargetRegressor`) with a Gradient Boosting model with `random state` and `early stopping` parameters.**
 
 Note that we will tune the hyperparameters using the whole pipeline and this set of training and test sets.
 
@@ -279,10 +278,11 @@ model = TransformedTargetRegressor(
 
 ### Step 1 — Jointly optimise the number of trees and the learning rate
 
-1.  Define the parameter grid for `max_iter` and `learning_rate`, then run a `GridSearchCV` with 2 folds (to speed-up training time), `scoring="r2"` and `return_train_score=True`. Use `n_jobs=-1` to parallelise the search.
+1.  **Define the parameter grid for `max_iter` and `learning_rate`, then run a `GridSearchCV` with 2 folds (to speed-up training time), `scoring="r2"` and `return_train_score=True`.** Use `n_jobs=-1` to parallelise the search.
 
 Note that the grid search can take some time to compute (for example, about 40 minutes for 36 iterations) so don't choose more than 5 sets of values for each parameter to tune. 
 You could also tune the hyperparameters bases on a sample of data to make it faster. 
+
 **Be careful : usually, you have to choose more than 2 folds for the cross validation (often 5).**
 We chose 2 folds of validation here to speed up training. 
 
@@ -297,6 +297,7 @@ To retrieve all fold scores after fitting, use `cv_results_` — it is a dict th
 #| code-summary: See the solution
 #| code-overflow: scroll
 #| eval: false
+
 from sklearn.model_selection import GridSearchCV
 
 param_grid_step1 = {
@@ -319,9 +320,9 @@ print(f"Best params : {gs_step1.best_params_}")
 print(f"Best CV R² : {gs_step1.best_score_:.4f}")
 ```
 
-2.  Make it a function called `results_to_df` which takes as input the cross-validation results and returns a dataframe, sorted by descending validation R² values . For that :
-    -   Retrieve the cross-validation results as a DataFrame;
+2.  **Make it a function called `results_to_df` which takes as input the cross-validation results and returns a dataframe, sorted by descending validation R² values.** For that:
 
+    -   Retrieve the cross-validation results as a dataFrame;
     -   Display the mean train and validation R² for each combination, sorted by descending validation R².
 
 ::: {.callout-tip collapse="true" title="Hint"}
@@ -363,7 +364,7 @@ df_step1 = results_to_df(gs_step1.cv_results_)
 In scikit-learn's `GridSearchCV`, the column `mean_test_score` refers to the **cross-validation score** computed on the held-out fold at each split — **not** to a score on `X_test`. The naming can be confusing: "test" here means "not used for training this fold". To avoid ambiguity we rename this column `cross_val_r2` in the results DataFrame.
 :::
 
-3.  Plot the mean train and validation R² on a single plot, with one line per `learning_rate`. Make it a function called `def plot_results_cv` which takes as input the hyperparameter to put on the X axis and the results as a dataframe from previous function.
+3.  **Plot the mean train and validation R² on a single plot, with one line per `learning_rate`. Make it a function called `def plot_results_cv` which takes as input the hyperparameter to put on the X axis and the results as a dataframe from previous function.**
 
     What do you observe about the interplay between the two hyperparameters?
 
@@ -410,27 +411,28 @@ plot_results_cv("max_iter", df_step1)
 
 If the best value of `max_iter` is the largest value tested (500), consider extending the grid before moving to the next step.
 
-In the end, we chose the hyperparameters 1000 fot he number of iterations : going beyond doesn't improve the score. 
-For the learning rate, 0.3 is the maximum with which the model still learns. 
+In the end, we chose the hyperparameters 500 fot he number of iterations : going beyond doesn't improve the score. 
+For the learning rate, 0.25 is a good value. 
 
 ```{python}
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
+
 BEST_ITER = 500  # to automatically catch the best hyperparameter, set to : gs_step1.best_params_["regressor__GB__max_iter"]
 BEST_LR = 0.25  # to automatically catch the best hyperparameter, set to : gs_step1.best_params_["regressor__GB__learning_rate"]
 ```
 
 ### Step 2 — Jointly optimise the tree structure
 
-4.  Fix `max_iter` and `learning_rate` to the best values found in step 1, then run a second `GridSearchCV` over `max_depth` and `min_samples_leaf` with other settings unchanged.
+4.  Fix `max_iter` and `learning_rate` to the best values found in step 1, then **run a second `GridSearchCV` over `max_depth` and `min_samples_leaf` with other settings unchanged.**
 
 ```{python}
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
 #| eval: false
+
 param_grid_step2 = {
     "regressor__GB__max_depth" : [3, 5, 8],
     "regressor__GB__min_samples_leaf": [10, 20, 50],
@@ -467,9 +469,8 @@ print(f"Best params : {gs_step2.best_params_}")
 print(f"Best CV R² : {gs_step2.best_score_:.4f}")
 ```
 
-5.  Using our pre-defined functions, retrieve the cross-validation results as a DataFrame and plot the mean train and validation R² for each combination.
-
-    Which combinations show signs of overfitting?
+5.  **Using our pre-defined functions `results_to_df` and `plot_results_cv` plot the result for each combination.**
+Which combinations show signs of overfitting?
 
 ```{python}
 #| code-fold: true
@@ -488,16 +489,17 @@ Let's set the max depth and minimal size of terminal leaves.
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
+
 BEST_DEPTH = 20 # to automatically catch the best hyperparameter, set to : gs_step2.best_params_["regressor__GB__max_depth"]
 BEST_MIN_LEAF = 75 # to automatically catch the best hyperparameter, set to : gs_step2.best_params_["regressor__GB__min_samples_leaf"]
 ```
 
 ### Step 3 — Optimise the regularisation parameters
 
-6.  Using the best hyperparameters found in steps 1 and 2, train one model for each value of `l2_regularization` in `[0.0, 0.1, 0.3, 0.5, 1.0]`. To use our predefined function, make it as if it was a cross validation with `max_iter` set to the above chosen value. Using our pre-defined function, plot the result.
+6.  Using the best hyperparameters found in steps 1 and 2,**run a third `GridSearchCV` for  value of `l2_regularization` in `[0.0, 0.1, 0.3, 0.5, 1.0]`.** 
+To be able to reuse our predefined function, **make it as if it was a cross validation with `max_iter` set to `BEST_ITER`. Using our pre-defined functions `results_to_df` and `plot_results_cv` plot the result.**
 
-    Does regularisation help reduce the gap between train and test performance?
+Does regularisation help reduce the gap between train and test performance?
 
 ```{python}
 #| code-fold: true
@@ -545,7 +547,12 @@ print(f"Best params : {gs_step3.best_params_}")
 print(f"Best CV R² : {gs_step3.best_score_:.4f}")
 ```
 
+**Let's set the regularization to 0 given the results of the fine-tuning.**
+
 ```{python}
+#| code-fold: true
+#| code-summary: See the solution
+#| code-overflow: scroll
 
 BEST_L2 = 0 # to automatically catch the best hyperparameter, set to : gs_step3.best_params_["regressor__GB__l2_regularization"]
 
@@ -553,13 +560,13 @@ BEST_L2 = 0 # to automatically catch the best hyperparameter, set to : gs_step3.
 
 ### Step 4 — Train the final model
 
-7.  Train the final `HistGradientBoostingRegressor` using all the best hyperparameters identified in the previous steps. Then re-train it on the full training set.
+7.  **Define the final `HistGradientBoostingRegressor` using all the best hyperparameters identified in the previous steps. Load the train and test datasets.  Then re-train it on the full training set.**
 
 ```{python}
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
+#| output: false
 
 from sklearn.model_selection import train_test_split
 
@@ -572,16 +579,6 @@ gb_final = HistGradientBoostingRegressor(
     random_state=RANDOM_STATE,
 )
 
-df = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/df.parquet")
-
-X = df.drop(columns=["price_sqm"])
-y = df["price_sqm"]
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y,
-    test_size=0.2,
-    random_state=RANDOM_STATE
-)
-
 # Wrap in the same pipeline / TransformedTargetRegressor as the RF section
 gb_pipeline_best = Pipeline([
     ("preprocessor", preprocessor),  # same preprocessor as defined in the preprocessing section
@@ -592,6 +589,11 @@ gb_model_final = TransformedTargetRegressor(
     regressor=gb_pipeline_best,
     transformer=y_transformer  # same targettransformer as defined in preprocessing section
 )
+
+X_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_train.parquet")
+X_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_test.parquet")
+y_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_train.parquet")["price_sqm"]
+y_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_test.parquet")["price_sqm"]
 
 gb_model_final.fit(X_train, y_train)
 print("Final model trained.")
@@ -636,7 +638,6 @@ Now that the model has been tuned, evaluate its performance on the test set and 
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
 
 list = [("train", X_train, y_train), ("test", X_test, y_test)]
 
@@ -650,7 +651,6 @@ for split, X, y in list:
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
 
 y_pred_test = gb_model_final.predict(X_test)
 predicted_actual_plot(y_test, y_pred_test, "Gradient Boosting")
@@ -670,7 +670,6 @@ For the prediction, you need to create a dictionary containing all the features 
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
 
 def build_feature_dict(loc_x, loc_y, fare_a, prop_type, feature_dict=None):
     """Return a feature dict ready for the model.
@@ -735,7 +734,6 @@ def build_feature_dict(loc_x, loc_y, fare_a, prop_type, feature_dict=None):
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
 
 prediction_examples = {
     "adresse1" : {"nom" : "88 avenue Verdier 92120 Montrouge", "fare_a" : 80, "loc_x": 2.244608, "loc_y": 48.8865792, "prop_type" : 2},
