@@ -171,6 +171,7 @@ cython_debug/
 /.quarto/
 .jupyter_cache/
 _site/
+site_*/
 *_files/
 **/*.quarto_ipynb
 *.json
