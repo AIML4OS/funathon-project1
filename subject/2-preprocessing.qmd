@@ -156,15 +156,16 @@ trans["price_sqm"] = trans["price"] / trans["farea"]
 
     For better prediction quality, you need to have a look at the distribution of your target variable and check whether it is roughly normal and approximately symmetric. If the distribution is not roughly normal or if it has a lot of extreme values, the prediction may be less accurate for certain ranges of values, and some extreme values will have too much influence on the final model.
 
+
 ::: {.callout-note title="Another way to load the data"}
 
-    The reason why extreme values are detrimental to model quality differs depending on the model used :
+The reason why extreme values are detrimental to model quality differs depending on the model used :
 
-    -   For random forests, the final prediction is the mean value of Y across all observations contained in the leaf. Since the mean is not a robust statistic, extreme values can strongly influence the final prediction associated with that leaf.
-    -   For gradient boosting, extreme values can lead to overfitting. Since gradient boosting iteratively reduces residuals by adding new trees, observations with very large residuals - often caused by extreme values - can have a disproportionate influence on the model.
+-   For random forests, the final prediction is the mean value of Y across all observations contained in the leaf. Since the mean is not a robust statistic, extreme values can strongly influence the final prediction associated with that leaf.
+-   For gradient boosting, extreme values can lead to overfitting. Since gradient boosting iteratively reduces residuals by adding new trees, observations with very large residuals - often caused by extreme values - can have a disproportionate influence on the model.
 :::
 
-    The best way to look at the distribution of the target is to plot it. So: plot the price per square meter and the logarithm of price per square meter. If you want, you can remove extreme values before plotting. Look at the plots, and answer this question: what distribution looks closer to the normal one? Is it necessary to transform `y`?
+The best way to look at the distribution of the target is to plot it. So: plot the price per square meter and the logarithm of price per square meter. If you want, you can remove extreme values before plotting. Look at the plots, and answer this question: what distribution looks closer to the normal one? Is it necessary to transform `y`?
  
 ::: {.callout-tip collapse="true" title="Hint"}
 
