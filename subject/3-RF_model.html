@@ -227,11 +227,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <p>In the first part of this project, we prepared the data to train the model. We reflected on which target variable to use, how to transform features and how to use scikit-learn tools for pipeline construction. Now, we are going to train a Random Forest model, covering both the theoretical background and its implementation.</p>
 <p><strong>Random Forests</strong> (RF) is a powerful and widely used ensemble method for classification and regression tasks. It combines the simplicity of decision trees and the sampling of observations and variables with the power of aggregation to improve predictive performance and reduce the risk of overfitting.</p>
-<p>An Insee working document on ensemble methods is available <a href="https://inseefrlab.github.io/DT_methodes_ensemblistes/chapters/chapter2/3-random_forest.html">here</a>. If you are unfamiliar with ensemble methods, we recommend reading this document before processing.</p>
+<p>An Insee working document on ensemble methods is available <a href="https://inseefrlab-github-io.translate.goog/DT_methodes_ensemblistes/chapters/chapter2/3-random_forest.html?_x_tr_sl=fr&amp;_x_tr_tl=en&amp;_x_tr_hl=en&amp;_x_tr_pto=wapp">here</a>. If you are unfamiliar with random forests, we recommend reading this document before processing.</p>
 <section id="concepts-of-random-forests" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Concepts of Random Forests</h1>
-<p><strong>RF</strong> extend <a href="https://inseefrlab.github.io/DT_methodes_ensemblistes/chapters/chapter2/2-bagging.html">bagging</a> by introducing an additional level of randomness: at each node, the splitting rule is determined using only a <strong>randomly selected subset of features</strong>. This further <strong>reduces correlation between trees</strong>, thereby <strong>lowering the variance of the aggregated model’s predictions</strong>.</p>
-<p>So, RF rely on four key elements : building <strong>aggregated regression or classification trees</strong>, with a <strong>randomized subset of features</strong> and a <strong><em>bootstrap</em></strong> <strong>sample</strong> - a random sample drawn with or without replacement from the original dataset, typically of the same size.</p>
+<p><strong>Random Forests</strong> extend <a href="https://inseefrlab-github-io.translate.goog/DT_methodes_ensemblistes/chapters/chapter2/2-bagging.html?_x_tr_sl=fr&amp;_x_tr_tl=en&amp;_x_tr_hl=en&amp;_x_tr_pto=wapp">bagging</a> by introducing an additional level of randomness: at each node, the splitting rule is determined using only a <strong>randomly selected subset of features</strong>. This further <strong>reduces correlation between trees</strong>, thereby <strong>lowering the variance of the aggregated model’s predictions</strong>.</p>
+<p>So, RF rely on three key elements : building <strong>aggregated regression or classification trees</strong>, with a <strong>randomized subset of features</strong> and a <strong><em>bootstrap</em></strong> <strong>sample</strong> - a random sample drawn with or without replacement from the original dataset, typically of the same size.</p>
 <p><strong>You need to select several hyperparameters for training</strong> (we cover the most important ones here) :</p>
 <ul>
 <li><strong>Number of trees</strong> : this hyperparameter must be tuned - too few trees lead to higher prediction error, while too many trees increase computational time;</li>
@@ -239,17 +239,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong>Data sample rate</strong> : useful to speed up training on large dataset, otherwise keep it close to <code>1.0</code>;</li>
 <li><strong>Minimum number of observation per leaf</strong> (terminal node) : setting a higher value can reduce training time, generally without any performance loss.</li>
 </ul>
-<p>For more information, you can read the paragraph on RF hyperparameters <a href="https://inseefrlab.github.io/DT_methodes_ensemblistes/chapters/chapter3/2-guide_usage_RF.html#sec-hyperparam-rf">here</a></p>
+<p>For more information, you can read the paragraph on RF hyperparameters <a href="https://inseefrlab-github-io.translate.goog/DT_methodes_ensemblistes/chapters/chapter3/2-guide_usage_RF.html?_x_tr_sl=fr&amp;_x_tr_tl=en&amp;_x_tr_hl=en&amp;_x_tr_pto=wapp#sec-hyperparam-rf">here</a></p>
 </section>
 <section id="exercice-4-train-your-first-random-forest-model" class="level1" data-number="2">
 <h1 data-number="2"><span class="header-section-number">2</span> Exercice 4: Train your first Random Forest model</h1>
-<div class="callout callout-style-default callout-important callout-titled" title="Fall back code">
+<div class="callout callout-style-default callout-important callout-titled" title="Fallback code">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Important</span>Fall back code
+<span class="screen-reader-only">Important</span>Fallback code
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -259,7 +259,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 In case you start from here, here is the parameters you need from past sections :
 </div>
 </div>
-<div id="bc62eec0" class="cell" data-execution_count="1">
+<div id="506493a0" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -334,63 +334,63 @@ In case you start from here, here is the parameters you need from past sections 
 </div>
 </div>
 <ol type="1">
-<li><p>Using the <code>RandomForestRegressor</code> class and its <a href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html">scikit-learn documentation page</a>, define a basic model with the following hyperparameters :</p>
-<ul>
-<li><p>n_estimators=50</p></li>
-<li><p>max_features=“sqrt”</p></li>
-<li><p>min_samples_leaf=10</p></li>
-</ul>
-<p>As it’s only a first step we chose to simplify the exercise. First, we will drop the <code>trans_date</code> and <code>prop_type</code> features. Secondly, we will work with the <strong>non transformed target</strong> (i.e.price per square meter) and not use the transformed target (i.e.&nbsp;log of the price per square meter) defined at the end of the pre-processing.</p>
-<p>We will come back to this later on and chain it with the preprocessing steps.</p>
-<p>Train the model with the remaining non transformed target (it should take a few minutes to train).</p>
-<blockquote class="blockquote">
-<p><strong>Note: All parameters of RandomForestRegressor have a default value - you only need to explicitly pass the ones you wish to override.</strong></p>
-</blockquote>
-<div class="callout callout-style-default callout-tip callout-titled" title="Hint">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Hint
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>Remember : in the <a href="1-preprocessing.qmd">Preprocessing section</a>, we created the training sets <code>X_train</code> and <code>y_train</code>.</p>
-</div>
-</div>
-</div></li>
+<li><p>Load the train and test datasets.</p>
+<p>::: {.callout-tip collapse=“true” title=“Hint”}</p>
+<p>Remember : in the <a href="../subject/2-preprocessing.html">Preprocessing section</a>, we created the training sets <code>X_train</code> and <code>y_train</code>.</p>
+<p>:::</p></li>
 </ol>
-<div id="4e17f41d" class="cell" data-execution_count="2">
+<div id="472b58a5" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>See the solution</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> RandomForestRegressor</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># create RandomForestRegressor instance with selected hyperparameters</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>rf <span class="op">=</span> RandomForestRegressor(</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    n_estimators<span class="op">=</span><span class="dv">50</span>,</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    max_features<span class="op">=</span><span class="st">"sqrt"</span>,</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    min_samples_leaf<span class="op">=</span><span class="dv">10</span>,</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    oob_score<span class="op">=</span><span class="va">True</span> <span class="co"># for calculating total oob error for the RF</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Defining train and test sets</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>X_train <span class="op">=</span> pd.read_parquet(<span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_train.parquet"</span>)</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>X_test  <span class="op">=</span> pd.read_parquet(<span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_test.parquet"</span>)</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>X_train <span class="op">=</span> X_train.drop(columns<span class="op">=</span>[<span class="st">"prop_type"</span>, <span class="st">"trans_date"</span>])</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>X_test  <span class="op">=</span>  X_test.drop(columns<span class="op">=</span>[<span class="st">"prop_type"</span>, <span class="st">"trans_date"</span>])</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>y_train <span class="op">=</span> pd.read_parquet(<span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_train.parquet"</span>)[<span class="st">"price_sqm"</span>]</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>y_test  <span class="op">=</span> pd.read_parquet(<span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_test.parquet"</span>)[<span class="st">"price_sqm"</span>]</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Train the model</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>rf.fit(X_train, y_train)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Defining train and test sets</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>X_train <span class="op">=</span> pd.read_parquet(<span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_train.parquet"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>X_test  <span class="op">=</span> pd.read_parquet(<span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_test.parquet"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>X_train <span class="op">=</span> X_train.drop(columns<span class="op">=</span>[<span class="st">"prop_type"</span>, <span class="st">"trans_date"</span>])</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>X_test  <span class="op">=</span>  X_test.drop(columns<span class="op">=</span>[<span class="st">"prop_type"</span>, <span class="st">"trans_date"</span>])</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>y_train <span class="op">=</span> pd.read_parquet(<span class="st">'s3://projet-funathon/2026/project1/data/2_preprocessing/y_train.parquet'</span>)[<span class="st">"price_sqm"</span>]</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>y_test  <span class="op">=</span> pd.read_parquet(<span class="st">'s3://projet-funathon/2026/project1/data/2_preprocessing/y_test.parquet'</span>)[<span class="st">"price_sqm"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <ol start="2" type="1">
+<li><p>Using the <code>RandomForestRegressor</code> class from the <code>scikit-learn</code> package and its <a href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html">documentation</a>, define a basic model with the following hyperparameters:</p>
+<ul>
+<li><code>n_estimators=50</code></li>
+<li><code>max_features="sqrt"</code></li>
+<li><code>min_samples_leaf=10</code></li>
+<li><code>oob_score=True</code></li>
+<li><code>n_jobs=-1</code></li>
+<li><code>verbose=2</code></li>
+</ul></li>
+</ol>
+<p><strong>Note: All parameters of RandomForestRegressor have a default value - you only need to explicitly pass the ones you wish to override.</strong> Have a careful look at the various hyperparameters in the documentation. Do you understand what they do? If no, you can read the paragraph on RF hyperparameters <a href="https://inseefrlab-github-io.translate.goog/DT_methodes_ensemblistes/chapters/chapter3/2-guide_usage_RF.html?_x_tr_sl=fr&amp;_x_tr_tl=en&amp;_x_tr_hl=en&amp;_x_tr_pto=wapp#sec-hyperparam-rf">here</a>.</p>
+<div id="e054b743" class="cell" data-execution_count="3">
+<details class="code-fold">
+<summary>See the solution</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> RandomForestRegressor</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># create RandomForestRegressor instance with selected hyperparameters</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>rf <span class="op">=</span> RandomForestRegressor(</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    n_estimators<span class="op">=</span><span class="dv">50</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    max_features<span class="op">=</span><span class="st">"sqrt"</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    min_samples_leaf<span class="op">=</span><span class="dv">10</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    oob_score<span class="op">=</span><span class="va">True</span> <span class="co"># for calculating total oob error for the RF</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<ol start="3" type="1">
+<li>You will now train the model. Since it is your very first model, we simplify things in two ways. First, we will drop the <code>trans_date</code> and <code>prop_type</code> features. Second, we will work with the <strong>non transformed target</strong> (i.e.&nbsp;price/sqm) rather than the transformed target (i.e.&nbsp;log price/sqm) defined at the end of the pre-processing. We will come back to these two points later.</li>
+</ol>
+<p>Train the model with the non-transformed target using the training data (NOT the test data). It should take a few minutes to train.</p>
+<div id="404d36d1" class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>See the solution</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Train the model</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>rf.fit(X_train, y_train)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<ol start="4" type="1">
 <li>Print the <code>Out-of-Bag</code> error <em>(the concept of OOB error will be covered in the next exercise)</em>.</li>
 </ol>
 <div class="callout callout-style-default callout-important callout-titled">
@@ -406,17 +406,17 @@ Important
 <p>Scikit-learn distinguishes <strong>parameters</strong> from <strong>fitted attributes</strong>. Here, to access the attributes sent back by the training phase listed in the documentation, we need to search for the <code>oob_score_</code> attributes of the random forest.</p>
 </div>
 </div>
-<div id="da4bcf63" class="cell" data-execution_count="3">
+<div id="c1b17bc3" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>See the solution</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"OOB Score : </span><span class="sc">{</span>rf<span class="sc">.</span>oob_score_<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"OOB Score : </span><span class="sc">{</span>rf<span class="sc">.</span>oob_score_<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<ol start="3" type="1">
-<li><p>Now, calculate the accuracy of the model on the test set - that is, how far off the prediction are from the actual values.</p>
+<ol start="5" type="1">
+<li><p>Now, calculate the mean squared error of the model on the test set - that is, how far off the prediction are from the actual values.</p>
 <p>Note that this is just an illustration of the evaluation process. More details on metrics will be covered in the <a href="3-metrics.qmd">dedicated section</a>.</p>
 <div class="callout callout-style-default callout-tip callout-titled" title="Hint">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -425,24 +425,23 @@ Important
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>You can use the <code>mean_squared_error</code> function from the <code>sklearn.metrics</code> module.</p>
-<p>Remember to use the test set for the evaluation, not the training set.</p>
+<p>You will need to use the predict method of the model (see the <a href="">documentation</a>). You can use the <code>mean_squared_error</code> function from the <code>sklearn.metrics</code> module. Remember to use the <strong>test set</strong> for the evaluation, NOT the training set.</p>
 </div>
 </div>
 </div></li>
 </ol>
-<div id="3d9dffdd" class="cell" data-execution_count="4">
+<div id="c5f900ea" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>See the solution</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_squared_error</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Predictions on train set</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>y_pred_test <span class="op">=</span> rf.predict(X_test)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the error</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test - MSE: </span><span class="sc">{</span>mean_squared_error(y_test, y_pred_test)<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_squared_error</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Predictions on train set</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>y_pred_test <span class="op">=</span> rf.predict(X_test)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the error</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test - MSE: </span><span class="sc">{</span>mean_squared_error(y_test, y_pred_test)<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p>Congrats 🥳! You have trained your first RF model. Now, try to find the best hyperparameters to minimize the final predicted error of the model.</p>
@@ -452,13 +451,13 @@ Important
 <p>Now that you understand what a random forest is, we will tune its hyperparameters for training. In this exercise, your aim is to train the best model for the prediction of price per square meter.</p>
 <section id="tuning-the-number-of-trees" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="tuning-the-number-of-trees"><span class="header-section-number">3.1</span> Tuning the number of trees</h2>
-<p>One easy way to determine the optimal number of trees is to use the <em>Out-of-Bag</em> (OOB) error - an error estimate computed on the observations that were not sampled during bootstrap and therefore not used to train each individual tree. By tracking how this error evolves as trees are added, one can plot its convergence as a function of the number of trees.</p>
-<p>With the scikit-learn’s default implementation, producing this plot is not straightforward : the training process is optimised for speed, and trees are grown in parallel, meaning intermediate OOB estimates are not natively exposed. We therefore need to write a custom function to compute and plot this convergence curve. You can see the documentation page on OOB error <a href="https://scikit-learn.org/stable/auto_examples/ensemble/plot_ensemble_oob.html">here</a></p>
-<p>We will implement a function to plot the OOB error as a function of the number of trees in a RF model. To do so, you will need to:</p>
+<p>One easy way to determine the optimal number of trees is to use the <em>Out-of-Bag</em> (OOB) error - an error estimate computed on the observations that were not sampled during bootstrap and therefore not used to train each individual tree. When adding more and more trees, this OOB error starts by decreasing fast until it converges to a minimum. As a consequence, we can track how this error evolves as trees are added to choose the number of trees.</p>
+<p>Unfortunately, with the scikit-learn’s default implementation, producing this plot is not straightforward : the training process is optimised for speed, and trees are grown in parallel, meaning intermediate OOB estimates are not natively exposed. We therefore need to write a custom function to compute and plot this convergence curve. You can see the documentation page on OOB error <a href="https://scikit-learn.org/stable/auto_examples/ensemble/plot_ensemble_oob.html">here</a>.</p>
+<p>In this exercise, will now implement a function to plot the OOB error as a function of the number of trees in a RF model. To do so, you will need to:</p>
 <ul>
-<li><p>subsample a fraction of the dataset to reduce computation time (the dataset is large with more than 1 million of rows);</p></li>
-<li><p>train multiple RF models with varying numbers of trees;</p></li>
-<li><p>plot the OOB error for each RF model to visualize the convergence.</p></li>
+<li>subsample a fraction of the dataset to reduce computation time (the dataset is large with more than 1 million of rows);</li>
+<li>train multiple RF models with varying numbers of trees;</li>
+<li>plot the OOB error for each RF model to visualize the convergence.</li>
 </ul>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -476,20 +475,91 @@ Note
 <ol type="1">
 <li>Subsample a fraction ( <code>0.1</code> ) of the <code>df</code> dataset to reduce computation time and define X_sub and y_sub. To stick to the characteristics of the target, stratify the sampling to the target’s distribution thanks to <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.qcut.html#pandas.qcut">pandas’ <code>qcut</code> function</a>.</li>
 </ol>
-<div id="2245cf1f" class="cell" data-execution_count="5">
+<div id="bc2fe4f2" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>See the solution</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sample the train dataset using Pandas' index</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>y_train_df <span class="op">=</span> pd.DataFrame(y_train)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>y_train_df[<span class="st">"quantile"</span>] <span class="op">=</span> pd.qcut(y_train_df[<span class="st">"price_sqm"</span>], q<span class="op">=</span><span class="dv">100</span>, labels<span class="op">=</span><span class="va">False</span>) <span class="co">## allows to discretly cut along quantiles</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>y_sub <span class="op">=</span> y_train_df.groupby(<span class="st">"quantile"</span>).sample(frac<span class="op">=</span><span class="fl">0.1</span>, random_state<span class="op">=</span> RANDOM_STATE)  <span class="co"># sampling by quantile </span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>y_sub <span class="op">=</span> y_sub[<span class="st">"price_sqm"</span>] <span class="co"># converting to pandas.series</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>X_sub <span class="op">=</span> X_train.<span class="bu">filter</span>(items<span class="op">=</span>y_sub.index, axis<span class="op">=</span><span class="dv">0</span> )  <span class="co"># sampling X_train</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sample the train dataset using Pandas' index</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>y_train_df <span class="op">=</span> pd.DataFrame(y_train)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>y_train_df[<span class="st">"quantile"</span>] <span class="op">=</span> pd.qcut(y_train_df[<span class="st">"price_sqm"</span>], q<span class="op">=</span><span class="dv">100</span>, labels<span class="op">=</span><span class="va">False</span>) <span class="co">## allows to discretly cut along quantiles</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>y_sub <span class="op">=</span> y_train_df.groupby(<span class="st">"quantile"</span>).sample(frac<span class="op">=</span><span class="fl">0.1</span>, random_state<span class="op">=</span> RANDOM_STATE)  <span class="co"># sampling by quantile </span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>y_sub <span class="op">=</span> y_sub[<span class="st">"price_sqm"</span>] <span class="co"># converting to pandas.series</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>X_sub <span class="op">=</span> X_train.<span class="bu">filter</span>(items<span class="op">=</span>y_sub.index, axis<span class="op">=</span><span class="dv">0</span> )  <span class="co"># sampling X_train</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <ol start="2" type="1">
 <li><p>Train multiple RF models with varying numbers of trees, using <code>warm_start=True</code> to avoid retraining all trees from scratch at each iteration. Keep the OOB error calculated in a list.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Hint">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Hint
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>As a hint, you can go to the documentation page on OOB error <a href="https://scikit-learn.org/stable/auto_examples/ensemble/plot_ensemble_oob.html">here</a>.</p>
+<p>If you need, here is the code to calculate and store the OOB score.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>oob_scores <span class="op">=</span> []</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>min_estimators <span class="op">=</span> <span class="dv">5</span> <span class="co"># Set this parameter</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>max_estimators <span class="op">=</span> <span class="dv">100</span>  <span class="co"># Set this parameter</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>metric <span class="op">=</span> <span class="st">"r2"</span>  <span class="co"># Set the metric you want to choose</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>warnings.filterwarnings(<span class="st">"ignore"</span>, message<span class="op">=</span><span class="st">"Some inputs do not have OOB scores"</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co"># filterwarnings remove some warnings messages</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(min_estimators, max_estimators, <span class="dv">10</span>):</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    rf.set_params(n_estimators<span class="op">=</span>n)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    rf.fit(X_sub, y_sub)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> metric <span class="op">==</span> <span class="st">"r2"</span>:</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>        oob_scores.append((n, <span class="dv">1</span> <span class="op">-</span> rf.oob_score_))</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> metric <span class="op">==</span> <span class="st">"neg_root_mean_squared_error"</span>:</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>        mse <span class="op">=</span> np.mean((y_sub <span class="op">-</span> rf.oob_prediction_) <span class="op">**</span> <span class="dv">2</span>)</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>        oob_scores.append((n, np.sqrt(mse)))</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>        mae <span class="op">=</span> np.mean(np.<span class="bu">abs</span>(y_sub <span class="op">-</span> rf.oob_prediction_))</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>        oob_scores.append((n, mae))</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>warnings.resetwarnings()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div></li>
+</ol>
+<div id="f8b58cef" class="cell" data-execution_count="8">
+<details class="code-fold">
+<summary>See the solution</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>metric <span class="op">=</span> <span class="st">"r2"</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>min_estimators<span class="op">=</span><span class="dv">5</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>max_estimators<span class="op">=</span><span class="dv">150</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>rf <span class="op">=</span> RandomForestRegressor(</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    warm_start<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>rf_params,</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>oob_scores <span class="op">=</span> []</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>warnings.filterwarnings(<span class="st">"ignore"</span>, message<span class="op">=</span><span class="st">"Some inputs do not have OOB scores"</span>)</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co"># filterwarnings remove some warnings messages</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(min_estimators, max_estimators, <span class="dv">20</span>):</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>    rf.set_params(n_estimators<span class="op">=</span>n)</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>    rf.fit(X_sub, y_sub)</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> metric <span class="op">==</span> <span class="st">"r2"</span>:</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>        oob_scores.append((n, <span class="dv">1</span> <span class="op">-</span> rf.oob_score_))</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> metric <span class="op">==</span> <span class="st">"neg_root_mean_squared_error"</span>:</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>        mse <span class="op">=</span> np.mean((y_sub <span class="op">-</span> rf.oob_prediction_) <span class="op">**</span> <span class="dv">2</span>)</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>        oob_scores.append((n, np.sqrt(mse)))</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>        mae <span class="op">=</span> np.mean(np.<span class="bu">abs</span>(y_sub <span class="op">-</span> rf.oob_prediction_))</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>        oob_scores.append((n, mae))</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>warnings.resetwarnings()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<ol start="3" type="1">
+<li><p>(<em>Optional</em>) Using the <em>Out-of-Bag (OOB) error</em>, try to plot the convergence of the OOB error as a function of the number of trees.</p>
 <div class="callout callout-style-default callout-tip callout-titled" title="Hint">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -502,65 +572,125 @@ Note
 </div>
 <div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>As a hint, you can go to the documentation page on OOB error <a href="https://scikit-learn.org/stable/auto_examples/ensemble/plot_ensemble_oob.html">here</a>.</p>
-<p>If you need, here is the code to calculate and store the OOB score.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings </span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>oob_scores <span class="op">=</span> []</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>min_estimators <span class="op">=</span> <span class="dv">5</span> <span class="co"># Set this parameter</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>max_estimators <span class="op">=</span> <span class="dv">100</span>  <span class="co"># Set this parameter</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>metric <span class="op">=</span> <span class="st">"r2"</span>  <span class="co"># Set the metric you want to choose</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>warnings.filterwarnings(<span class="st">"ignore"</span>, message<span class="op">=</span><span class="st">"Some inputs do not have OOB scores"</span>)</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># filterwarnings remove some warnings messages</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(min_estimators, max_estimators, <span class="dv">10</span>):</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    rf.set_params(n_estimators<span class="op">=</span>n)</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    rf.fit(X_sub, y_sub)</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> metric <span class="op">==</span> <span class="st">"r2"</span>:</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>        oob_scores.append((n, <span class="dv">1</span> <span class="op">-</span> rf.oob_score_))</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> metric <span class="op">==</span> <span class="st">"neg_root_mean_squared_error"</span>:</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>        mse <span class="op">=</span> np.mean((y_sub <span class="op">-</span> rf.oob_prediction_) <span class="op">**</span> <span class="dv">2</span>)</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>        oob_scores.append((n, np.sqrt(mse)))</span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>        mae <span class="op">=</span> np.mean(np.<span class="bu">abs</span>(y_sub <span class="op">-</span> rf.oob_prediction_))</span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>        oob_scores.append((n, mae))</span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>warnings.resetwarnings()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>You need to :</p>
+<ul>
+<li>subsample the inputs <code>X</code> and <code>y</code>, with a parameter <code>subsample</code> ;</li>
+<li>train the RF model from 15 to 150 trees (with a gap at 5) with <code>RandomForestRegressor</code> with the parameter <code>warm_start=True</code>;</li>
+<li>select which metric you use to calculate OOB error estimator</li>
+<li>plot the convergence of OOB error as a function of number of trees</li>
+</ul>
 </div>
 </div>
 </div></li>
 </ol>
-<div id="0fc5eb87" class="cell" data-execution_count="6">
+<div id="da0497de" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>See the solution</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>metric <span class="op">=</span> <span class="st">"r2"</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>min_estimators<span class="op">=</span><span class="dv">5</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>max_estimators<span class="op">=</span><span class="dv">150</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>rf <span class="op">=</span> RandomForestRegressor(</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    warm_start<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>rf_params,</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>oob_scores <span class="op">=</span> []</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>warnings.filterwarnings(<span class="st">"ignore"</span>, message<span class="op">=</span><span class="st">"Some inputs do not have OOB scores"</span>)</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co"># filterwarnings remove some warnings messages</span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(min_estimators, max_estimators, <span class="dv">20</span>):</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    rf.set_params(n_estimators<span class="op">=</span>n)</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    rf.fit(X_sub, y_sub)</span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> metric <span class="op">==</span> <span class="st">"r2"</span>:</span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>        oob_scores.append((n, <span class="dv">1</span> <span class="op">-</span> rf.oob_score_))</span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> metric <span class="op">==</span> <span class="st">"neg_root_mean_squared_error"</span>:</span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>        mse <span class="op">=</span> np.mean((y_sub <span class="op">-</span> rf.oob_prediction_) <span class="op">**</span> <span class="dv">2</span>)</span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>        oob_scores.append((n, np.sqrt(mse)))</span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>        mae <span class="op">=</span> np.mean(np.<span class="bu">abs</span>(y_sub <span class="op">-</span> rf.oob_prediction_))</span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>        oob_scores.append((n, mae))</span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>warnings.resetwarnings()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>rf_params <span class="op">=</span> {</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"max_depth"</span>: <span class="dv">8</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"max_features"</span>: <span class="st">"sqrt"</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"min_samples_split"</span>: <span class="dv">5</span>,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"min_samples_leaf"</span>: <span class="dv">10</span>,</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"random_state"</span>: RANDOM_STATE,</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rf_error_oob_plot(X_train,</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>                      y_train,</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>                      subsample<span class="op">=</span><span class="fl">0.1</span>,</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>                      min_estimators<span class="op">=</span><span class="dv">15</span>,</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>                      max_estimators<span class="op">=</span><span class="dv">150</span>,</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>                      metric<span class="op">=</span><span class="st">'r2'</span>,</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>                      <span class="op">**</span>rf_params):</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="co">    Plot error OOB convergence by the number of trees</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a><span class="co">        X_train: features</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="co">        y_train: target</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="co">        subsample: rate of sample for X_train</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a><span class="co">        min_estimators: number min of trees</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a><span class="co">        max_estimators: number max of trees</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a><span class="co">        metric : 'r2',  'rmse' or 'mae'</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># --- Stratified sampling of training set ---</span></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>    y_train_df <span class="op">=</span> pd.DataFrame(y_train)</span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>    y_train_df[<span class="st">"quantile"</span>] <span class="op">=</span> pd.qcut(y_train_df[<span class="st">"price_sqm"</span>], q<span class="op">=</span><span class="dv">100</span>, labels<span class="op">=</span><span class="va">False</span>) <span class="co">## allows to discretly cut along quantiles</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>    y_sub <span class="op">=</span> y_train_df.groupby(<span class="st">"quantile"</span>).sample(frac<span class="op">=</span><span class="fl">0.1</span>, random_state<span class="op">=</span> RANDOM_STATE)  <span class="co"># sampling by quantile </span></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>    y_sub <span class="op">=</span> y_sub[<span class="st">"price_sqm"</span>] <span class="co"># converting to pandas.series</span></span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>    X_sub <span class="op">=</span> X_train.<span class="bu">filter</span>(items<span class="op">=</span>y_sub.index, axis<span class="op">=</span><span class="dv">0</span> )  <span class="co"># sampling X_train</span></span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>    <span class="co"># --- Training with warm start ---</span></span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>    rf <span class="op">=</span> RandomForestRegressor(</span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>        oob_score<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>        warm_start<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>        <span class="op">**</span>rf_params,</span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a>    oob_scores <span class="op">=</span> []</span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a>    warnings.filterwarnings(<span class="st">"ignore"</span>, message<span class="op">=</span><span class="st">"Some inputs do not have OOB scores"</span>)</span>
+<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(min_estimators, max_estimators, <span class="dv">5</span>):</span>
+<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a>        rf.set_params(n_estimators<span class="op">=</span>n)</span>
+<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a>        rf.fit(X_sub, y_sub)</span>
+<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> metric <span class="op">==</span> <span class="st">"r2"</span>:</span>
+<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a>            oob_scores.append((n, <span class="dv">1</span> <span class="op">-</span> rf.oob_score_))</span>
+<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> metric <span class="op">==</span> <span class="st">"neg_root_mean_squared_error"</span>:</span>
+<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a>            mse <span class="op">=</span> np.mean((y_sub <span class="op">-</span> rf.oob_prediction_) <span class="op">**</span> <span class="dv">2</span>)</span>
+<span id="cb10-54"><a href="#cb10-54" aria-hidden="true" tabindex="-1"></a>            oob_scores.append((n, np.sqrt(mse)))</span>
+<span id="cb10-55"><a href="#cb10-55" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb10-56"><a href="#cb10-56" aria-hidden="true" tabindex="-1"></a>            mae <span class="op">=</span> np.mean(np.<span class="bu">abs</span>(y_sub <span class="op">-</span> rf.oob_prediction_))</span>
+<span id="cb10-57"><a href="#cb10-57" aria-hidden="true" tabindex="-1"></a>            oob_scores.append((n, mae))</span>
+<span id="cb10-58"><a href="#cb10-58" aria-hidden="true" tabindex="-1"></a>    warnings.resetwarnings()</span>
+<span id="cb10-59"><a href="#cb10-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-60"><a href="#cb10-60" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Generate the "OOB error rate" vs. "n_estimators" plot.</span></span>
+<span id="cb10-61"><a href="#cb10-61" aria-hidden="true" tabindex="-1"></a>    xs, ys <span class="op">=</span> <span class="bu">zip</span>(<span class="op">*</span>oob_scores)</span>
+<span id="cb10-62"><a href="#cb10-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-63"><a href="#cb10-63" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots()</span>
+<span id="cb10-64"><a href="#cb10-64" aria-hidden="true" tabindex="-1"></a>    ax.plot(xs, ys)</span>
+<span id="cb10-65"><a href="#cb10-65" aria-hidden="true" tabindex="-1"></a>    ax.set_xlim(min_estimators, max_estimators)</span>
+<span id="cb10-66"><a href="#cb10-66" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"n_trees"</span>)</span>
+<span id="cb10-67"><a href="#cb10-67" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="ss">f"OOB error (</span><span class="sc">{</span>metric<span class="sc">}</span><span class="ss">)"</span>)</span>
+<span id="cb10-68"><a href="#cb10-68" aria-hidden="true" tabindex="-1"></a>    plt.close(fig)</span>
+<span id="cb10-69"><a href="#cb10-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-70"><a href="#cb10-70" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> fig</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<ol start="3" type="1">
-<li><p>(<em>Optional</em>) Using the <em>Out-of-Bag (OOB) error</em>, try to plot the convergence of the OOB error as a function of the number of trees.</p>
+<p>You can select the number of trees (<code>n_estimators</code>) now, with the OOB error plot. Which number do you choose ?</p>
+<div id="f188fba9" class="cell" data-execution_count="10">
+<details class="code-fold">
+<summary>See the solution</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>oob_error_ntrees <span class="op">=</span> rf_error_oob_plot(X_train<span class="op">=</span>X_train,</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>                                     y_train<span class="op">=</span>y_train,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                                     subsample<span class="op">=</span><span class="fl">0.1</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                                     min_estimators<span class="op">=</span><span class="dv">5</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>                                     max_estimators<span class="op">=</span><span class="dv">150</span>,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>                                     metric<span class="op">=</span><span class="st">"r2"</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>oob_error_ntrees</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="tuning-all-others-hyperparameters-with-cross-validation" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="tuning-all-others-hyperparameters-with-cross-validation"><span class="header-section-number">3.2</span> Tuning all others hyperparameters with cross validation</h2>
+<p><strong>Cross-validation</strong> is a key step in model training : it is a technique used to evaluate the model’s ability to generalize to unseendata, by splitting the dataset into multiple folds (typically 5) and iteratively using each fold as a validation set while the remaining folds are used for training. It also allows you to compare different set of hyperparameters and select the configuration that yields the best predictive performance.</p>
+<p>Note that in the Preprocessing section, you saw how to build a Pipeline. In this exercise, we will use a Pipeline again. The first exercise didn’t use it to let you practice scikit-learn tools documented <a href="https://scikit-learn.org/stable/modules/compose.html#pipelines-and-composite-estimators">here</a>.</p>
+<ol start="0" type="1">
+<li>For convenience, we dropped the features <code>prop_type</code>, <code>dtemut</code> and trained our model on absolute prices and not on the transformed ones. Get them back and define the new training and testing datasets <code>X_train, X_test, y_train, y_test</code>.</li>
+</ol>
+<div id="f4d051a5" class="cell" data-execution_count="11">
+<details class="code-fold">
+<summary>See the solution</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Split features / target</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>X_train <span class="op">=</span> pd.read_parquet(<span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_train.parquet"</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>X_test  <span class="op">=</span> pd.read_parquet(<span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_test.parquet"</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>y_train <span class="op">=</span> pd.read_parquet(<span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_train.parquet"</span>)[<span class="st">"price_sqm"</span>]</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>y_test  <span class="op">=</span> pd.read_parquet(<span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_test.parquet"</span>)[<span class="st">"price_sqm"</span>] </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<ol type="1">
+<li><p>Create a dictionary with the 3 hyperparameters to test (<code>n_estimators</code>, <code>max_features</code> and <code>min_samples_leaf</code>) for training.</p>
 <div class="callout callout-style-default callout-tip callout-titled" title="Hint">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -573,137 +703,6 @@ Note
 </div>
 <div id="callout-7" class="callout-7-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>You need to :</p>
-<ul>
-<li>subsample the inputs <code>X</code> and <code>y</code>, with a parameter <code>subsample</code> ;</li>
-<li>train the RF model from 15 to 150 trees (with a gap at 5) with <code>RandomForestRegressor</code> with the parameter <code>warm_start=True</code>;</li>
-<li>select which metric you use to calculate OOB error estimator</li>
-<li>plot the convergence of OOB error as a function of number of trees</li>
-</ul>
-</div>
-</div>
-</div></li>
-</ol>
-<div id="a052d1f7" class="cell" data-execution_count="7">
-<details class="code-fold">
-<summary>See the solution</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>rf_params <span class="op">=</span> {</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"max_depth"</span>: <span class="dv">8</span>,</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"max_features"</span>: <span class="st">"sqrt"</span>,</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"min_samples_split"</span>: <span class="dv">5</span>,</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"min_samples_leaf"</span>: <span class="dv">10</span>,</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"random_state"</span>: RANDOM_STATE,</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rf_error_oob_plot(X_train,</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>                      y_train,</span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>                      subsample<span class="op">=</span><span class="fl">0.1</span>,</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>                      min_estimators<span class="op">=</span><span class="dv">15</span>,</span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>                      max_estimators<span class="op">=</span><span class="dv">150</span>,</span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>                      metric<span class="op">=</span><span class="st">'r2'</span>,</span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>                      <span class="op">**</span>rf_params):</span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co">    Plot error OOB convergence by the number of trees</span></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="co">        X_train: features</span></span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="co">        y_train: target</span></span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="co">        subsample: rate of sample for X_train</span></span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="co">        min_estimators: number min of trees</span></span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a><span class="co">        max_estimators: number max of trees</span></span>
-<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a><span class="co">        metric : 'r2',  'rmse' or 'mae'</span></span>
-<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># --- Stratified sampling of training set ---</span></span>
-<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>    y_train_df <span class="op">=</span> pd.DataFrame(y_train)</span>
-<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>    y_train_df[<span class="st">"quantile"</span>] <span class="op">=</span> pd.qcut(y_train_df[<span class="st">"price_sqm"</span>], q<span class="op">=</span><span class="dv">100</span>, labels<span class="op">=</span><span class="va">False</span>) <span class="co">## allows to discretly cut along quantiles</span></span>
-<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>    y_sub <span class="op">=</span> y_train_df.groupby(<span class="st">"quantile"</span>).sample(frac<span class="op">=</span><span class="fl">0.1</span>, random_state<span class="op">=</span> RANDOM_STATE)  <span class="co"># sampling by quantile </span></span>
-<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>    y_sub <span class="op">=</span> y_sub[<span class="st">"price_sqm"</span>] <span class="co"># converting to pandas.series</span></span>
-<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>    X_sub <span class="op">=</span> X_train.<span class="bu">filter</span>(items<span class="op">=</span>y_sub.index, axis<span class="op">=</span><span class="dv">0</span> )  <span class="co"># sampling X_train</span></span>
-<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>    <span class="co"># --- Training with warm start ---</span></span>
-<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>    rf <span class="op">=</span> RandomForestRegressor(</span>
-<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>        oob_score<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>        warm_start<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>        <span class="op">**</span>rf_params,</span>
-<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>    oob_scores <span class="op">=</span> []</span>
-<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>    warnings.filterwarnings(<span class="st">"ignore"</span>, message<span class="op">=</span><span class="st">"Some inputs do not have OOB scores"</span>)</span>
-<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(min_estimators, max_estimators, <span class="dv">5</span>):</span>
-<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>        rf.set_params(n_estimators<span class="op">=</span>n)</span>
-<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>        rf.fit(X_sub, y_sub)</span>
-<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> metric <span class="op">==</span> <span class="st">"r2"</span>:</span>
-<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a>            oob_scores.append((n, <span class="dv">1</span> <span class="op">-</span> rf.oob_score_))</span>
-<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> metric <span class="op">==</span> <span class="st">"neg_root_mean_squared_error"</span>:</span>
-<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a>            mse <span class="op">=</span> np.mean((y_sub <span class="op">-</span> rf.oob_prediction_) <span class="op">**</span> <span class="dv">2</span>)</span>
-<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a>            oob_scores.append((n, np.sqrt(mse)))</span>
-<span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
-<span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a>            mae <span class="op">=</span> np.mean(np.<span class="bu">abs</span>(y_sub <span class="op">-</span> rf.oob_prediction_))</span>
-<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a>            oob_scores.append((n, mae))</span>
-<span id="cb8-58"><a href="#cb8-58" aria-hidden="true" tabindex="-1"></a>    warnings.resetwarnings()</span>
-<span id="cb8-59"><a href="#cb8-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-60"><a href="#cb8-60" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Generate the "OOB error rate" vs. "n_estimators" plot.</span></span>
-<span id="cb8-61"><a href="#cb8-61" aria-hidden="true" tabindex="-1"></a>    xs, ys <span class="op">=</span> <span class="bu">zip</span>(<span class="op">*</span>oob_scores)</span>
-<span id="cb8-62"><a href="#cb8-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-63"><a href="#cb8-63" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots()</span>
-<span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a>    ax.plot(xs, ys)</span>
-<span id="cb8-65"><a href="#cb8-65" aria-hidden="true" tabindex="-1"></a>    ax.set_xlim(min_estimators, max_estimators)</span>
-<span id="cb8-66"><a href="#cb8-66" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"n_trees"</span>)</span>
-<span id="cb8-67"><a href="#cb8-67" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="ss">f"OOB error (</span><span class="sc">{</span>metric<span class="sc">}</span><span class="ss">)"</span>)</span>
-<span id="cb8-68"><a href="#cb8-68" aria-hidden="true" tabindex="-1"></a>    plt.close(fig)</span>
-<span id="cb8-69"><a href="#cb8-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-70"><a href="#cb8-70" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> fig</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-</div>
-<p>You can select the number of trees (<code>n_estimators</code>) now, with the OOB error plot. Which number do you choose ?</p>
-<div id="10f44a04" class="cell" data-execution_count="8">
-<details class="code-fold">
-<summary>See the solution</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>oob_error_ntrees <span class="op">=</span> rf_error_oob_plot(X_train<span class="op">=</span>X_train,</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                                     y_train<span class="op">=</span>y_train,</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                                     subsample<span class="op">=</span><span class="fl">0.1</span>,</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>                                     min_estimators<span class="op">=</span><span class="dv">5</span>,</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>                                     max_estimators<span class="op">=</span><span class="dv">150</span>,</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>                                     metric<span class="op">=</span><span class="st">"r2"</span>)</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>oob_error_ntrees</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-</div>
-</section>
-<section id="tuning-all-others-hyperparameters-with-cross-validation" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="tuning-all-others-hyperparameters-with-cross-validation"><span class="header-section-number">3.2</span> Tuning all others hyperparameters with cross validation</h2>
-<p><strong>Cross-validation</strong> is a key step in model training : it is a technique used to evaluate the model’s ability to generalize to unseendata, by splitting the dataset into multiple folds (typically 5) and iteratively using each fold as a validation set while the remaining folds are used for training. It also allows you to compare different set of hyperparameters and select the configuration that yields the best predictive performance.</p>
-<p>Note that in the Preprocessing section, you saw how to build a Pipeline. In this exercise, we will use a Pipeline again. The first exercise didn’t use it to let you practice scikit-learn tools documented <a href="https://scikit-learn.org/stable/modules/compose.html#pipelines-and-composite-estimators">here</a>.</p>
-<ol start="0" type="1">
-<li>For convenience, we dropped the features <code>prop_type</code>, <code>dtemut</code> and trained our model on absolute prices and not on the transformed ones. Get them back and define the new training and testing datasets <code>X_train, X_test, y_train, y_test</code>.</li>
-</ol>
-<div id="285f5f03" class="cell" data-execution_count="9">
-<details class="code-fold">
-<summary>See the solution</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Split features / target</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>X_train <span class="op">=</span> pd.read_parquet(<span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_train.parquet"</span>)</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>X_test  <span class="op">=</span> pd.read_parquet(<span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_test.parquet"</span>)</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>y_train <span class="op">=</span> pd.read_parquet(<span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_train.parquet"</span>)[<span class="st">"price_sqm"</span>]</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>y_test  <span class="op">=</span> pd.read_parquet(<span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_test.parquet"</span>)[<span class="st">"price_sqm"</span>] </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-</div>
-<ol type="1">
-<li><p>Create a dictionary with the 3 hyperparameters to test (<code>n_estimators</code>, <code>max_features</code> and <code>min_samples_leaf</code>) for training.</p>
-<div class="callout callout-style-default callout-tip callout-titled" title="Hint">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Hint
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-8" class="callout-8-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
 <p>Pay attention to hyperparameter names : when using <code>Pipeline</code> and <code>TransformedTargetRegressor</code> objects, theses names are more complex than plain <code>RandomForestRegressor</code> parameters names. In the previous section, we used two objects for training :</p>
 <ul>
 <li><code>TransformedTargetRegressor</code> to apply log transformation on the target - the corresponding parameter prefix is <code>regressor</code></li>
@@ -714,46 +713,46 @@ Note
 </div>
 </div></li>
 </ol>
-<div id="e447e35f" class="cell" data-execution_count="10">
+<div id="a570464f" class="cell" data-execution_count="12">
 <details class="code-fold">
 <summary>See the solution</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>param_grid <span class="op">=</span> {</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"regressor__RF__n_estimators"</span>: [<span class="dv">80</span>],</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"regressor__RF__max_features"</span>: [<span class="st">"sqrt"</span>],</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"regressor__RF__min_samples_leaf"</span>: [<span class="dv">40</span>, <span class="dv">50</span>, <span class="dv">75</span>],</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"regressor__RF__max_depth"</span> : [<span class="dv">8</span>, <span class="dv">13</span>],</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>param_grid <span class="op">=</span> {</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"regressor__RF__n_estimators"</span>: [<span class="dv">80</span>],</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"regressor__RF__max_features"</span>: [<span class="st">"sqrt"</span>],</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"regressor__RF__min_samples_leaf"</span>: [<span class="dv">40</span>, <span class="dv">50</span>, <span class="dv">75</span>],</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"regressor__RF__max_depth"</span> : [<span class="dv">8</span>, <span class="dv">13</span>],</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <ol start="2" type="1">
 <li>Using the <a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html">Grid Search documentation</a>, write the code to set up and run cross-validated hyperparameter tuning for the RF model. Note that training the model should last around 10 minutes.</li>
 </ol>
-<div id="8e6b8549" class="cell" data-execution_count="11">
+<div id="ca9fb4be" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>See the solution</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> GridSearchCV</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Grid search</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>grid_search <span class="op">=</span> GridSearchCV(</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    estimator<span class="op">=</span>model, <span class="co"># it is the TransformedTargetRegressor created in the preprocessing part</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    param_grid<span class="op">=</span>param_grid,</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    cv<span class="op">=</span><span class="dv">4</span>,  <span class="co"># number of folds</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    scoring<span class="op">=</span><span class="st">"r2"</span>, <span class="co"># 'r2' or 'neg_root_mean_squared_error' or 'neg_mean_absolute_error'</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    n_jobs<span class="op">=-</span><span class="dv">1</span>,</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="dv">1</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Train</span></span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>grid_search.fit(X_train, y_train)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> GridSearchCV</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Grid search</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>grid_search <span class="op">=</span> GridSearchCV(</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    estimator<span class="op">=</span>model, <span class="co"># it is the TransformedTargetRegressor created in the preprocessing part</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    param_grid<span class="op">=</span>param_grid,</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    cv<span class="op">=</span><span class="dv">4</span>,  <span class="co"># number of folds</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    scoring<span class="op">=</span><span class="st">"r2"</span>, <span class="co"># 'r2' or 'neg_root_mean_squared_error' or 'neg_mean_absolute_error'</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    n_jobs<span class="op">=-</span><span class="dv">1</span>,</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="dv">1</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Train</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>grid_search.fit(X_train, y_train)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <ol start="3" type="1">
 <li>From the fitted <code>grid_search</code> object, retrieve the best hyperparameters found for the model.</li>
 </ol>
-<div id="91865d59" class="cell" data-execution_count="12">
+<div id="2bde8f00" class="cell" data-execution_count="14">
 <details class="code-fold">
 <summary>See the solution</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Best params : </span><span class="sc">{</span>grid_search<span class="sc">.</span>best_params_<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Best params : </span><span class="sc">{</span>grid_search<span class="sc">.</span>best_params_<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="callout callout-style-default callout-important callout-titled">
@@ -767,19 +766,19 @@ Important
 </div>
 <div class="callout-body-container callout-body">
 <p>Scikit-learn distinguishes <strong>original parameters</strong> from **fitted attributes with a trailing _**. The <code>_</code> suffix is a consistent scikit-learn convention: any attribute that only exists after fitting ends with <code>_</code> (e.g., <code>coef_</code>, <code>n_features_in_</code>, <code>classes_</code>). It signals “this was learned from data.”</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>grid_search.myfittedparam_  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>grid_search.myfittedparam_  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <ol start="4" type="1">
 <li>From the fitted <code>grid_search</code> object, retrieve the best model. As it has only been trained on a fraction of the training set, retrain it on the full training set. Which type is <code>best_estimator_</code> attribute ?</li>
 </ol>
-<div id="a1a36f00" class="cell" data-execution_count="13">
+<div id="be20fe22" class="cell" data-execution_count="15">
 <details class="code-fold">
 <summary>See the solution</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>rf_model_final <span class="op">=</span> grid_search.best_estimator_</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">type</span>(rf_model_final))</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>rf_model_final.fit(X_train, y_train)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>rf_model_final <span class="op">=</span> grid_search.best_estimator_</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">type</span>(rf_model_final))</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>rf_model_final.fit(X_train, y_train)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p>Congrats ! You have optimized your RF model. Now, you need to evaluate its accuracy — that is, how close the model’s predictions are to the actual values..</p>
@@ -805,17 +804,17 @@ Important
 If you’re stuck, you can fetch back the final trained model by executing the following code. The fetched model can then be used to predict any values and evaluate it.
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> joblib <span class="im">import</span> load</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> s3fs</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Create filesystem object</span></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>S3_ENDPOINT_URL <span class="op">=</span> <span class="st">"https://"</span> <span class="op">+</span> os.environ[<span class="st">"AWS_S3_ENDPOINT"</span>]</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>fs <span class="op">=</span> s3fs.S3FileSystem(client_kwargs<span class="op">=</span>{<span class="st">'endpoint_url'</span>: S3_ENDPOINT_URL})</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>FILE_PATH_S3 <span class="op">=</span> <span class="st">"projet-funathon/2026/project1/models/rf_model_final.joblib"</span> </span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> fs.<span class="bu">open</span>(FILE_PATH_S3, mode<span class="op">=</span><span class="st">"rb"</span>) <span class="im">as</span> model:</span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    rf_model_final <span class="op">=</span> load(model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> joblib <span class="im">import</span> load</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> s3fs</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Create filesystem object</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>S3_ENDPOINT_URL <span class="op">=</span> <span class="st">"https://"</span> <span class="op">+</span> os.environ[<span class="st">"AWS_S3_ENDPOINT"</span>]</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>fs <span class="op">=</span> s3fs.S3FileSystem(client_kwargs<span class="op">=</span>{<span class="st">'endpoint_url'</span>: S3_ENDPOINT_URL})</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>FILE_PATH_S3 <span class="op">=</span> <span class="st">"projet-funathon/2026/project1/models/rf_model_final.joblib"</span> </span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> fs.<span class="bu">open</span>(FILE_PATH_S3, mode<span class="op">=</span><span class="st">"rb"</span>) <span class="im">as</span> model:</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>    rf_model_final <span class="op">=</span> load(model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Now that your model has been optimized, it is time to rigorously evaluate its performance on the test set — data the model has never seen during training. This step is essential to assess how well your model generalizes to new observations.</p>
@@ -828,14 +827,48 @@ If you’re stuck, you can fetch back the final trained model by executing the f
 <ol type="1">
 <li>Compute predictions on the test set using the best model retrieved from the previous exercise.</li>
 </ol>
-<div id="83052685" class="cell" data-execution_count="14">
+<div id="1384feee" class="cell" data-execution_count="16">
 <details class="code-fold">
 <summary>See the solution</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>y_pred_test <span class="op">=</span> rf_model_final.predict(X_test)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>y_pred_test <span class="op">=</span> rf_model_final.predict(X_test)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <ol start="2" type="1">
 <li>Calculate the three evaluation metrics on the test set.</li>
+</ol>
+<div class="callout callout-style-default callout-tip callout-titled" title="Hint">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Hint
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>You can use <code>mean_squared_error</code>, <code>mean_absolute_error</code>, and <code>r2_score</code> from <code>sklearn.metrics</code>. To obtain <strong>RMSE</strong> from <strong>MSE</strong>, apply <code>np.sqrt()</code>.</p>
+</div>
+</div>
+</div>
+<div id="0c27dbbd" class="cell" data-execution_count="17">
+<details class="code-fold">
+<summary>See the solution</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_squared_error, mean_absolute_error, r2_score</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>rmse <span class="op">=</span> np.sqrt(mean_squared_error(y_test, y_pred_test))</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>mae  <span class="op">=</span> mean_absolute_error(y_test, y_pred_test)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>r2   <span class="op">=</span> r2_score(y_test, y_pred_test)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test - RMSE : </span><span class="sc">{</span>rmse<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test - MAE  : </span><span class="sc">{</span>mae<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test - R²   : </span><span class="sc">{</span>r2<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<ol start="3" type="1">
+<li>(Optional) Plot predicted values against actual values to visually assess model quality. A well-calibrated model should have points closely aligned along the diagonal.</li>
 </ol>
 <div class="callout callout-style-default callout-tip callout-titled" title="Hint">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
@@ -849,70 +882,36 @@ If you’re stuck, you can fetch back the final trained model by executing the f
 </div>
 <div id="callout-11" class="callout-11-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>You can use <code>mean_squared_error</code>, <code>mean_absolute_error</code>, and <code>r2_score</code> from <code>sklearn.metrics</code>. To obtain <strong>RMSE</strong> from <strong>MSE</strong>, apply <code>np.sqrt()</code>.</p>
-</div>
-</div>
-</div>
-<div id="a55546af" class="cell" data-execution_count="15">
-<details class="code-fold">
-<summary>See the solution</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_squared_error, mean_absolute_error, r2_score</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>rmse <span class="op">=</span> np.sqrt(mean_squared_error(y_test, y_pred_test))</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>mae  <span class="op">=</span> mean_absolute_error(y_test, y_pred_test)</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>r2   <span class="op">=</span> r2_score(y_test, y_pred_test)</span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test - RMSE : </span><span class="sc">{</span>rmse<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test - MAE  : </span><span class="sc">{</span>mae<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test - R²   : </span><span class="sc">{</span>r2<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-</div>
-<ol start="3" type="1">
-<li>(Optional) Plot predicted values against actual values to visually assess model quality. A well-calibrated model should have points closely aligned along the diagonal.</li>
-</ol>
-<div class="callout callout-style-default callout-tip callout-titled" title="Hint">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Hint
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-12" class="callout-12-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
 <p>Use <code>matplotlib.pyplot</code> to create a scatter plot of <code>y_test</code> against <code>y_pred_test</code>. Add a reference diagonal line (representing perfect predictions) using <code>ax.plot([min, max], [min, max])</code>.</p>
 </div>
 </div>
 </div>
-<div id="0f24df29" class="cell" data-execution_count="16">
+<div id="776e0f2d" class="cell" data-execution_count="18">
 <details class="code-fold">
 <summary>See the solution</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> predicted_actual_plot(y_test, y_pred_test, model_name):</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="dv">7</span>))</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    ax.scatter(y_test, y_pred_test, alpha<span class="op">=</span><span class="fl">0.3</span>, s<span class="op">=</span><span class="dv">5</span>, label<span class="op">=</span><span class="st">"Predictions"</span>)</span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    lims <span class="op">=</span> [<span class="bu">min</span>(y_test.<span class="bu">min</span>(), y_pred_test.<span class="bu">min</span>()),</span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>            <span class="bu">max</span>(y_test.<span class="bu">max</span>(), y_pred_test.<span class="bu">max</span>())]</span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    ax.plot(lims, lims, <span class="st">"r--"</span>, linewidth<span class="op">=</span><span class="fl">1.5</span>, label<span class="op">=</span><span class="st">"Perfect prediction"</span>)</span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"Actual values (log)"</span>)</span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="st">"Predicted values (log)"</span>)</span>
-<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="ss">f"Comparison of predicted values vs. actual values on the test set</span><span class="ch">\n</span><span class="ss">(</span><span class="sc">{</span>model_name<span class="sc">}</span><span class="ss">)"</span>)</span>
-<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>    ax.legend()</span>
-<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>    plt.xscale(<span class="st">'log'</span>)</span>
-<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>    plt.yscale(<span class="st">'log'</span>)</span>
-<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
-<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> fig</span>
-<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>predicted_actual_plot(y_test, y_pred_test, <span class="st">"Random Forest"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> predicted_actual_plot(y_test, y_pred_test, model_name):</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="dv">7</span>))</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    ax.scatter(y_test, y_pred_test, alpha<span class="op">=</span><span class="fl">0.3</span>, s<span class="op">=</span><span class="dv">5</span>, label<span class="op">=</span><span class="st">"Predictions"</span>)</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    lims <span class="op">=</span> [<span class="bu">min</span>(y_test.<span class="bu">min</span>(), y_pred_test.<span class="bu">min</span>()),</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>            <span class="bu">max</span>(y_test.<span class="bu">max</span>(), y_pred_test.<span class="bu">max</span>())]</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    ax.plot(lims, lims, <span class="st">"r--"</span>, linewidth<span class="op">=</span><span class="fl">1.5</span>, label<span class="op">=</span><span class="st">"Perfect prediction"</span>)</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"Actual values (log)"</span>)</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="st">"Predicted values (log)"</span>)</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="ss">f"Comparison of predicted values vs. actual values on the test set</span><span class="ch">\n</span><span class="ss">(</span><span class="sc">{</span>model_name<span class="sc">}</span><span class="ss">)"</span>)</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>    ax.legend()</span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>    plt.xscale(<span class="st">'log'</span>)</span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>    plt.yscale(<span class="st">'log'</span>)</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> fig</span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>predicted_actual_plot(y_test, y_pred_test, <span class="st">"Random Forest"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -922,124 +921,124 @@ If you’re stuck, you can fetch back the final trained model by executing the f
 <ol type="1">
 <li>Create a function <code>build_feature_dict</code> that returns a dictionary of features ready for prediction</li>
 </ol>
-<div id="4452228a" class="cell" data-execution_count="17">
+<div id="b9a693b5" class="cell" data-execution_count="19">
 <details class="code-fold">
 <summary>See the solution</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_feature_dict(loc_x, loc_y, fare_a, prop_type, feature_dict<span class="op">=</span><span class="va">None</span>):</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Return a feature dict ready for the model.</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co">    If `feature_dict` is provided, it is returned unchanged.</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co">    Otherwise, a default dict is built from the required arguments.</span></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co">        loc_x, loc_y : ()</span></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> feature_dict <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> feature_dict</span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>    _prop_type_map <span class="op">=</span> {<span class="dv">1</span>: <span class="st">"House"</span>, <span class="dv">2</span>: <span class="st">"Flat"</span>}</span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    prop_type_str <span class="op">=</span> _prop_type_map.get(prop_type, <span class="bu">str</span>(prop_type))</span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
-<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">"farea"</span>: fare_a,</span>
-<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>        <span class="st">"trans_date"</span>: <span class="st">"01/02/2023"</span>,</span>
-<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>        <span class="st">"trans_year"</span>: <span class="dv">2023</span>,</span>
-<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>        <span class="st">"trans_month"</span>: <span class="dv">2</span>,</span>
-<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>        <span class="st">"prop_type"</span>: prop_type_str,</span>
-<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>        <span class="st">"prop_year_harm_10"</span>: <span class="dv">1870</span>,</span>
-<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>        <span class="st">"prop_loc_x"</span>: loc_x,</span>
-<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>        <span class="st">"prop_loc_y"</span>: loc_y,</span>
-<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>        <span class="st">"has_cheating"</span>: <span class="dv">0</span>,</span>
-<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>        <span class="st">"has_elec"</span>: <span class="dv">2</span>,</span>
-<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>        <span class="st">"has_elevator"</span>: <span class="dv">2</span>,</span>
-<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a>        <span class="st">"has_gas"</span>: <span class="dv">2</span>,</span>
-<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a>        <span class="st">"has_mdrainage"</span>: <span class="dv">2</span>,</span>
-<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a>        <span class="st">"has_rchute"</span>: <span class="dv">0</span>,</span>
-<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a>        <span class="st">"has_water"</span>: <span class="dv">2</span>,</span>
-<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_floors"</span>: <span class="dv">6</span>,</span>
-<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_bath"</span>: <span class="dv">0</span>,</span>
-<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_eatr"</span>: <span class="dv">0</span>,</span>
-<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_kit8"</span>: <span class="dv">1</span>,</span>
-<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_kit9"</span>: <span class="dv">0</span>,</span>
-<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_ancrooms"</span>: <span class="dv">0</span>,</span>
-<span id="cb20-37"><a href="#cb20-37" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_attic"</span>: <span class="dv">1</span>,</span>
-<span id="cb20-38"><a href="#cb20-38" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_basmt"</span>: <span class="dv">1</span>,</span>
-<span id="cb20-39"><a href="#cb20-39" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_garage"</span>: <span class="dv">0</span>,</span>
-<span id="cb20-40"><a href="#cb20-40" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_pool"</span>: <span class="dv">0</span>,</span>
-<span id="cb20-41"><a href="#cb20-41" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_mrooms"</span>: <span class="dv">3</span>,</span>
-<span id="cb20-42"><a href="#cb20-42" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_otherannex"</span>: <span class="dv">0</span>,</span>
-<span id="cb20-43"><a href="#cb20-43" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_rooms"</span>: <span class="dv">4</span>,</span>
-<span id="cb20-44"><a href="#cb20-44" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_show"</span>: <span class="dv">1</span>,</span>
-<span id="cb20-45"><a href="#cb20-45" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_sink"</span>: <span class="dv">1</span>,</span>
-<span id="cb20-46"><a href="#cb20-46" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_slr"</span>: <span class="dv">2</span>,</span>
-<span id="cb20-47"><a href="#cb20-47" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_terrace"</span>: <span class="dv">1</span>,</span>
-<span id="cb20-48"><a href="#cb20-48" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_washr"</span>: <span class="dv">1</span>,</span>
-<span id="cb20-49"><a href="#cb20-49" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_wc"</span>: <span class="dv">1</span>,</span>
-<span id="cb20-50"><a href="#cb20-50" aria-hidden="true" tabindex="-1"></a>        <span class="st">"nth_floor"</span>: <span class="dv">3</span>,</span>
-<span id="cb20-51"><a href="#cb20-51" aria-hidden="true" tabindex="-1"></a>        <span class="st">"s_land_agri"</span>: <span class="dv">0</span>,</span>
-<span id="cb20-52"><a href="#cb20-52" aria-hidden="true" tabindex="-1"></a>        <span class="st">"s_land_artif"</span>: <span class="dv">0</span>,</span>
-<span id="cb20-53"><a href="#cb20-53" aria-hidden="true" tabindex="-1"></a>        <span class="st">"s_land_nat"</span>: <span class="dv">0</span>,</span>
-<span id="cb20-54"><a href="#cb20-54" aria-hidden="true" tabindex="-1"></a>        <span class="st">"stair"</span>: <span class="dv">2</span>,</span>
-<span id="cb20-55"><a href="#cb20-55" aria-hidden="true" tabindex="-1"></a>    }</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_feature_dict(loc_x, loc_y, fare_a, prop_type, feature_dict<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Return a feature dict ready for the model.</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co">    If `feature_dict` is provided, it is returned unchanged.</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co">    Otherwise, a default dict is built from the required arguments.</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="co">        loc_x, loc_y : ()</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> feature_dict <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> feature_dict</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>    _prop_type_map <span class="op">=</span> {<span class="dv">1</span>: <span class="st">"House"</span>, <span class="dv">2</span>: <span class="st">"Flat"</span>}</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>    prop_type_str <span class="op">=</span> _prop_type_map.get(prop_type, <span class="bu">str</span>(prop_type))</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">"farea"</span>: fare_a,</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>        <span class="st">"trans_date"</span>: <span class="st">"01/02/2023"</span>,</span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>        <span class="st">"trans_year"</span>: <span class="dv">2023</span>,</span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>        <span class="st">"trans_month"</span>: <span class="dv">2</span>,</span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>        <span class="st">"prop_type"</span>: prop_type_str,</span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>        <span class="st">"prop_year_harm_10"</span>: <span class="dv">1870</span>,</span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>        <span class="st">"prop_loc_x"</span>: loc_x,</span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>        <span class="st">"prop_loc_y"</span>: loc_y,</span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>        <span class="st">"has_cheating"</span>: <span class="dv">0</span>,</span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>        <span class="st">"has_elec"</span>: <span class="dv">2</span>,</span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>        <span class="st">"has_elevator"</span>: <span class="dv">2</span>,</span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>        <span class="st">"has_gas"</span>: <span class="dv">2</span>,</span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>        <span class="st">"has_mdrainage"</span>: <span class="dv">2</span>,</span>
+<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a>        <span class="st">"has_rchute"</span>: <span class="dv">0</span>,</span>
+<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a>        <span class="st">"has_water"</span>: <span class="dv">2</span>,</span>
+<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_floors"</span>: <span class="dv">6</span>,</span>
+<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_bath"</span>: <span class="dv">0</span>,</span>
+<span id="cb22-33"><a href="#cb22-33" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_eatr"</span>: <span class="dv">0</span>,</span>
+<span id="cb22-34"><a href="#cb22-34" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_kit8"</span>: <span class="dv">1</span>,</span>
+<span id="cb22-35"><a href="#cb22-35" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_kit9"</span>: <span class="dv">0</span>,</span>
+<span id="cb22-36"><a href="#cb22-36" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_ancrooms"</span>: <span class="dv">0</span>,</span>
+<span id="cb22-37"><a href="#cb22-37" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_attic"</span>: <span class="dv">1</span>,</span>
+<span id="cb22-38"><a href="#cb22-38" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_basmt"</span>: <span class="dv">1</span>,</span>
+<span id="cb22-39"><a href="#cb22-39" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_garage"</span>: <span class="dv">0</span>,</span>
+<span id="cb22-40"><a href="#cb22-40" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_pool"</span>: <span class="dv">0</span>,</span>
+<span id="cb22-41"><a href="#cb22-41" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_mrooms"</span>: <span class="dv">3</span>,</span>
+<span id="cb22-42"><a href="#cb22-42" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_otherannex"</span>: <span class="dv">0</span>,</span>
+<span id="cb22-43"><a href="#cb22-43" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_rooms"</span>: <span class="dv">4</span>,</span>
+<span id="cb22-44"><a href="#cb22-44" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_show"</span>: <span class="dv">1</span>,</span>
+<span id="cb22-45"><a href="#cb22-45" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_sink"</span>: <span class="dv">1</span>,</span>
+<span id="cb22-46"><a href="#cb22-46" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_slr"</span>: <span class="dv">2</span>,</span>
+<span id="cb22-47"><a href="#cb22-47" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_terrace"</span>: <span class="dv">1</span>,</span>
+<span id="cb22-48"><a href="#cb22-48" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_washr"</span>: <span class="dv">1</span>,</span>
+<span id="cb22-49"><a href="#cb22-49" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_wc"</span>: <span class="dv">1</span>,</span>
+<span id="cb22-50"><a href="#cb22-50" aria-hidden="true" tabindex="-1"></a>        <span class="st">"nth_floor"</span>: <span class="dv">3</span>,</span>
+<span id="cb22-51"><a href="#cb22-51" aria-hidden="true" tabindex="-1"></a>        <span class="st">"s_land_agri"</span>: <span class="dv">0</span>,</span>
+<span id="cb22-52"><a href="#cb22-52" aria-hidden="true" tabindex="-1"></a>        <span class="st">"s_land_artif"</span>: <span class="dv">0</span>,</span>
+<span id="cb22-53"><a href="#cb22-53" aria-hidden="true" tabindex="-1"></a>        <span class="st">"s_land_nat"</span>: <span class="dv">0</span>,</span>
+<span id="cb22-54"><a href="#cb22-54" aria-hidden="true" tabindex="-1"></a>        <span class="st">"stair"</span>: <span class="dv">2</span>,</span>
+<span id="cb22-55"><a href="#cb22-55" aria-hidden="true" tabindex="-1"></a>    }</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <ol start="2" type="1">
 <li>Create another dictionary with a few example properties to run predictions on</li>
 </ol>
-<div id="054f8d29" class="cell" data-execution_count="18">
+<div id="bc44e679" class="cell" data-execution_count="20">
 <details class="code-fold">
 <summary>See the solution</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>prediction_examples <span class="op">=</span> {</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"adresse1"</span> : {<span class="st">"nom"</span> : <span class="st">"88 avenue Verdier 92120 Montrouge"</span>, <span class="st">"fare_a"</span> : <span class="dv">80</span>, <span class="st">"loc_x"</span>: <span class="fl">2.244608</span>, <span class="st">"loc_y"</span>: <span class="fl">48.8865792</span>, <span class="st">"prop_type"</span> : <span class="dv">2</span>},</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"adresse2"</span> : {<span class="st">"nom"</span> : <span class="st">"3 rue Sadi Carnot 78120 Rambouillet"</span>, <span class="st">"fare_a"</span> : <span class="dv">140</span>, <span class="st">"loc_x"</span>: <span class="fl">1.8300153</span>, <span class="st">"loc_y"</span>: <span class="fl">48.6431721</span>, <span class="st">"prop_type"</span> : <span class="dv">1</span>},</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"adresse3"</span> : {<span class="st">"nom"</span> : <span class="st">"1 rue des arts 92700 Colombes"</span>, <span class="st">"fare_a"</span> : <span class="dv">35</span>, <span class="st">"loc_x"</span>: <span class="fl">2.2410483</span>, <span class="st">"loc_y"</span>: <span class="fl">48.9109437</span>, <span class="st">"prop_type"</span> : <span class="dv">2</span>},</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"adresse4"</span> : {<span class="st">"nom"</span> : <span class="st">"152 Rue de Sèvres 75015 Paris"</span>, <span class="st">"fare_a"</span> : <span class="dv">93</span>, <span class="st">"loc_x"</span>: <span class="fl">2.3146301</span>, <span class="st">"loc_y"</span>: <span class="fl">48.8462097</span>, <span class="st">"prop_type"</span> : <span class="dv">2</span>},</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"adresse5"</span> : {<span class="st">"nom"</span> : <span class="st">"3 rue Paul Doumer 93100 Montreuil"</span>, <span class="st">"fare_a"</span> : <span class="dv">105</span>, <span class="st">"loc_x"</span>: <span class="fl">2.45626</span>, <span class="st">"loc_y"</span>: <span class="fl">48.861197</span>, <span class="st">"prop_type"</span> : <span class="dv">1</span>},  </span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>prediction_examples <span class="op">=</span> {</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"adresse1"</span> : {<span class="st">"nom"</span> : <span class="st">"88 avenue Verdier 92120 Montrouge"</span>, <span class="st">"fare_a"</span> : <span class="dv">80</span>, <span class="st">"loc_x"</span>: <span class="fl">2.244608</span>, <span class="st">"loc_y"</span>: <span class="fl">48.8865792</span>, <span class="st">"prop_type"</span> : <span class="dv">2</span>},</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"adresse2"</span> : {<span class="st">"nom"</span> : <span class="st">"3 rue Sadi Carnot 78120 Rambouillet"</span>, <span class="st">"fare_a"</span> : <span class="dv">140</span>, <span class="st">"loc_x"</span>: <span class="fl">1.8300153</span>, <span class="st">"loc_y"</span>: <span class="fl">48.6431721</span>, <span class="st">"prop_type"</span> : <span class="dv">1</span>},</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"adresse3"</span> : {<span class="st">"nom"</span> : <span class="st">"1 rue des arts 92700 Colombes"</span>, <span class="st">"fare_a"</span> : <span class="dv">35</span>, <span class="st">"loc_x"</span>: <span class="fl">2.2410483</span>, <span class="st">"loc_y"</span>: <span class="fl">48.9109437</span>, <span class="st">"prop_type"</span> : <span class="dv">2</span>},</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"adresse4"</span> : {<span class="st">"nom"</span> : <span class="st">"152 Rue de Sèvres 75015 Paris"</span>, <span class="st">"fare_a"</span> : <span class="dv">93</span>, <span class="st">"loc_x"</span>: <span class="fl">2.3146301</span>, <span class="st">"loc_y"</span>: <span class="fl">48.8462097</span>, <span class="st">"prop_type"</span> : <span class="dv">2</span>},</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"adresse5"</span> : {<span class="st">"nom"</span> : <span class="st">"3 rue Paul Doumer 93100 Montreuil"</span>, <span class="st">"fare_a"</span> : <span class="dv">105</span>, <span class="st">"loc_x"</span>: <span class="fl">2.45626</span>, <span class="st">"loc_y"</span>: <span class="fl">48.861197</span>, <span class="st">"prop_type"</span> : <span class="dv">1</span>},  </span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <ol start="3" type="1">
 <li>Now, predict the price per square meter for each example</li>
 </ol>
-<div id="23e7043a" class="cell" data-execution_count="19">
+<div id="028dfc72" class="cell" data-execution_count="21">
 <details class="code-fold">
 <summary>See the solution</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Build a DataFrame with one row per address — batching is faster than</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co"># calling predict() in a loop and ensures consistent column ordering.</span></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> []</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> key, infos <span class="kw">in</span> prediction_examples.items():</span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    features <span class="op">=</span> build_feature_dict(</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>        loc_x<span class="op">=</span>infos[<span class="st">"loc_x"</span>],</span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>        loc_y<span class="op">=</span>infos[<span class="st">"loc_y"</span>],</span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>        fare_a<span class="op">=</span>infos[<span class="st">"fare_a"</span>],</span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>        prop_type<span class="op">=</span>infos[<span class="st">"prop_type"</span>],</span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>    features[<span class="st">"adresse"</span>] <span class="op">=</span> infos[<span class="st">"nom"</span>]</span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>    features[<span class="st">"id"</span>] <span class="op">=</span> key</span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>    rows.append(features)</span>
-<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>X_examples <span class="op">=</span> pd.DataFrame(rows)</span>
-<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep metadata aside; the model only sees the feature columns it was trained on.</span></span>
-<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>meta_cols <span class="op">=</span> [<span class="st">"id"</span>, <span class="st">"adresse"</span>]</span>
-<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>feature_cols <span class="op">=</span> [c <span class="cf">for</span> c <span class="kw">in</span> X_examples.columns <span class="cf">if</span> c <span class="kw">not</span> <span class="kw">in</span> meta_cols]</span>
-<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicted price per square meter</span></span>
-<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>predicted_price_sqm <span class="op">=</span> rf_model_final.predict(X_examples[feature_cols])</span>
-<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> X_examples[meta_cols].copy()</span>
-<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>results[<span class="st">"price_per_sqm"</span>] <span class="op">=</span> predicted_price_sqm.<span class="bu">round</span>(<span class="dv">0</span>)</span>
-<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>results[<span class="st">"surface"</span>]       <span class="op">=</span> X_examples[<span class="st">"farea"</span>].values</span>
-<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a>results[<span class="st">"total_price"</span>]   <span class="op">=</span> (results[<span class="st">"price_per_sqm"</span>] <span class="op">*</span> results[<span class="st">"surface"</span>]).<span class="bu">round</span>(<span class="dv">0</span>)</span>
-<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _, row <span class="kw">in</span> results.iterrows():</span>
-<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(</span>
-<span id="cb22-33"><a href="#cb22-33" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"For the property at </span><span class="sc">{</span>row[<span class="st">'adresse'</span>]<span class="sc">}</span><span class="ss"> "</span></span>
-<span id="cb22-34"><a href="#cb22-34" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"(</span><span class="sc">{</span>row[<span class="st">'surface'</span>]<span class="sc">:.0f}</span><span class="ss"> sqm), the estimated price is "</span></span>
-<span id="cb22-35"><a href="#cb22-35" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"</span><span class="sc">{</span>row[<span class="st">'price_per_sqm'</span>]<span class="sc">:,.0f}</span><span class="ss"> €/sqm, "</span></span>
-<span id="cb22-36"><a href="#cb22-36" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"i.e. a total of about </span><span class="sc">{</span>row[<span class="st">'total_price'</span>]<span class="sc">:,.0f}</span><span class="ss"> €."</span></span>
-<span id="cb22-37"><a href="#cb22-37" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Build a DataFrame with one row per address — batching is faster than</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co"># calling predict() in a loop and ensures consistent column ordering.</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> []</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> key, infos <span class="kw">in</span> prediction_examples.items():</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    features <span class="op">=</span> build_feature_dict(</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>        loc_x<span class="op">=</span>infos[<span class="st">"loc_x"</span>],</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>        loc_y<span class="op">=</span>infos[<span class="st">"loc_y"</span>],</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>        fare_a<span class="op">=</span>infos[<span class="st">"fare_a"</span>],</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>        prop_type<span class="op">=</span>infos[<span class="st">"prop_type"</span>],</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>    features[<span class="st">"adresse"</span>] <span class="op">=</span> infos[<span class="st">"nom"</span>]</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>    features[<span class="st">"id"</span>] <span class="op">=</span> key</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>    rows.append(features)</span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>X_examples <span class="op">=</span> pd.DataFrame(rows)</span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep metadata aside; the model only sees the feature columns it was trained on.</span></span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>meta_cols <span class="op">=</span> [<span class="st">"id"</span>, <span class="st">"adresse"</span>]</span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>feature_cols <span class="op">=</span> [c <span class="cf">for</span> c <span class="kw">in</span> X_examples.columns <span class="cf">if</span> c <span class="kw">not</span> <span class="kw">in</span> meta_cols]</span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicted price per square meter</span></span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a>predicted_price_sqm <span class="op">=</span> rf_model_final.predict(X_examples[feature_cols])</span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> X_examples[meta_cols].copy()</span>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a>results[<span class="st">"price_per_sqm"</span>] <span class="op">=</span> predicted_price_sqm.<span class="bu">round</span>(<span class="dv">0</span>)</span>
+<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a>results[<span class="st">"surface"</span>]       <span class="op">=</span> X_examples[<span class="st">"farea"</span>].values</span>
+<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a>results[<span class="st">"total_price"</span>]   <span class="op">=</span> (results[<span class="st">"price_per_sqm"</span>] <span class="op">*</span> results[<span class="st">"surface"</span>]).<span class="bu">round</span>(<span class="dv">0</span>)</span>
+<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _, row <span class="kw">in</span> results.iterrows():</span>
+<span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(</span>
+<span id="cb24-33"><a href="#cb24-33" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"For the property at </span><span class="sc">{</span>row[<span class="st">'adresse'</span>]<span class="sc">}</span><span class="ss"> "</span></span>
+<span id="cb24-34"><a href="#cb24-34" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"(</span><span class="sc">{</span>row[<span class="st">'surface'</span>]<span class="sc">:.0f}</span><span class="ss"> sqm), the estimated price is "</span></span>
+<span id="cb24-35"><a href="#cb24-35" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"</span><span class="sc">{</span>row[<span class="st">'price_per_sqm'</span>]<span class="sc">:,.0f}</span><span class="ss"> €/sqm, "</span></span>
+<span id="cb24-36"><a href="#cb24-36" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"i.e. a total of about </span><span class="sc">{</span>row[<span class="st">'total_price'</span>]<span class="sc">:,.0f}</span><span class="ss"> €."</span></span>
+<span id="cb24-37"><a href="#cb24-37" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
