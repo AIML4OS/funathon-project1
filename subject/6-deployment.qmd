@@ -306,6 +306,7 @@ Don't forget to see how the variables are encoded in the [dedicated section](1-i
 
 
 ``` python
+
 {
     "farea": 10,
     "trans_date": "01/02/2023",
@@ -355,6 +356,8 @@ You can now query your API with python's `request`.
 
 ```{python}
 #| eval: false
+#| code-fold: true
+
 import requests
 
 prop_features = {
@@ -403,7 +406,7 @@ response = requests.post("http://localhost:8000/predict", json=prop_features)
 print(response.json())
 ```
 
-Expected output:
+The output should have the following structure:
 
 ```{.json}
 {'predicted_price_sqm': 2081.0, 'predicted_price': 135273.0, 'farea': 65}
