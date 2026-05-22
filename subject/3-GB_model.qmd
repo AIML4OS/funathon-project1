@@ -59,34 +59,10 @@ To allow for comparison with the random forest section, we chose to use the same
 
 import pandas as pd 
 import numpy as np
-from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
-from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 
 RANDOM_STATE = 202605
 
-def date_to_days(X: pd.Series, ref_date: pd.Timestamp):
-    # converts a date to a difference to ref_date :
-    diff_dt = pd.to_datetime(X) - ref_date
-    # Extract days part from datetime object
-    diff_dt = diff_dt.dt.days
-    # Transform it from a Pandas series to a Numpy nd array, used by scikit learn for input
-    diff_dt = diff_dt.to_numpy().reshape(-1, 1)
-
-    return diff_dt
-
-date_transformer = FunctionTransformer(
-    date_to_days,
-    kw_args={"ref_date": pd.Timestamp('2010-01-01 00:00')}
-    )
-
-preprocessor = ColumnTransformer(
-    transformers=[
-        ("cat", OneHotEncoder(handle_unknown="ignore"), ["prop_type", "prop_year_harm_10"]),  # one-hot encoder on feature
-        ("dat", date_transformer, "trans_date") # feature time since 01-01-2010
-    ],
-    remainder="passthrough"  # to keep features not transformed
-)
 
 import matplotlib.pyplot as plt
 
@@ -120,8 +96,6 @@ def predicted_actual_plot(y_test, y_pred_test, model_name):
 
 1.  Using the `HistGradientBoostingRegressor` class and its [scikit-learn documentation page](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html), define and train a baseline model with **default hyperparameters**. 
 For convenience, load the training and testing datasets `X_train, X_test, y_train, y_test` that were already defined at the end of the [pre-processing section](1-preprocessing.qmd).
-Drop the features `prop_type`, `trans_date` from `X_train` and `X_test`. 
-It will simplify the scikit learn code - in real life you wouldn't drop these features and that's what we'll do later on.
 
 **Note that just like for `RandomForestRegressor`, all parameters have default values — you do not need to pass any argument to get a working model.**
 
@@ -135,10 +109,6 @@ from sklearn.ensemble import HistGradientBoostingRegressor
 
 X_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_train_log.parquet")
 X_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_test_log.parquet")
-
-X_train = X_train.drop(columns=["prop_type", "trans_date"])
-X_test  =  X_test.drop(columns=["prop_type", "trans_date"])
-
 y_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_train_log.parquet")["price_sqm_log"]
 y_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_test_log.parquet")["price_sqm_log"]
 
@@ -254,7 +224,6 @@ y_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/pr
 y_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_test_log.parquet")["price_sqm_log"]
 
 model = Pipeline([
-    ('preprocessing', preprocessor),
     ('GB', HistGradientBoostingRegressor(
         random_state=RANDOM_STATE,
         early_stopping=True))
@@ -423,7 +392,6 @@ param_grid_step2 = {
 }
 
 model_step2 = Pipeline([
-    ('preprocessing', preprocessor),
     ('GB', HistGradientBoostingRegressor(
         max_iter=BEST_ITER,
         learning_rate=BEST_LR,
@@ -493,7 +461,6 @@ param_grid_step3 = {
 }
 
 model_step3 = Pipeline([
-    ('preprocessing', preprocessor),
     ('GB', HistGradientBoostingRegressor(
         learning_rate=BEST_LR,
         max_depth=BEST_DEPTH,
@@ -562,7 +529,6 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 # Wrap in the same pipeline as the RF section
 gb_model_final = Pipeline([
-    ("preprocessor", preprocessor),  # same preprocessor as defined in the preprocessing section
     ("GB", gb_final),
 ])
 
@@ -655,15 +621,14 @@ def build_feature_dict(loc_x, loc_y, fare_a, prop_type, feature_dict=None):
     if feature_dict is not None:
         return feature_dict
 
-    _prop_type_map = {1: "House", 2: "Flat"}
-    prop_type_str = _prop_type_map.get(prop_type, str(prop_type))
+    trans_date_tr =   (pd.Timestamp('2023-02-01 00:00') - pd.Timestamp('2010-01-01 00:00')).days
 
     return {
         "farea": fare_a,
-        "trans_date": "01/02/2023",
+        "trans_date": trans_date_tr,
         "trans_year": 2023,
         "trans_month": 2,
-        "prop_type": prop_type_str,
+        "prop_type": prop_type,
         "prop_year_harm_10": 1870,
         "prop_loc_x": loc_x,
         "prop_loc_y": loc_y,
@@ -731,6 +696,8 @@ import pandas as pd
 # Build a DataFrame with one row per address — batching is faster than
 # calling predict() in a loop and ensures consistent column ordering.
 rows = []
+# adrs = "adresse4"
+# prediction_example = {adrs: prediction_examples[adrs]}
 for key, infos in prediction_examples.items():
     features = build_feature_dict(
         loc_x=infos["loc_x"],
