@@ -696,8 +696,6 @@ import pandas as pd
 # Build a DataFrame with one row per address — batching is faster than
 # calling predict() in a loop and ensures consistent column ordering.
 rows = []
-# adrs = "adresse4"
-# prediction_example = {adrs: prediction_examples[adrs]}
 for key, infos in prediction_examples.items():
     features = build_feature_dict(
         loc_x=infos["loc_x"],
@@ -711,12 +709,11 @@ for key, infos in prediction_examples.items():
 
 X_examples = pd.DataFrame(rows)
 
-# Keep metadata aside; the model only sees the feature columns it was trained on.
+# Keep metadata aside
 meta_cols = ["id", "adresse"]
-feature_cols = [c for c in X_examples.columns if c not in meta_cols]
 
 # Predicted price per square meter
-predicted_price_sqm = np.exp(gb_model_final.predict(X_examples[feature_cols]))
+predicted_price_sqm = np.exp(gb_model_final.predict(X_examples[X_test.columns]))
 
 results = X_examples[meta_cols].copy()
 results["price_per_sqm"] = predicted_price_sqm.round(0)
