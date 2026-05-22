@@ -47,37 +47,10 @@ For more information, you can read the paragraph on RF hyperparameters [here](ht
 
 import pandas as pd
 import numpy as np
-from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
-from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.pipeline import Pipeline
 
 RANDOM_STATE = 202605
-
-
-def date_to_days(X: pd.Series, ref_date: pd.Timestamp):
-    # converts a date to a difference to ref_date :
-    diff_dt = pd.to_datetime(X) - ref_date
-    # Extract days part from datetime object
-    diff_dt = diff_dt.dt.days
-    # Transform it from a Pandas series to a Numpy nd array, used by scikit learn for input
-    diff_dt = diff_dt.to_numpy().reshape(-1, 1)
-
-    return diff_dt
-
-
-date_transformer = FunctionTransformer(
-    date_to_days,
-    kw_args={"ref_date": pd.Timestamp('2010-01-01 00:00')}
-    )
-
-preprocessor = ColumnTransformer(
-    transformers=[
-        ("cat", OneHotEncoder(handle_unknown="ignore"), ["prop_type", "prop_year_harm_10"]),  # one-hot encoder on feature
-        ("dat", date_transformer, "trans_date") # feature time since 01-01-2010
-    ],
-    remainder="passthrough"  # to keep features not transformed
-)
 
 rf_params = {
     "n_estimators": 100,
@@ -91,7 +64,6 @@ rf_params = {
 }
 
 model = Pipeline([
-    ('preprocessing', preprocessor),
     ('RF', RandomForestRegressor(**rf_params))
 ])
 
@@ -110,10 +82,6 @@ model = Pipeline([
     -   max_features="sqrt"
 
     -   min_samples_leaf=10
-
-    As it's only a first step we chose to simplify the exercise. We will drop the `trans_date` and `prop_type` features. 
-
-    We will come back to this later on and chain it with the preprocessing steps.
 
     Train the model (it should take a few minutes to train).
 
@@ -143,10 +111,6 @@ rf = RandomForestRegressor(
 # Defining train and test sets
 X_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_train_log.parquet")
 X_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_test_log.parquet")
-
-X_train = X_train.drop(columns=["prop_type", "trans_date"])
-X_test  =  X_test.drop(columns=["prop_type", "trans_date"])
-
 y_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_train_log.parquet")["price_sqm_log"]
 y_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_test_log.parquet")["price_sqm_log"]
 
@@ -504,6 +468,8 @@ grid_search.myfittedparam_
 
 4.  From the fitted `grid_search` object, retrieve the best model. As it has only been trained on a fraction of the training set, retrain it on the full training set. Which type is `best_estimator_` attribute ?
 
+<!-- Best params : {'RF__max_depth': 13, 'RF__max_features': 'sqrt', 'RF__min_samples_leaf': 40, 'RF__n_estimators': 80} -->
+
 ```{python}
 #| code-fold: true
 #| code-summary: See the solution
@@ -538,7 +504,7 @@ import s3fs
 # Create filesystem object
 S3_ENDPOINT_URL = "https://" + os.environ["AWS_S3_ENDPOINT"]
 fs = s3fs.S3FileSystem(client_kwargs={'endpoint_url': S3_ENDPOINT_URL})
-FILE_PATH_S3 = "projet-funathon/2026/project1/models/rf_model_final.joblib" 
+FILE_PATH_S3 = "projet-funathon/2026/project1/models/rf_model_log_final.joblib" 
 
 with fs.open(FILE_PATH_S3, mode="rb") as model:
     rf_model_final = load(model)
@@ -652,15 +618,14 @@ def build_feature_dict(loc_x, loc_y, fare_a, prop_type, feature_dict=None):
     if feature_dict is not None:
         return feature_dict
 
-    _prop_type_map = {1: "House", 2: "Flat"}
-    prop_type_str = _prop_type_map.get(prop_type, str(prop_type))
+    trans_date_tr =   (pd.Timestamp('2023-02-01 00:00') - pd.Timestamp('2010-01-01 00:00')).days
 
     return {
         "farea": fare_a,
-        "trans_date": "01/02/2023",
+        "trans_date": trans_date_tr,
         "trans_year": 2023,
         "trans_month": 2,
-        "prop_type": prop_type_str,
+        "prop_type": prop_type,
         "prop_year_harm_10": 1870,
         "prop_loc_x": loc_x,
         "prop_loc_y": loc_y,
@@ -723,6 +688,7 @@ prediction_examples = {
 #| code-summary: See the solution
 #| code-overflow: scroll
 
+
 import pandas as pd
 
 # Build a DataFrame with one row per address — batching is faster than
@@ -741,12 +707,11 @@ for key, infos in prediction_examples.items():
 
 X_examples = pd.DataFrame(rows)
 
-# Keep metadata aside; the model only sees the feature columns it was trained on.
+# Keep metadata aside
 meta_cols = ["id", "adresse"]
-feature_cols = [c for c in X_examples.columns if c not in meta_cols]
 
 # Predicted price per square meter
-predicted_price_sqm = np.exp(rf_model_final.predict(X_examples[feature_cols]))
+predicted_price_sqm = np.exp(gb_model_final.predict(X_examples[X_test.columns]))
 
 results = X_examples[meta_cols].copy()
 results["price_per_sqm"] = predicted_price_sqm.round(0)
