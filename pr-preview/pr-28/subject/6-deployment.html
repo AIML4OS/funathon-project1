@@ -465,7 +465,7 @@ Tip
 <li>return a dictionnary with <code>predicted_price_sqm</code>, <code>predicted_price</code> and <code>farea</code>.</li>
 </ul>
 <p>In the end, <strong>the input data should have a similar format (same names, same data types) as <code>X_test</code></strong>.</p>
-<div id="a532d09e" class="cell" data-execution_count="1">
+<div id="cd9ce8a6" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -556,7 +556,8 @@ Tip
 <li>has stairs.</li>
 </ul></li>
 </ul>
-<p>To avoid typing everything, you can use the list of variables or use the <code>build_feature_dict</code> function from <strong>?@sec-scikit-learn-pipeline</strong> and <strong>?@sec-scikit-learn-pipeline</strong>. Don’t forget to see how the variables are encoded in the <a href="../subject/1-intro_data.html">dedicated section</a> !</p>
+<p>To avoid typing everything, you can use the list of variables or use the <code>build_feature_dict</code> function from <a href="../subject/3-GB_model.html#sec-scikit-learn-pipeline">the gradient boosting section</a> or <a href="../subject/3-RF_model.html#sec-scikit-learn-pipeline">the random forest section</a>.</p>
+<p>Don’t forget to see how the variables are encoded in the <a href="../subject/1-intro_data.html">dedicated section</a> !</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>{</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"farea"</span>: <span class="dv">10</span>,</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"trans_date"</span>: <span class="st">"01/02/2023"</span>,</span>
@@ -599,7 +600,7 @@ Tip
 <span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a>    <span class="st">"stair"</span>: <span class="dv">1</span> </span>
 <span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>  }</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>You can now query your API with python’s <code>request</code>.</p>
-<div id="998c4a33" class="cell" data-execution_count="2">
+<div id="020e4eaa" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>prop_features <span class="op">=</span> {</span>
