@@ -658,7 +658,7 @@ predicted_actual_plot(y_test, y_pred_test, "Gradient Boosting")
 ```
 
 
-## Exercice 9bis: Now, let's play : predict the housing price for your custom address
+## Exercice 9bis: Now, let's play : predict the housing price for your custom address {#sec-gb-prediction}
 
 For the prediction, you need to create a dictionary containing all the features X. Since we have more than ten features, we simplify the exercise with a function that builds the dictionary and lets you override some of its values.
 

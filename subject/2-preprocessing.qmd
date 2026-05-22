@@ -345,7 +345,7 @@ All datetime features must be preprocessed — you cannot use the `Timestamp` ty
 -   keep months feature to capture the seasonality of transactions and convert it to numeric ;
 -   keep years feature to capture years specifics patterns and convert it to numeric.
 
-You will see in the section {#sec-scikit-learn-pipeline} how preprocessing can be performed with scikit-learn.
+You will see in the @sec-scikit-learn-pipeline how preprocessing can be performed with scikit-learn.
 
 ### Now let's go : prepare the dataframe for the training
 
