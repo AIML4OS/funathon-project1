@@ -64,7 +64,7 @@ con = duckdb.connect(database=":memory:")
 # We load all transactions made in France between 2010 and 2022
 trans = con.sql(
     """
-        SELECT * FROM read_parquet('s3://projet-funathon/2026/project1/data/1_input/transactions_EN.parquet')
+        SELECT * FROM read_parquet('https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/1_input/transactions_EN.parquet')
     """).to_df()
 
 
@@ -81,6 +81,7 @@ import pandas as pd
 # We load all transactions made in France between 2010 and 2022
 trans = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/1_input/transactions_EN.parquet" 
 ```
+
 :::
 
 3.  **Search some information about `trans` dataframe**
