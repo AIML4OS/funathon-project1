@@ -218,7 +218,7 @@ print(f"MAPE GB: {mape_pct_gb:.2f} %")
 
 In this exercise, you will produce four diagnostic plots: a residuals distribution, a QQ-plot comparing actual and predicted quantiles, the target distribution and a feature importance plot. For each plot, take a moment to interpret what you observe.
 
-1.  Write a `residuals_distribution(residuals, rmse)` function to plot the histogram of the residuals. It takes `residuals` (a pandas Series) and `rmse` (a float), along with `ax`, `label` and `color` parameters for overlay plotting. 
+1.  **Write a `residuals_distribution(residuals, rmse)` function to plot the histogram of the residuals.** It takes `residuals` (a pandas Series) and `rmse` (a float), along with `ax`, `label` and `color` parameters for overlay plotting. 
 
 ::: {.callout-tip collapse="true" title="Hint"}
 
@@ -245,7 +245,7 @@ def residuals_distribution(residuals: pd.Series, rmse: float, ax=None, label=Non
     return ax
 ```
 
-2.  Plot the residuals distribution of the RF and GB models. Look at whether the histogram is centered around zero and whether it is approximately symmetric.
+2.  **Plot the residuals distribution of the RF and GB models.** Look at whether the histogram is centered around zero and whether it is approximately symmetric.
 
 ::: {.callout-tip collapse="true" title="Hint"}
 
@@ -265,7 +265,7 @@ residuals_distribution(gb_residuals, rmse_gb, ax=ax, label=f"GB (RMSE={rmse_gb:.
 plt.show()
 ```
 
-3.  Write a `QQplot(y_test, y_pred)` function which computes 1000 quantile points for both series and plots them against each other. The parameters are `y_test`, `y_pred`, pandas series of observed and predicted target and the same parameters that question 1. for overlay plotting. The function should return the plot. 
+3.  **Write a `QQplot(y_test, y_pred)` function which computes 1000 quantile points for both series and plots them against each other.** The parameters are `y_test`, `y_pred`, pandas series of observed and predicted target and the same parameters that question 1. for overlay plotting. The function should return the plot. 
 
 ```{python}
 #| code-fold: true
@@ -298,7 +298,7 @@ def QQplot(y_test: pd.Series, y_pred: pd.Series, ax=None, label=None, color=None
 
 ```
 
-4.  Plot the QQ plot comparing the quantiles of the actual and predicted distributions for RF and GB models. Check whether the points align closely along the diagonal, especially in the tails.
+4.  **Plot the QQ plot comparing the quantiles of the actual and predicted distributions for RF and GB models.** Check whether the points align closely along the diagonal, especially in the tails.
 
 ::: {.callout-tip collapse="true" title="Hint"}
 
@@ -320,7 +320,7 @@ plt.show()
 
 > How does the gradient boosting model compare visually with the random forest?
 
-5. Define a `target_distribution()` function to plot the distribution of the parameter `y`, a pandas Serie.
+5. **Define a `target_distribution()` function to plot the distribution of the parameter `y`, a pandas Serie.**
 
 ```{python}
 #| code-fold: true
@@ -341,7 +341,7 @@ def target_distribution(y: pd.Series):
 
 ```
 
-6.  Plot and compare the target distributions for the actual test values and the predicted values side by side.
+6.  **Plot and compare the target distributions for the actual test values and the predicted values side by side.**
 
 ::: {.callout-tip collapse="true" title="Hint"}
 
@@ -440,7 +440,7 @@ def calculate_importance(X_test, y_test, RANDOM_STATE, final_rf, SCORING):
     return importances
 ```
 
-8.  Write a `permutation_importance()` function to plot the bar chart of features importance. 
+8.  **Write a `permutation_importance()` function to plot the bar chart of features importance.**
 
 ```{python}
 #| code-fold: true
@@ -462,7 +462,7 @@ def importance_plot(importances):
 
 ```
 
-9.  Compute the permutation importance and plot the top 20 most important features.
+9.  **Compute the permutation importance and plot the top 20 most important features.**
 
 ::: {.callout-tip collapse="true" title="Hint"}
 

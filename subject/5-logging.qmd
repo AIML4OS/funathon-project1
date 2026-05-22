@@ -29,7 +29,7 @@ Don't forget to search in [MLFlow documentation](https://mlflow.org/docs/latest/
 
 In this exercise, you will log the pre-trained RF model step by step, following the structure of the main training script. By the end, every artifact produced during training — figures, parameters, metrics and the model itself — will be registered in MLflow.
 
-1.  Before starting, make sure that the MLflow tracking URI is set and that the experiment exists.
+1.  Before starting, **make sure that the MLflow tracking URI is set and that the experiment exists.**
 
 ```{python}
 #| code-fold: true
@@ -44,7 +44,7 @@ mlflow.set_tracking_uri(mlflow_server)
 mlflow.set_experiment("run_rf")
 ```
 
-2.  Open a new MLflow run using the run `run_rf`.
+2.  **Open a new MLflow run using the run `run_rf`.**
 
 ::: {.callout-tip collapse="true" title="Hint"}
 
@@ -63,7 +63,7 @@ with mlflow.start_run(run_name="run_rf"):
 
 Note that when testing MLflow logging with the following instructions (from 3. to 10.), you must run the code inside this block. Otherwise, the logging will not work.
 
-3.  Log tags to describe the context of the run: model type, task, data paths, target column, framework.
+3.  **Log tags to describe the context of the run:** model type, task, data paths, target column, framework.
 
 
 
@@ -87,7 +87,7 @@ Use `mlflow.set_tags()` with a dictionary. Tags are free-form strings and are us
     })
 ```
 
-4.  Log the training configuration parameters: dataset split ratio, model hyperparameters, dataset size and statistics.
+4.  **Log the training configuration parameters:** dataset split ratio, model hyperparameters, dataset size and statistics.
 
 
 
@@ -117,7 +117,7 @@ Use `mlflow.log_params()` with a dictionary. Parameters are meant for scalar val
     })
 ```
 
-5.  Log the OOB convergence figure produced in Exercise 5, which shows how the OOB error evolves as the number of trees increases.
+5.  **Log the OOB convergence figure produced in Exercise 5, which shows how the OOB error evolves as the number of trees increases.**
 
 
 
@@ -135,7 +135,7 @@ Use `mlflow.log_figure()`, which takes a matplotlib figure object and a filename
     mlflow.log_figure(oob_error_ntrees, "convergence_ntrees_oob_error.png")
 ```
 
-6.  Log the best hyperparameters found by the cross-validation grid search.
+6.  **Log the best hyperparameters found by the cross-validation grid search.**
 
 
 
@@ -153,7 +153,7 @@ The `GridSearchCV` object exposes the best hyperparameter combination via `grid_
     mlflow.log_params(grid_search.best_params_)
 ```
 
-7.  Compute and log the evaluation metrics on the test set: RMSE, MAE and R².
+7.  **Compute and log the evaluation metrics on the test set: RMSE, MAE and R².**
 
 
 
@@ -182,7 +182,7 @@ First generate predictions with `rf_model_final.predict(X_test)`, then compute t
     mlflow.log_metrics(metrics)
 ```
 
-8.  Log all diagnostic figures seen in *Metrics* section: residuals distribution, QQ plot, target distribution for the test set, target distribution for the predictions and the permutation feature importance plot.
+8.  **Log all diagnostic figures seen in *Metrics* section:** residuals distribution, QQ plot, target distribution for the test set, target distribution for the predictions and the permutation feature importance plot.
 
 
 
@@ -219,7 +219,7 @@ Each call to `mlflow.log_figure()` requires a figure object and a destination fi
     )
 ```
 
-9.  Log the trained model as a scikit-learn artifact, together with its input/output signature and an input example. Register it with a version name.
+9.  **Log the trained model as a scikit-learn artifact, together with its input/output signature and an input example. Register it with a version name.**
 
 Note that the model signature describes the expected schema for model inputs and outputs. It is inferred from a sample of training data and predictions and enables MLflow to validate inputs at serving time.
 
@@ -256,7 +256,7 @@ Use `mlflow.sklearn.log_model()` with the following arguments:
     )
 ```
 
-10. Retrieve and print the run ID at the end of the logging block to confirm that the run was registered successfully.
+10. **Retrieve and print the run ID at the end of the logging block to confirm that the run was registered successfully.**
 
 
 ::: {.callout-tip collapse="true" title="Hint"}

@@ -657,12 +657,14 @@ predicted_actual_plot(y_test, y_pred_test, "Gradient Boosting")
 
 ```
 
+You see that the model isn't perfect.
+**It's only a tutorial so we won't try to fine-tune it more but the model would need to be better suited before going to production.**
 
 ## Exercice 9bis: Now, let's play : predict the housing price for your custom address {#sec-gb-prediction}
 
 For the prediction, you need to create a dictionary containing all the features X. Since we have more than ten features, we simplify the exercise with a function that builds the dictionary and lets you override some of its values.
 
-1. Create a function `build_feature_dict` that returns a dictionary of features ready for prediction
+1. **Create a function `build_feature_dict` that returns a dictionary of features ready for prediction.**
 
 ```{python}
 #| code-fold: true
@@ -727,7 +729,7 @@ def build_feature_dict(loc_x, loc_y, fare_a, prop_type, feature_dict=None):
     }
 ```
 
-2. Create another dictionary with a few example properties to run predictions on
+2. **Create another dictionary with a few example properties to run predictions on**.
 
 ```{python}
 #| code-fold: true
@@ -745,7 +747,7 @@ prediction_examples = {
 
 ```
 
-3. Now, predict the price per square meter for each example
+3. Now, **predict the price per square meter for each example**.
 
 ```{python}
 #| code-fold: true
@@ -791,10 +793,14 @@ for _, row in results.iterrows():
     )
 ```
 
+Real life prices are far more expensive in Paris :) 
+It's a confirmation that the model isn't perfect. 
+**The model would need to be better suited before going to production but it takes more than 2 days to really fine-tune it !**
+
 
 # Summary
 
-Congrats 🎉! In this section, you have successfully
+Congrats 🎉! In this section, you have successfully : 
 
 - seen the foundations of goosting models,
 - trained a `HistGradientBoostingRegressor` with scikit-learn,
