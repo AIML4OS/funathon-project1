@@ -140,8 +140,58 @@ It will load the model,  all parameters and data necessary to keep on going thro
 #| echo: false
 #| output: false
 
-# Saving final model to reuse it in the metrics part
+
+import pandas as pd 
+import numpy as np
+from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
+from sklearn.compose import ColumnTransformer, TransformedTargetRegressor
+from sklearn.pipeline import Pipeline
+import requests
 from joblib import load
+import io
+
+RANDOM_STATE = 202605
+
+def log_transform(y):
+    return np.log10(y)
+
+def inverse_log_transform(y):
+    return 10 ** y
+
+y_transformer = FunctionTransformer(
+    func=log_transform,
+    inverse_func=inverse_log_transform)
+
+def date_to_days(X: pd.Series, ref_date: pd.Timestamp):
+    # converts a date to a difference to ref_date :
+    diff_dt = pd.to_datetime(X) - ref_date
+    # Extract days part from datetime object
+    diff_dt = diff_dt.dt.days
+    # Transform it from a Pandas series to a Numpy nd array, used by scikit learn for input
+    diff_dt = diff_dt.to_numpy().reshape(-1, 1)
+
+    return diff_dt
+
+date_transformer = FunctionTransformer(
+    date_to_days,
+    kw_args={"ref_date": pd.Timestamp('2010-01-01 00:00')}
+    )
+
+preprocessor = ColumnTransformer(
+    transformers=[
+        ("cat", OneHotEncoder(handle_unknown="ignore"), ["prop_type", "prop_year_harm_10"]),  # one-hot encoder on feature
+        ("dat", date_transformer, "trans_date") # feature time since 01-01-2010
+    ],
+    remainder="passthrough"  # to keep features not transformed
+)
+
+
+X_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_train.parquet")
+X_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_test.parquet")
+y_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_train.parquet")["price_sqm"]
+y_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_test.parquet")["price_sqm"]
+
+# Importing fine-tuned RF and GB models
 rf_model_final = load("rf_model_final.joblib")
 gb_model_final = load("gb_model_final.joblib")
 
@@ -164,7 +214,8 @@ gb_residuals = y_test - y_pred_GB
 
 ```
 
-2.  Compute RMSE, MAE and R² using scikit-learn's metrics module for the comparison of RF and GB models.
+2.  **Compute RMSE, MAE and R² using scikit-learn's metrics module for the comparison of RF and GB models.**
+Save the RMSE for both models as `rmse_rf` and `rmse_gb`. 
 
 ::: {.callout-tip collapse="true" title="Hint"}
 
@@ -181,7 +232,7 @@ You can use the function `print-metrics` made in the last section on *GB model*.
 
 from sklearn.metrics import root_mean_squared_error, mean_absolute_error, r2_score
 
-def print_metrics(model, split, X=X_train, y=y_train):
+def print_metrics(model, split, X=X_test, y=y_test):
     """
     Print metrics for trained model
     """
@@ -196,6 +247,8 @@ models = [("RF", rf_model_final), ("GB", gb_model_final)]
 for name, model in models:
     print_metrics(model, name, X_test, y_test)
 
+rmse_rf = root_mean_squared_error(y_test, y_pred_RF)
+rmse_gb = root_mean_squared_error(y_test, y_pred_GB)
 ```
 
 > Which model would you choose, and why?

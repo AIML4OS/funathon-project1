@@ -22,7 +22,7 @@ bash solution/admin/extract.sh "subject/3-GB_model.qmd" $FILE_3A
 bash solution/admin/extract.sh "subject/3-RF_model.qmd" $FILE_3B
 
 # File step4 - metrics
-bash solution/admin/extract.sh "subject/4-metrics.qmd" "temp.py" && cat intermediate_solutions/0_fallback.py temp.py > $FILE_4 && rm temp.py
+bash solution/admin/extract.sh "subject/4-metrics.qmd" $FILE_4 
 
 # Test
 if [ "$TEST" = true ]; then
