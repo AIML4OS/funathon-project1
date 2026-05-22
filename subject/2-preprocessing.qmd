@@ -184,10 +184,10 @@ import matplotlib.pyplot as plt
 y = trans["price_sqm"]
 p = np.percentile(y, 99.5)
 
-fig, axes = plt.subplots(4, 1, figsize=(12, 15))
+fig, axes = plt.subplots(4, 1, figsize=(12, 12))
 
 for ax, (data, label) in zip(axes, [(y, "Y"), (y[y <= p], "Y filtered"), (np.log(y), "log(Y)"), (np.log(y[y <= p]), "log(Y) filtered")]):
-    ax.hist(data, bins="auto", edgecolor="white", color="#334887", alpha=0.95)
+    ax.hist(data, bins="auto", edgecolor="white", color="#334887", alpha=0.5)
     ax.set_title(label)
     ax.set_xlabel("Price per square meter")
     ax.set_ylabel("Number of transactions")
@@ -196,7 +196,8 @@ plt.tight_layout()
 plt.show()
 ```
 
-    In this case, you can see the difference between `Y` and `log(Y)` distribution : it is much closer to normal with the log transformation. Moreover, prices distribution is usually right skewed as they are more often positive, and **prices usually present extreme values that logarithm will soften**. We will therefore apply a log transformation to the target variable when constructing the training pipeline.
+
+In this case, you can see the difference between `Y` and `log(Y)` distribution : it is much closer to normal with the log transformation. Moreover, prices distribution is usually right skewed as they are more often positive, and **prices usually present extreme values that logarithm will soften**. We will therefore apply a log transformation to the target variable when constructing the training pipeline.
 
 3.  **Handle outlier or erroneous values in the target variable**
 
@@ -218,7 +219,7 @@ plt.show()
 
 ```{python}
 
-fig, axes = plt.subplots(2, 1, figsize=(12, 15))
+fig, axes = plt.subplots(1, 2, figsize=(12, 15))
 
 for ax, (data, label) in zip(axes, [(y[y <= 2000], "Y below 2000€ per sqm"), (y[y <= 500], "Y below 500€ per sqm")]):
     ax.hist(data, bins="auto", edgecolor="white", color="#334887", alpha=0.95)
@@ -548,14 +549,16 @@ We will now create our first pipeline to transform the data for the training pha
 
 Go and check [scikit-learn's documentation](https://scikit-learn.org/stable/modules/generated/sklearn.compose.ColumnTransformer.html).
 
-    ::: {.callout-tip collapse="true" title="Hint"}
 
-    For the preprocessing step, you have to :
+::: {.callout-tip collapse="true" title="Hint"}
 
-    -  applyt the new function `date_to_days` with [scikit-learn's `FunctionTransformer`](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.FunctionTransformer.html) ;
-    -   apply the chosen encoding method (OneHotEncoder) on categorical features.
+For the preprocessing step, you have to :
 
-    :::
+-  applyt the new function `date_to_days` with [scikit-learn's `FunctionTransformer`](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.FunctionTransformer.html) ;
+-   apply the chosen encoding method (OneHotEncoder) on categorical features.
+
+:::
+
 
 Here is the code for the new function `date_to_days` that will transform the `trans_date` variable, a `Timestamp`, to an elapsed feature (`ref_date = '2010-01-01 00:00'`). 
 Note that the output of your `date_to_days` function is a Python array and that `.to_numpy().reshape(-1, 1)` applied to a Pandas Series will transform it to the correct type.
@@ -599,16 +602,17 @@ preprocessor = ColumnTransformer(
 
 2.  **Create the Pipeline for training a RandomForestRegressor model.** Go to the [scikit-learn's documentation](https://scikit-learn.org/stable/modules/compose.html#pipelines-and-composite-estimators) on the matter to understand how it works.
 
-    ::: {.callout-tip collapse="true" title="Hint"}
 
-    For the pipeline steps, you have to :
+::: {.callout-tip collapse="true" title="Hint"}
 
-    -   create a `FunctionTransformer` instance for the `log` transformation of the target with either [`np.log`](https://numpy.org/doc/stable/reference/generated/numpy.log.html) or your own defined `log_transform` and `inverse_log_transform` functions ;
-    -   create a pipeline `rf_pipeline` with the preprocessing step `preprocessor` defined above and a RandomForestRegressor model ;
-    -   Write all hyperparameters you want to use for the `RandomForestRegressor` instance - have a tour on [the documentation](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html) ;
-    -   apply this target transformation to the pipeline with [`TransformedTargetRegressor`](https://scikit-learn.org/stable/modules/generated/sklearn.compose.TransformedTargetRegressor.html#sklearn.compose.TransformedTargetRegressor).
+For the pipeline steps, you have to :
 
-    :::
+-   create a `FunctionTransformer` instance for the `log` transformation of the target with either [`np.log`](https://numpy.org/doc/stable/reference/generated/numpy.log.html) or your own defined `log_transform` and `inverse_log_transform` functions ;
+-   create a pipeline `rf_pipeline` with the preprocessing step `preprocessor` defined above and a RandomForestRegressor model ;
+-   Write all hyperparameters you want to use for the `RandomForestRegressor` instance - have a tour on [the documentation](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html) ;
+-   apply this target transformation to the pipeline with [`TransformedTargetRegressor`](https://scikit-learn.org/stable/modules/generated/sklearn.compose.TransformedTargetRegressor.html#sklearn.compose.TransformedTargetRegressor).
+
+:::
 
 ```{python}
 #| code-fold: true
