@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 # Check if input file is provided
 if [ "$#" -lt 1 ]; then
     echo "Usage: $0 <input_file.qmd>"
@@ -15,34 +14,44 @@ else
     output_file="$2"
 fi
 
-
-
 # Extract Python code blocks, remove #| lines, and trim the exact number of leading whitespace
+# Doesn't extract code that have #| echo: false
 awk '
 /# Exercice/ {
     print ""; print $0;
     next;
     }
 /^[[:space:]]*```\{python/ {
-    print "# %%"
     leading_ws = 0;
     temp = $0;
     while (substr(temp, leading_ws + 1, 1) ~ /[[:space:]]/) {
         leading_ws++;
     }
     flag = 1;
+    skip = 0;
+    block = "";
     next;
 }
 /^[[:space:]]*```/ && flag {
-    flag = 0; print ""
+    if (!skip) {
+        print "# %%"
+        printf "%s", block;
+        print ""
+    }
+    flag = 0;
+    skip = 0;
+    block = "";
     next;
 }
 flag {
+    if (/^[[:space:]]*#\|[[:space:]]*echo:[[:space:]]*false/) {
+        skip = 1;
+    }
     if (leading_ws > 0 && length($0) >= leading_ws) {
         $0 = substr($0, leading_ws + 1);
     }
     if (!/^[[:space:]]*#\|/) {
-        print;
+        block = block $0 "\n";
     }
 }
 ' "$input_file" > "$output_file"
