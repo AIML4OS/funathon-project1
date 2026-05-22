@@ -49,12 +49,12 @@ import s3fs
 # Create filesystem object
 S3_ENDPOINT_URL = "https://" + os.environ["AWS_S3_ENDPOINT"]
 fs = s3fs.S3FileSystem(client_kwargs={'endpoint_url': S3_ENDPOINT_URL})
-FILE_PATH_S3 = "projet-funathon/2026/project1/models/rf_model_final.joblib" 
+FILE_PATH_S3 = "projet-funathon/2026/project1/models/rf_model_log_final.joblib" 
 
 with fs.open(FILE_PATH_S3, mode="rb") as model:
     rf_model_final = load(model)
 
-FILE_PATH_S3 = "projet-funathon/2026/project1/models/gb_model_final.joblib" 
+FILE_PATH_S3 = "projet-funathon/2026/project1/models/gb_model_log_final.joblib" 
 
 with fs.open(FILE_PATH_S3, mode="rb") as model:
     gb_model_final = load(model)
@@ -191,7 +191,7 @@ We load the model **once at startup**, so that it does not need to be reloaded o
 import mlflow.sklearn
 
 MODEL_URI = "runs:/<mlflow_run_id>/run-relative/path/to/model"  # For example "runs:/04d6f9d4ac4941ebb56a6c9ef2de46c2/model"
-MODEL_URI = "models:/<model_name>/<model_version>"  # For example "models:/GB/6" or "models:/GB@latest" to have the latest version you stored
+MODEL_URI = "models:/<model_name>/<model_version>"  # For example "models:/GB-log/6" or "models:/GB-log@latest" to have the latest version you stored
 model = mlflow.sklearn.load_model(MODEL_URI)
 ```
 
@@ -211,6 +211,8 @@ Input should have a similar format to `X_test`.
 import pandas as pd
 import mlflow.sklearn
 from fastapi import FastAPI
+import numpy as np
+import pandas as pd
 
 # ── App initialization ──────────────────────────────────────────────────────
 
@@ -223,7 +225,7 @@ app = FastAPI(
 
 # ── Model loading (done once at startup) ────────────────────────────────────
 
-MODEL_URI = "models:/GB@latest"
+MODEL_URI = "models:/GB-log@latest"
 model = mlflow.sklearn.load_model(MODEL_URI)
 
 
@@ -250,21 +252,16 @@ def predict(prop_features: dict):
 
     prop_features_df = pd.DataFrame([prop_features])
 
-    # Turning prop_type to Categorical data
-    prop_features_df["prop_type"] = pd.Categorical(
-        prop_features_df["prop_type"],
-        categories=["1", "2"],
-        ordered=False
-    ).rename_categories({"1": "House", "2": "Flat"})
-
     # Turning trans_date to datetime format
-    prop_features_df["trans_date"] = pd.to_datetime(prop_features_df["trans_date"], format="%d/%m/%Y")
+    prop_features_df["trans_date"] = (
+        pd.to_datetime(prop_features_df["trans_date"], format="%d/%m/%Y") - pd.Timestamp('2010-01-01 00:00')
+    ).dt.days
 
     # Storing floor area
     farea = prop_features["farea"]
 
     # Run the prediction
-    predicted_price_sqm = model.predict(prop_features_df)[0]
+    predicted_price_sqm = np.exp(model.predict(prop_features_df)[0])
     predicted_price = predicted_price_sqm * farea
 
     return {

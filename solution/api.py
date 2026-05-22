@@ -2,6 +2,8 @@
 import pandas as pd
 import mlflow.sklearn
 from fastapi import FastAPI
+import numpy as np
+import pandas as pd
 
 # ── App initialization ──────────────────────────────────────────────────────
 
@@ -14,7 +16,7 @@ app = FastAPI(
 
 # ── Model loading (done once at startup) ────────────────────────────────────
 
-MODEL_URI = "models:/GB@latest"
+MODEL_URI = "models:/GB-log@latest"
 model = mlflow.sklearn.load_model(MODEL_URI)
 
 
@@ -32,7 +34,6 @@ def show_welcome_page(MODEL_URI=MODEL_URI):
         "model_version": MODEL_URI,
     }
 
-
 @app.post("/predict")
 def predict(prop_features: dict):
     """
@@ -42,21 +43,16 @@ def predict(prop_features: dict):
 
     prop_features_df = pd.DataFrame([prop_features])
 
-    # Turning prop_type to Categorical data
-    prop_features_df["prop_type"] = pd.Categorical(
-        prop_features_df["prop_type"],
-        categories=["1", "2"],
-        ordered=False
-    ).rename_categories({"1": "House", "2": "Flat"})
-
     # Turning trans_date to datetime format
-    prop_features_df["trans_date"] = pd.to_datetime(prop_features_df["trans_date"], format="%d/%m/%Y")
+    prop_features_df["trans_date"] = (
+        pd.to_datetime(prop_features_df["trans_date"], format="%d/%m/%Y") - pd.Timestamp('2010-01-01 00:00')
+    ).dt.days
 
     # Storing floor area
     farea = prop_features["farea"]
 
     # Run the prediction
-    predicted_price_sqm = model.predict(prop_features_df)[0]
+    predicted_price_sqm = np.exp(model.predict(prop_features_df)[0])
     predicted_price = predicted_price_sqm * farea
 
     return {
