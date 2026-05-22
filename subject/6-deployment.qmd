@@ -300,7 +300,7 @@ def predict(prop_features: dict):
   - has stairs. 
 
 
-To avoid typing everything, you can use the list of variables or use the `build_feature_dict` function from [the gradient boosting section](3-GB_model.qmd#sec-scikit-learn-pipeline) or [the random forest section](3-RF_model.qmd#sec-scikit-learn-pipeline).
+To avoid typing everything, you can use the list of variables or use the `build_feature_dict` function from [the gradient boosting section](3-GB_model.qmdl#sec-gb-prediction) or [the random forest section](3-RF_model.qmdl#sec-rf-prediction).
 
 Don't forget to see how the variables are encoded in the [dedicated section](1-intro_data.qmd) ! 
 
