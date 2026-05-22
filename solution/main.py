@@ -3,7 +3,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor, HistGradientBoostingRegressor
 from preprocess import complete_pre_processing
 from log_mlflow import log_to_mlflow
-from pipeline import set_pipeline
 from utils import setup_logging, set_seed, check_data, store_datasets, store_model_mlflow_s3
 
 logger = setup_logging()
@@ -53,12 +52,10 @@ gb_params = {
     "random_state": set_seed()
 }
 
-gb_model_final = set_pipeline(
-    "GB",
-    HistGradientBoostingRegressor(
+gb_model_final = HistGradientBoostingRegressor(
         **gb_params
-    )
 )
+    
 gb_model_final.fit(X_train, y_train)
 
 
@@ -103,12 +100,10 @@ rf_params = {
         "min_samples_leaf": 40
     }
 
-rf_model_final = set_pipeline(
-    "RF",
-    RandomForestRegressor(
+rf_model_final =     RandomForestRegressor(
         **rf_params
     )
-)
+
 rf_model_final.fit(X_train, y_train)
 
 # %%
