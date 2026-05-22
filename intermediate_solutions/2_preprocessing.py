@@ -3,6 +3,7 @@
 # %%
 
 import duckdb
+import os
 
 RANDOM_STATE = 202506
 
@@ -95,9 +96,6 @@ trans = trans[mask].reset_index(drop=True)
 n1 = trans.shape[0]
 
 print(f"{n1} rows after deterministic and statistic filtering")
-
-
-# %%
 print(f'Applying these filters methods has dropped about {((n0 - n1)/n0)*100:.2f} % of the transactions.')
 
 # %%
@@ -112,6 +110,7 @@ df = trans.drop(columns=[
 
 
 # %%
+
 # Printing all rows containing at least one NA
 print(df[df.isna().any(axis=1)])
 

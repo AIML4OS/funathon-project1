@@ -67,6 +67,7 @@ def predicted_actual_plot(y_test, y_pred_test, model_name):
 
 ## Exercice 7: Train your first Gradient Boosting model
 # %%
+
 from sklearn.ensemble import HistGradientBoostingRegressor
 
 X_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_train.parquet")
@@ -82,6 +83,7 @@ gb_baseline = HistGradientBoostingRegressor(random_state=RANDOM_STATE)
 gb_baseline.fit(X_train, y_train)
 
 # %%
+
 from sklearn.metrics import root_mean_squared_error, mean_absolute_error, r2_score
 
 
@@ -127,6 +129,7 @@ model = TransformedTargetRegressor(
 
 
 # %%
+
 from sklearn.model_selection import GridSearchCV
 
 param_grid_step1 = {
@@ -197,10 +200,12 @@ def plot_results_cv(param_x:str, results_df_):
 plot_results_cv("max_iter", df_step1)
 
 # %%
+
 BEST_ITER = 500  # to automatically catch the best hyperparameter, set to : gs_step1.best_params_["regressor__GB__max_iter"]
 BEST_LR = 0.25  # to automatically catch the best hyperparameter, set to : gs_step1.best_params_["regressor__GB__learning_rate"]
 
 # %%
+
 param_grid_step2 = {
     "regressor__GB__max_depth" : [3, 5, 8],
     "regressor__GB__min_samples_leaf": [10, 20, 50],
@@ -243,6 +248,7 @@ df_step2 = results_to_df(gs_step2.cv_results_)
 plot_results_cv("min_samples_leaf", df_step2)
 
 # %%
+
 BEST_DEPTH = 20 # to automatically catch the best hyperparameter, set to : gs_step2.best_params_["regressor__GB__max_depth"]
 BEST_MIN_LEAF = 75 # to automatically catch the best hyperparameter, set to : gs_step2.best_params_["regressor__GB__min_samples_leaf"]
 
@@ -305,16 +311,6 @@ gb_final = HistGradientBoostingRegressor(
     random_state=RANDOM_STATE,
 )
 
-df = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/df.parquet")
-
-X = df.drop(columns=["price_sqm"])
-y = df["price_sqm"]
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y,
-    test_size=0.2,
-    random_state=RANDOM_STATE
-)
-
 # Wrap in the same pipeline / TransformedTargetRegressor as the RF section
 gb_pipeline_best = Pipeline([
     ("preprocessor", preprocessor),  # same preprocessor as defined in the preprocessing section
@@ -325,6 +321,11 @@ gb_model_final = TransformedTargetRegressor(
     regressor=gb_pipeline_best,
     transformer=y_transformer  # same targettransformer as defined in preprocessing section
 )
+
+X_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_train.parquet")
+X_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_test.parquet")
+y_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_train.parquet")["price_sqm"]
+y_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_test.parquet")["price_sqm"]
 
 gb_model_final.fit(X_train, y_train)
 print("Final model trained.")
@@ -345,7 +346,7 @@ predicted_actual_plot(y_test, y_pred_test, "Gradient Boosting")
 
 
 
-## Exercice 9bis: Now, let's play : predict the housing price for your custom address
+## Exercice 9bis: Now, let's play : predict the housing price for your custom address {#sec-gb-prediction}
 # %%
 
 def build_feature_dict(loc_x, loc_y, fare_a, prop_type, feature_dict=None):

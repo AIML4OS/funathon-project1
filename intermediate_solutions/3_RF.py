@@ -71,6 +71,19 @@ model = TransformedTargetRegressor(
 )
 
 # %%
+
+# Defining train and test sets
+X_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_train.parquet")
+X_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_test.parquet")
+
+X_train = X_train.drop(columns=["prop_type", "trans_date"])
+X_test  =  X_test.drop(columns=["prop_type", "trans_date"])
+
+y_train = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/y_train.parquet')["price_sqm"]
+y_test  = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessing/y_test.parquet')["price_sqm"]
+
+# %%
+
 from sklearn.ensemble import RandomForestRegressor
 
 # create RandomForestRegressor instance with selected hyperparameters
@@ -81,15 +94,7 @@ rf = RandomForestRegressor(
     oob_score=True # for calculating total oob error for the RF
 )
 
-# Defining train and test sets
-X_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_train.parquet")
-X_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_test.parquet")
-
-X_train = X_train.drop(columns=["prop_type", "trans_date"])
-X_test  =  X_test.drop(columns=["prop_type", "trans_date"])
-
-y_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_train.parquet")["price_sqm"]
-y_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_test.parquet")["price_sqm"]
+# %%
 
 # Train the model
 rf.fit(X_train, y_train)
@@ -100,6 +105,7 @@ print(f"OOB Score : {rf.oob_score_}")
 
 
 # %%
+
 from sklearn.metrics import mean_squared_error
 
 # Predictions on train set
@@ -123,11 +129,12 @@ X_sub = X_train.filter(items=y_sub.index, axis=0 )  # sampling X_train
 
 
 # %%
+
 import warnings
 
 metric = "r2"
-min_estimators=5
-max_estimators=150
+min_estimators = 5
+max_estimators = 150
 
 rf = RandomForestRegressor(
     warm_start=True,
@@ -151,6 +158,7 @@ for n in range(min_estimators, max_estimators, 20):
 warnings.resetwarnings()
 
 # %%
+
 import matplotlib.pyplot as plt
 
 rf_params = {
@@ -224,6 +232,7 @@ def rf_error_oob_plot(X_train,
 
 
 # %%
+
 oob_error_ntrees = rf_error_oob_plot(X_train=X_train,
                                      y_train=y_train,
                                      subsample=0.1,
@@ -251,6 +260,7 @@ param_grid = {
 }
 
 # %%
+
 from sklearn.model_selection import GridSearchCV
 
 # Grid search
@@ -284,6 +294,7 @@ rf_model_final.fit(X_train, y_train)
 y_pred_test = rf_model_final.predict(X_test)
 
 # %%
+
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 import numpy as np
 
@@ -296,6 +307,7 @@ print(f"Test - MAE  : {mae:.2f}")
 print(f"Test - R²   : {r2:.4f}")
 
 # %%
+
 import matplotlib.pyplot as plt
 
 
