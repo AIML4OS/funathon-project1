@@ -60,20 +60,10 @@ To allow for comparison with the random forest section, we chose to use the same
 import pandas as pd 
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
-from sklearn.compose import ColumnTransformer, TransformedTargetRegressor
+from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 
 RANDOM_STATE = 202605
-
-def log_transform(y):
-    return np.log10(y)
-
-def inverse_log_transform(y):
-    return 10 ** y
-
-y_transformer = FunctionTransformer(
-    func=log_transform,
-    inverse_func=inverse_log_transform)
 
 def date_to_days(X: pd.Series, ref_date: pd.Timestamp):
     # converts a date to a difference to ref_date :
@@ -143,14 +133,14 @@ It will simplify the scikit learn code - in real life you wouldn't drop these fe
 #| eval: false
 from sklearn.ensemble import HistGradientBoostingRegressor
 
-X_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_train.parquet")
-X_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_test.parquet")
+X_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_train_log.parquet")
+X_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_test_log.parquet")
 
 X_train = X_train.drop(columns=["prop_type", "trans_date"])
 X_test  =  X_test.drop(columns=["prop_type", "trans_date"])
 
-y_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_train.parquet")["price_sqm"]
-y_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_test.parquet")["price_sqm"]
+y_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_train_log.parquet")["price_sqm_log"]
+y_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_test_log.parquet")["price_sqm_log"]
 
 gb_baseline = HistGradientBoostingRegressor(random_state=RANDOM_STATE)
 gb_baseline.fit(X_train, y_train)
@@ -248,7 +238,7 @@ We use the same `X_train`, `X_test`, `y_train`, `y_test` splits defined in the p
 - Load the training and testing datasets `X_train, X_test, y_train, y_test` that we saved earlier. 
   
 
-- Update the definition of our previous pipeline structure (with `TransformedTargetRegressor`) with a Gradient Boosting model with `random state` and `early stopping` parameters.
+- Update the definition of our previous pipeline structure with a Gradient Boosting model with `random state` and `early stopping` parameters.
 
 Note that we will tune the hyperparameters using the whole pipeline and this set of training and test sets.
 
@@ -258,22 +248,18 @@ Note that we will tune the hyperparameters using the whole pipeline and this set
 #| code-overflow: scroll
 #| eval: false
 
-X_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_train.parquet")
-X_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_test.parquet")
-y_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_train.parquet")["price_sqm"]
-y_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_test.parquet")["price_sqm"]
+X_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_train_log.parquet")
+X_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_test_log.parquet")
+y_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_train_log.parquet")["price_sqm_log"]
+y_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_test_log.parquet")["price_sqm_log"]
 
-gb_pipeline = Pipeline([
+model = Pipeline([
     ('preprocessing', preprocessor),
     ('GB', HistGradientBoostingRegressor(
         random_state=RANDOM_STATE,
         early_stopping=True))
 ])
 
-model = TransformedTargetRegressor(
-    regressor=gb_pipeline,
-    transformer=y_transformer
-)
 
 ```
 
@@ -300,8 +286,8 @@ To retrieve all fold scores after fitting, use `cv_results_` — it is a dict th
 from sklearn.model_selection import GridSearchCV
 
 param_grid_step1 = {
-    "regressor__GB__max_iter": [200, 500],
-    "regressor__GB__learning_rate": [0.1, 0.15, 0.2],
+    "GB__max_iter": [200, 500],
+    "GB__learning_rate": [0.1, 0.15, 0.2],
 }
 
 gs_step1 = GridSearchCV(
@@ -326,7 +312,7 @@ print(f"Best CV R² : {gs_step1.best_score_:.4f}")
 
 ::: {.callout-tip collapse="true" title="Hint"}
 The cross-validation results are available through the model's `cv_results_` attribute.
-All parameters names are prefixed with `param_regressor__GB__`.
+All parameters names are prefixed with `param__GB__`.
 The metrics we are looking for are suffixed `mean_train_score` and `mean_test_score`.
 :::
 
@@ -337,7 +323,7 @@ The metrics we are looking for are suffixed `mean_train_score` and `mean_test_sc
 #| eval: false
 
 def results_to_df(results_: dict):
-    pattern = "param_regressor__GB__"
+    pattern = "param_GB__"
     pattern_len = len(pattern)
     params = [key for key in results_.keys() if key.startswith(pattern)]
     matching_keys = params + ["mean_train_score", "mean_test_score"]
@@ -418,8 +404,8 @@ For the learning rate, 0.3 is the maximum with which the model still learns.
 #| code-summary: See the solution
 #| code-overflow: scroll
 #| eval: false
-BEST_ITER = 500  # to automatically catch the best hyperparameter, set to : gs_step1.best_params_["regressor__GB__max_iter"]
-BEST_LR = 0.25  # to automatically catch the best hyperparameter, set to : gs_step1.best_params_["regressor__GB__learning_rate"]
+BEST_ITER = 500  # to automatically catch the best hyperparameter, set to : gs_step1.best_params_["GB__max_iter"]
+BEST_LR = 0.25  # to automatically catch the best hyperparameter, set to : gs_step1.best_params_["GB__learning_rate"]
 ```
 
 ### Step 2 — Jointly optimise the tree structure
@@ -432,11 +418,11 @@ BEST_LR = 0.25  # to automatically catch the best hyperparameter, set to : gs_st
 #| code-overflow: scroll
 #| eval: false
 param_grid_step2 = {
-    "regressor__GB__max_depth" : [3, 5, 8],
-    "regressor__GB__min_samples_leaf": [10, 20, 50],
+    "GB__max_depth" : [15, 20 , 25],
+    "GB__min_samples_leaf": [50, 75, 100],
 }
 
-gb_pipeline_step2 = Pipeline([
+model_step2 = Pipeline([
     ('preprocessing', preprocessor),
     ('GB', HistGradientBoostingRegressor(
         max_iter=BEST_ITER,
@@ -446,10 +432,6 @@ gb_pipeline_step2 = Pipeline([
     ))
 ])
 
-model_step2 = TransformedTargetRegressor(
-    regressor=gb_pipeline_step2,
-    transformer=y_transformer
-)
 
 gs_step2 = GridSearchCV(
     estimator=model_step2,
@@ -489,8 +471,8 @@ Let's set the max depth and minimal size of terminal leaves.
 #| code-summary: See the solution
 #| code-overflow: scroll
 #| eval: false
-BEST_DEPTH = 20 # to automatically catch the best hyperparameter, set to : gs_step2.best_params_["regressor__GB__max_depth"]
-BEST_MIN_LEAF = 75 # to automatically catch the best hyperparameter, set to : gs_step2.best_params_["regressor__GB__min_samples_leaf"]
+BEST_DEPTH = 20 # to automatically catch the best hyperparameter, set to : gs_step2.best_params_["GB__max_depth"]
+BEST_MIN_LEAF = 75 # to automatically catch the best hyperparameter, set to : gs_step2.best_params_["GB__min_samples_leaf"]
 ```
 
 ### Step 3 — Optimise the regularisation parameters
@@ -506,11 +488,11 @@ BEST_MIN_LEAF = 75 # to automatically catch the best hyperparameter, set to : gs
 #| eval: false
 
 param_grid_step3 = {
-    "regressor__GB__l2_regularization" : [0.0, 0.1, 0.3, 0.5, 1.0],
-    "regressor__GB__max_iter" : [BEST_ITER],
+    "GB__l2_regularization" : [0.0, 0.1, 0.3],
+    "GB__max_iter" : [BEST_ITER],
 }
 
-gb_pipeline_step3 = Pipeline([
+model_step3 = Pipeline([
     ('preprocessing', preprocessor),
     ('GB', HistGradientBoostingRegressor(
         learning_rate=BEST_LR,
@@ -521,10 +503,6 @@ gb_pipeline_step3 = Pipeline([
     ))
 ])
 
-model_step3 = TransformedTargetRegressor(
-    regressor=gb_pipeline_step3,
-    transformer=y_transformer
-)
 
 gs_step3 = GridSearchCV(
     estimator=model_step3,
@@ -547,7 +525,7 @@ print(f"Best CV R² : {gs_step3.best_score_:.4f}")
 
 ```{python}
 
-BEST_L2 = 0 # to automatically catch the best hyperparameter, set to : gs_step3.best_params_["regressor__GB__l2_regularization"]
+BEST_L2 = 0 # to automatically catch the best hyperparameter, set to : gs_step3.best_params_["GB__l2_regularization"]
 
 ```
 
@@ -572,10 +550,10 @@ gb_final = HistGradientBoostingRegressor(
     random_state=RANDOM_STATE,
 )
 
-df = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/df.parquet")
+df = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/df_log.parquet")
 
-X = df.drop(columns=["price_sqm"])
-y = df["price_sqm"]
+X = df.drop(columns=["price_sqm_log"])
+y = df["price_sqm_log"]
 X_train, X_test, y_train, y_test = train_test_split(
     X, y,
     test_size=0.2,
@@ -583,15 +561,11 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 
 # Wrap in the same pipeline / TransformedTargetRegressor as the RF section
-gb_pipeline_best = Pipeline([
+gb_model_final = Pipeline([
     ("preprocessor", preprocessor),  # same preprocessor as defined in the preprocessing section
     ("GB", gb_final),
 ])
 
-gb_model_final = TransformedTargetRegressor(
-    regressor=gb_pipeline_best,
-    transformer=y_transformer  # same targettransformer as defined in preprocessing section
-)
 
 gb_model_final.fit(X_train, y_train)
 print("Final model trained.")
@@ -775,7 +749,7 @@ meta_cols = ["id", "adresse"]
 feature_cols = [c for c in X_examples.columns if c not in meta_cols]
 
 # Predicted price per square meter
-predicted_price_sqm = gb_model_final.predict(X_examples[feature_cols])
+predicted_price_sqm = np.exp(gb_model_final.predict(X_examples[feature_cols]))
 
 results = X_examples[meta_cols].copy()
 results["price_per_sqm"] = predicted_price_sqm.round(0)
