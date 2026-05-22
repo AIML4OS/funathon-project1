@@ -820,3 +820,14 @@ Congrats 🎉! In this section, you have successfully
 You can now have a look at the [gradient boosting model](3-GB_model.qmd).
 Once you have trained both model, you can have a closer look at metrics with the [metrics section](4-metrics.qmd).  
 
+
+```{python}
+#| echo: false
+#| output: false
+
+# Saving final model to reuse it in the metrics part
+from joblib import dump
+
+dump(rf_model_final, "rf_model_final.joblib")
+
+```

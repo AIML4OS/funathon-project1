@@ -55,7 +55,6 @@ To allow for comparison with the random forest section, we chose to use the same
 ```{python}
 #| code-fold: true
 #| code-overflow: scroll
-#| eval: false
 
 import pandas as pd 
 import numpy as np
@@ -807,3 +806,14 @@ Congrats 🎉! In this section, you have successfully :
 
 You can now have a look at how to train a [random forest model](3-RF_model.qmd).
 Once you have trained both model, you can have a closer look at metrics with the [metrics section](4-metrics.qmd).
+
+```{python}
+#| echo: false
+#| output: false
+
+# Saving final model to reuse it in the metrics part
+from joblib import dump
+
+dump(gb_model_final, "gb_model_final.joblib")
+
+```
