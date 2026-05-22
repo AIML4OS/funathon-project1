@@ -1,5 +1,4 @@
 from sklearn.pipeline import Pipeline
-from sklearn.compose import TransformedTargetRegressor
 from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
 from sklearn.compose import ColumnTransformer
 import pandas as pd
