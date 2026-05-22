@@ -43,7 +43,6 @@ For more information, you can read the paragraph on RF hyperparameters [here](ht
 ```{python}
 #| code-fold: true
 #| code-overflow: scroll
-#| eval: false
 
 import pandas as pd
 import numpy as np
@@ -130,7 +129,6 @@ Remember : in the [Preprocessing section](2-preprocessing.qmd), we created the t
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
 
 # Defining train and test sets
 X_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_train.parquet")
@@ -159,7 +157,6 @@ y_test  = pd.read_parquet('s3://projet-funathon/2026/project1/data/2_preprocessi
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
 
 from sklearn.ensemble import RandomForestRegressor
 
@@ -176,6 +173,17 @@ rf = RandomForestRegressor(
 3.  You will now train the model. Since it is your very first model, we simplify things in two ways. First, we will drop the `trans_date` and `prop_type` features. Second, we will work with the **non transformed target** (i.e. price/sqm) rather than the transformed target (i.e. log price/sqm) defined at the end of the pre-processing. We will come back to these two points later.
 
 **Train the model with the non-transformed target using the training data (NOT the test data)**. It should take a few minutes to train.
+
+```{python}
+#| echo: false
+#| output: false
+
+X_train = X_train.sample(frac=0.1, random_state=RANDOM_STATE)
+y_train = y_train[X_train.index]
+
+# Train the model on a subsample for faster deployment
+rf.fit(X_train, y_train)
+```
 
 ```{python}
 #| code-fold: true
@@ -197,7 +205,6 @@ Scikit-learn distinguishes **parameters** from **fitted attributes**. Here, to a
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
 
 print(f"OOB Score : {rf.oob_score_}")
 
@@ -217,7 +224,7 @@ You will need to use the predict method of the model (see the [documentation](ht
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
+
 from sklearn.metrics import mean_squared_error
 
 # Predictions on train set
@@ -257,7 +264,6 @@ For convenience and pedagogical reasons, we are still working on a subset of the
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
 
 # Sample the train dataset using Pandas' index
 y_train_df = pd.DataFrame(y_train)
@@ -304,7 +310,7 @@ X_sub = X_train.filter(items=y_sub.index, axis=0 )  # sampling X_train
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
+
 import warnings
 
 metric = "r2"
@@ -350,7 +356,7 @@ warnings.resetwarnings()
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
+
 import matplotlib.pyplot as plt
 
 rf_params = {
@@ -430,7 +436,7 @@ You can select the number of trees (`n_estimators`) now, with the OOB error plot
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
+
 oob_error_ntrees = rf_error_oob_plot(X_train=X_train,
                                      y_train=y_train,
                                      subsample=0.1,
@@ -452,13 +458,22 @@ Note that in the Preprocessing section, you saw how to build a Pipeline. In this
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
 
 # Split features / target
 X_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_train.parquet")
 X_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_test.parquet")
 y_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_train.parquet")["price_sqm"]
 y_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_test.parquet")["price_sqm"] 
+
+```
+
+
+```{python}
+#| echo: false
+#| output: false
+
+X_train = X_train.sample(frac=0.1, random_state=RANDOM_STATE)
+y_train = y_train[X_train.index]
 
 ```
 
@@ -480,7 +495,6 @@ y_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/pr
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
 
 param_grid = {
     "regressor__RF__n_estimators": [80],
@@ -496,7 +510,8 @@ param_grid = {
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
+#| output: false
+
 from sklearn.model_selection import GridSearchCV
 
 # Grid search
@@ -513,13 +528,12 @@ grid_search = GridSearchCV(
 grid_search.fit(X_train, y_train)
 ```
 
-3.  From the fitted `grid_search` object, retrieve the best hyperparameters found for the model.
+3.  From the fitted `grid_search` object, **retrieve the best hyperparameters found for the model.**
 
 ```{python}
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
 
 print(f"Best params : {grid_search.best_params_}")
 ```
@@ -532,13 +546,13 @@ grid_search.myfittedparam_
 ```
 :::
 
-4.  From the fitted `grid_search` object, **retrieve the best model**. As it has only been trained on a fraction of the training set, retrain it on the full training set. Which type is `best_estimator_` attribute ?
+4.  From the fitted `grid_search` object, **retrieve the best model**. As it has only been trained on a fraction of the training set, **retrain it on the full training set**. Which type is `best_estimator_` attribute ?
 
 ```{python}
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
+#| output: false
 
 rf_model_final = grid_search.best_estimator_
 print(type(rf_model_final))
@@ -590,7 +604,6 @@ Several metrics are commonly used to evaluate regression models:
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
 
 y_pred_test = rf_model_final.predict(X_test)
 ```
@@ -607,7 +620,7 @@ You can use `mean_squared_error`, `mean_absolute_error`, and `r2_score` from `sk
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
+
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 import numpy as np
 
@@ -632,7 +645,7 @@ Use `matplotlib.pyplot` to create a scatter plot of `y_test` against `y_pred_tes
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
+
 import matplotlib.pyplot as plt
 
 
@@ -669,7 +682,6 @@ For the prediction, you need to create a dictionary containing all the features 
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
 
 def build_feature_dict(loc_x, loc_y, fare_a, prop_type, feature_dict=None):
     """Return a feature dict ready for the model.
@@ -734,7 +746,6 @@ def build_feature_dict(loc_x, loc_y, fare_a, prop_type, feature_dict=None):
 #| code-fold: true
 #| code-summary: See the solution
 #| code-overflow: scroll
-#| eval: false
 
 prediction_examples = {
     "adresse1" : {"nom" : "88 avenue Verdier 92120 Montrouge", "fare_a" : 80, "loc_x": 2.244608, "loc_y": 48.8865792, "prop_type" : 2},
