@@ -50,6 +50,10 @@ plt.tight_layout()
 plt.show()
 
 # %%
+trans["price_sqm_log"] = np.log(trans["price_sqm"])
+
+
+# %%
 
 fig, axes = plt.subplots(2, 1, figsize=(12, 15))
 
@@ -68,14 +72,14 @@ n0 = trans.shape[0]
 print(f"{n0} rows before filtering")
 
 # Apply some deterministic threshold on the dataframe
-trans = trans[(trans["price_sqm"] < 200000) & (trans["price_sqm"] > 100)]
+trans = trans[(trans["price_sqm_log"] < np.log(200000)) & (trans["price_sqm_log"] > np.log(100))]
 
 print(f"{trans.shape[0]} rows after deterministic filtering")
 
 # Apply IQR methods for the outlier removal
 def outlier_transform(y, lower=0.1, upper=0.9):
     """
-    Transform Y target to log(Y) and remove outliers with IQR method
+    Remove outliers with IQR method
 
     Args :
         y : target
@@ -89,7 +93,7 @@ def outlier_transform(y, lower=0.1, upper=0.9):
     mask = (y >= Q_lower - 1.5 * IQR) & (y <= Q_upper + 1.5 * IQR)
     return mask
 
-mask = outlier_transform(trans["price_sqm"])
+mask = outlier_transform(trans["price_sqm_log"])
 trans = trans[mask].reset_index(drop=True)
 
 n1 = trans.shape[0]
@@ -107,7 +111,7 @@ trans = trans.dropna(subset = "price_sqm")
 # %%
 
 df = trans.drop(columns=[
-    "price", "prop_loc_dep", "prop_loc_citycode", "dist_tosea"
+    "price", "price_sqm", "prop_loc_dep", "prop_loc_citycode", "dist_tosea"
 ])
 
 
@@ -147,8 +151,8 @@ df = df.drop(columns=["prop_year_harm"])
 from sklearn.model_selection import train_test_split
 
 # Split features / target
-X = df.drop(columns=["price_sqm"])  # X must contain only the features we'll learn from
-y = df["price_sqm"]  # target must be a dataframe with 1 column
+X = df.drop(columns=["price_sqm_log"])  # X must contain only the features we'll learn from
+y = df["price_sqm_log"]  # target must be a dataframe with 1 column
 
 # Split train / test set
 X_train, X_test, y_train, y_test = train_test_split(
@@ -191,24 +195,10 @@ preprocessor = ColumnTransformer(
 
 # %%
 from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
-from sklearn.compose import ColumnTransformer, TransformedTargetRegressor
+from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.ensemble import RandomForestRegressor
 
-def log_transform(y):
-    return np.log10(y)
-
-def inverse_log_transform(y):
-    return 10 ** y
-
-y_transformer = FunctionTransformer(
-    func=log_transform,
-    inverse_func=inverse_log_transform)
-
-# Other option with Numpy :
-# y_transformer = FunctionTransformer(
-#     func=np.log,
-#     inverse_func=np.exp)
 
 rf_params = {
     "n_estimators": 100,
@@ -226,9 +216,6 @@ rf_pipeline = Pipeline([
     ('RF', RandomForestRegressor(**rf_params))
 ])
 
-model = TransformedTargetRegressor(
-    regressor=rf_pipeline,
-    transformer=y_transformer
-)
+
 
 
