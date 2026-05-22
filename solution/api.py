@@ -41,7 +41,7 @@ def predict(prop_features: dict):
     and the estimated total price.
     """
 
-    prop_features_df = pd.DataFrame([prop_features])
+    prop_features_df = pd.DataFrame([prop_features])[model.feature_names_in_]
 
     # Turning trans_date to datetime format
     prop_features_df["trans_date"] = (

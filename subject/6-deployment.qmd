@@ -250,7 +250,7 @@ def predict(prop_features: dict):
     and the estimated total price.
     """
 
-    prop_features_df = pd.DataFrame([prop_features])
+    prop_features_df = pd.DataFrame([prop_features])[model.feature_names_in_]
 
     # Turning trans_date to datetime format
     prop_features_df["trans_date"] = (
@@ -395,7 +395,7 @@ print(response.json())
 Expected output:
 
 ```{.json}
-{'predicted_price_sqm': 2081.0, 'predicted_price': 135273.0, 'farea': 65}
+{'predicted_price_sqm': 2279.0, 'predicted_price': 148135.0, 'farea': 65}
 ```
 
 
