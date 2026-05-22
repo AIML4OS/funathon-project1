@@ -36,7 +36,7 @@ def load_data():
 
 def outlier_transform(y, lower=0.1, upper=0.9):
     """
-    Transform Y target to log(Y) and remove outliers with IQR method
+    Remove outliers with IQR method
 
     Args :
         y : target
@@ -76,17 +76,17 @@ def complete_pre_processing():
 
     trans = trans[trans["prop_loc_dep"].isin(["75", "77", "78", "91", "92", "93", "94", "95"])]
 
-    trans["price_sqm"] = trans["price"] / trans["farea"]
+    trans["price_sqm_log"] = np.log(trans["price"] / trans["farea"])
 
     # Apply some deterministic threshold on the dataframe
-    trans = trans[(trans["price_sqm"] < 200000) & (trans["price_sqm"] > 100)]
+    trans = trans[(trans["price_sqm_log"] < np.log(200000)) & (trans["price_sqm_log"] > np.log(100))]
 
 
     # Apply IQR methods for the outlier removal
-    mask = outlier_transform(trans["price_sqm"])
+    mask = outlier_transform(trans["price_sqm_log"])
     trans = trans[mask].reset_index(drop=True)
 
-    trans = trans.dropna(subset="price_sqm")
+    trans = trans.dropna(subset="price_sqm_log")
     df = trans.drop(columns=[
         "price", "prop_loc_dep", "prop_loc_citycode", "dist_tosea"
     ])

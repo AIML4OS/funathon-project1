@@ -34,30 +34,10 @@ def set_preprocessor():
     )
 
 
-def log_transform(y):
-    return np.log10(y)
-
-
-def inverse_log_transform(y):
-    return 10 ** y
-
-
-def set_y_transformer():
-    return FunctionTransformer(
-        func=log_transform,
-        inverse_func=inverse_log_transform
-    )
-
-
 def set_pipeline(ml_name, ml_model):
     ml_pipeline = Pipeline([
         ("preprocessor", set_preprocessor()),
         (ml_name, ml_model),
     ])
 
-    ml_model_pipeline = TransformedTargetRegressor(
-        regressor=ml_pipeline,
-        transformer=set_y_transformer()
-    )
-
-    return ml_model_pipeline
+    return ml_pipeline

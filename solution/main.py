@@ -19,8 +19,8 @@ logger.info(f'df : {check_data(df)["msg"]}')
 logger.info("Pipeline")
 
 logger.info("Setting training data sets")
-X = df.drop(columns=["price_sqm"])
-y = df["price_sqm"]
+X = df.drop(columns=["price_sqm_log"])
+y = df["price_sqm_log"]
 
 X_train, X_test, y_train, y_test = train_test_split(
     X, y,
@@ -32,9 +32,9 @@ logger.info(f'X_train : {check_data(X_train)["msg"]}')
 logger.info(f'X_test : {check_data(X_test)["msg"]}')
 # %%
 
-datasets_to_store = {"X_train": X_train, "X_test": X_test, "y_train": y_train.to_frame(), "y_test": y_test.to_frame(), "df": df}
-store_datasets(datasets_to_store=datasets_to_store)
-logger.info(f'Storing datasets to S3 : {datasets_to_store.keys()}')
+# datasets_to_store = {"X_train": X_train, "X_test": X_test, "y_train": y_train.to_frame(), "y_test": y_test.to_frame(), "df": df}
+# store_datasets(datasets_to_store=datasets_to_store)
+# logger.info(f'Storing datasets to S3 : {datasets_to_store.keys()}')
 
 # %%
 # Fitting GB model
@@ -70,7 +70,7 @@ exp_name = "Funathon - project 1"
 log_to_mlflow(
     exp_name=exp_name,
     model=gb_model_final,
-    model_name="GB",
+    model_name="GB-log",
     model_params=gb_params,
     X_train=X_train,
     X_test=X_test,
@@ -82,7 +82,7 @@ log_to_mlflow(
 # %%
 # Saving GB model to S3
 logger.info("Storing latest GB model from MLFLow to S3")
-store_model_mlflow_s3("models:/GB@latest", "gb_model_final.joblib")
+# store_model_mlflow_s3("models:/GB@latest", "gb_model_final.joblib")
 
 # %%
 logger.info("Setting training data sets")
@@ -104,7 +104,7 @@ rf_params = {
     }
 
 rf_model_final = set_pipeline(
-    "RF",
+    "RF-log",
     RandomForestRegressor(
         **rf_params
     )

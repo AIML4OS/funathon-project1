@@ -52,8 +52,8 @@ def predicted_actual_plot(y_test, y_pred_test, model_name):
     ax.set_ylabel("Predicted values (log)")
     ax.set_title(f"Comparison of predicted values vs. actual values on the test set\n({model_name})")
     ax.legend()
-    plt.xscale('log')
-    plt.yscale('log')
+    # plt.xscale('log')
+    # plt.yscale('log')
     plt.tight_layout()
     return fig
 
