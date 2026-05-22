@@ -55,12 +55,6 @@ def pre_process_raw_data(df):
     # Filtering NA values
     df = df.dropna()
 
-    df["prop_type"] = pd.Categorical(
-        df["prop_type"],
-        categories=["1", "2"],
-        ordered=False
-    ).rename_categories({"1": "House", "2": "Flat"})
-
     # Replacing year of construction by decade and merging together all years before 1850
     df['prop_year_harm_10'] = (df['prop_year_harm'] // 10)*10
     df['prop_year_harm_10'] = df['prop_year_harm_10'].where(df['prop_year_harm_10'] >= 1850, 1840)
