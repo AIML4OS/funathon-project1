@@ -567,8 +567,6 @@ BEST_L2 = 0 # to automatically catch the best hyperparameter, set to : gs_step3.
 #| code-overflow: scroll
 #| output: false
 
-from sklearn.model_selection import train_test_split
-
 gb_final = HistGradientBoostingRegressor(
     max_iter=BEST_ITER,
     learning_rate=BEST_LR,
