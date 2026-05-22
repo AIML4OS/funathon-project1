@@ -101,45 +101,11 @@ Features with near-zero or negative permutation importance can safely be removed
 
 In this exercise, you will generate predictions from the best RF and GB model and compute all four evaluation metrics on the test set.
 
-0. **Load the RF and GB models.**
-
-::: {.callout-important title="If you want to fetch back final RF and GB model" collapse="true"}
-
-<div style="display:flex;align-items:center;gap:0.4em;margin-bottom:0.8em;">
-<img src="../img/CheckpointSM3DL.webp" style="max-height:4em;width:auto;flex-shrink:0;"/>
-<div style="flex:1;margin:0;">You can fetch back the final trained models by executing the following code. The fetched models can then be used to predict any values and evaluate it.</div>
-</div>
-
-
-```python
-from joblib import load
-import os
-import s3fs
-
-# Create filesystem object
-S3_ENDPOINT_URL = "https://" + os.environ["AWS_S3_ENDPOINT"]
-fs = s3fs.S3FileSystem(client_kwargs={'endpoint_url': S3_ENDPOINT_URL})
-FILE_PATH_S3 = "projet-funathon/2026/project1/models/rf_model_final.joblib" 
-
-with fs.open(FILE_PATH_S3, mode="rb") as model:
-    rf_model_final = load(model)
-
-FILE_PATH_S3 = "projet-funathon/2026/project1/models/gb_model_final.joblib" 
-
-with fs.open(FILE_PATH_S3, mode="rb") as model:
-    gb_model_final = load(model)
-
-```
-
-You can also also fall back to the current state by running the script in `intermediate_solutions/0_fallback.py`.
-It will load the model,  all parameters and data necessary to keep on going through the next exercices.  
-
-:::
+To be sure that you have everything already set-up properly, you can run the following code from previous section. 
 
 ```{python}
-#| echo: false
 #| output: false
-
+#| code-fold: true
 
 import pandas as pd 
 import numpy as np
@@ -196,6 +162,39 @@ rf_model_final = load("rf_model_final.joblib")
 gb_model_final = load("gb_model_final.joblib")
 
 ```
+
+
+::: {.callout-important title="If you want to fetch back final RF and GB model from S3" collapse="true"}
+
+<div style="display:flex;align-items:center;gap:0.4em;margin-bottom:0.8em;">
+<img src="../img/CheckpointSM3DL.webp" style="max-height:4em;width:auto;flex-shrink:0;"/>
+<div style="flex:1;margin:0;">You can fetch back the final trained models by executing the following code. The fetched models can then be used to predict any values and evaluate it.</div>
+</div>
+
+
+```python
+from joblib import load
+import os
+import s3fs
+
+# Create filesystem object
+S3_ENDPOINT_URL = "https://" + os.environ["AWS_S3_ENDPOINT"]
+fs = s3fs.S3FileSystem(client_kwargs={'endpoint_url': S3_ENDPOINT_URL})
+FILE_PATH_S3 = "projet-funathon/2026/project1/models/rf_model_final.joblib" 
+
+with fs.open(FILE_PATH_S3, mode="rb") as model:
+    rf_model_final = load(model)
+
+FILE_PATH_S3 = "projet-funathon/2026/project1/models/gb_model_final.joblib" 
+
+with fs.open(FILE_PATH_S3, mode="rb") as model:
+    gb_model_final = load(model)
+
+```
+
+It will load the model,  all parameters and data necessary to keep on going through the next exercices.  
+
+:::
 
 1.  **Generate predictions on the test set using the best RF and GB models** from exercise 5 and compute their residuals.
 
