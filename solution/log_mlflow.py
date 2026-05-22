@@ -25,8 +25,7 @@ def log_to_mlflow(exp_name, model, model_name, model_params, X_train, X_test, y_
             name=model_name,
             signature=signature,
             input_example=X_train.head(5),
-            registered_model_name=model_name,
-            code_paths=["solution/pipeline.py"]  # To store the full pipeline with it
+            registered_model_name=model_name
         )
         logger.info("Computing residuals and metrics")
         y_pred = model.predict(X_test)

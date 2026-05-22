@@ -68,6 +68,9 @@ def pre_process_raw_data(df):
     # Dropping old column
     df = df.drop(columns=["prop_year_harm"])
 
+    # Transforming date data into a difference to a reference date in days
+    df["trans_date"] = (pd.to_datetime(df["trans_date"])-pd.Timestamp('2010-01-01 00:00')).dt.days
+
     return df
 
 
