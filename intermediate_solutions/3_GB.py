@@ -59,7 +59,6 @@ def predicted_actual_plot(y_test, y_pred_test, model_name):
     ax.legend()
     plt.xscale('log')
     plt.yscale('log')
-    plt.tight_layout()
     return fig
 
 
@@ -299,8 +298,6 @@ BEST_L2 = 0 # to automatically catch the best hyperparameter, set to : gs_step3.
 
 
 # %%
-
-from sklearn.model_selection import train_test_split
 
 gb_final = HistGradientBoostingRegressor(
     max_iter=BEST_ITER,

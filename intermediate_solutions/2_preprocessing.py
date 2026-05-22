@@ -15,7 +15,7 @@ con = duckdb.connect(database=":memory:")
 # We load all transactions made in France between 2010 and 2022
 trans = con.sql(
     """
-        SELECT * FROM read_parquet('s3://projet-funathon/2026/project1/data/1_input/transactions_EN.parquet')
+        SELECT * FROM read_parquet('https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/1_input/transactions_EN.parquet')
     """).to_df()
 
 
@@ -39,10 +39,10 @@ import matplotlib.pyplot as plt
 y = trans["price_sqm"]
 p = np.percentile(y, 99.5)
 
-fig, axes = plt.subplots(4, 1, figsize=(12, 15))
+fig, axes = plt.subplots(4, 1, figsize=(12, 12))
 
 for ax, (data, label) in zip(axes, [(y, "Y"), (y[y <= p], "Y filtered"), (np.log(y), "log(Y)"), (np.log(y[y <= p]), "log(Y) filtered")]):
-    ax.hist(data, bins="auto", edgecolor="white", color="#334887", alpha=0.95)
+    ax.hist(data, bins="auto", edgecolor="white", color="#334887", alpha=0.5)
     ax.set_title(label)
     ax.set_xlabel("Price per square meter")
     ax.set_ylabel("Number of transactions")
@@ -52,7 +52,7 @@ plt.show()
 
 # %%
 
-fig, axes = plt.subplots(2, 1, figsize=(12, 15))
+fig, axes = plt.subplots(1, 2, figsize=(12, 15))
 
 for ax, (data, label) in zip(axes, [(y[y <= 2000], "Y below 2000€ per sqm"), (y[y <= 500], "Y below 500€ per sqm")]):
     ax.hist(data, bins="auto", edgecolor="white", color="#334887", alpha=0.95)

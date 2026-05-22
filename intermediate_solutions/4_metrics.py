@@ -1,44 +1,62 @@
-# Run this script to load the dataframe df and final tuned GB and RF models. 
-#  %%
-import sys
-sys.path.append("..")
-sys.path.append("../solution")
-import pandas as pd
+
+## Exercice 10: Compute evaluation metrics
+# %%
+
+import pandas as pd 
+import numpy as np
+from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
+from sklearn.compose import ColumnTransformer, TransformedTargetRegressor
+from sklearn.pipeline import Pipeline
+import requests
 from joblib import load
-from solution.utils import set_seed, set_s3fs, generate_file_path_s3_models
-from solution.pipeline import set_date_transformer, set_preprocessor, set_y_transformer
+import io
 
-RANDOM_STATE = set_seed()
+RANDOM_STATE = 202605
 
-df      = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/df.parquet")
+def log_transform(y):
+    return np.log10(y)
+
+def inverse_log_transform(y):
+    return 10 ** y
+
+y_transformer = FunctionTransformer(
+    func=log_transform,
+    inverse_func=inverse_log_transform)
+
+def date_to_days(X: pd.Series, ref_date: pd.Timestamp):
+    # converts a date to a difference to ref_date :
+    diff_dt = pd.to_datetime(X) - ref_date
+    # Extract days part from datetime object
+    diff_dt = diff_dt.dt.days
+    # Transform it from a Pandas series to a Numpy nd array, used by scikit learn for input
+    diff_dt = diff_dt.to_numpy().reshape(-1, 1)
+
+    return diff_dt
+
+date_transformer = FunctionTransformer(
+    date_to_days,
+    kw_args={"ref_date": pd.Timestamp('2010-01-01 00:00')}
+    )
+
+preprocessor = ColumnTransformer(
+    transformers=[
+        ("cat", OneHotEncoder(handle_unknown="ignore"), ["prop_type", "prop_year_harm_10"]),  # one-hot encoder on feature
+        ("dat", date_transformer, "trans_date") # feature time since 01-01-2010
+    ],
+    remainder="passthrough"  # to keep features not transformed
+)
+
+
 X_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_train.parquet")
 X_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_test.parquet")
 y_train = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_train.parquet")["price_sqm"]
 y_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_test.parquet")["price_sqm"]
 
-# Create filesystem object
-fs = set_s3fs()
-
-date_transformer = set_date_transformer()
-
-preprocessor = set_preprocessor()
-
-y_transformer = set_y_transformer()
-
 # Importing fine-tuned RF and GB models
-FILE_PATH_S3 = generate_file_path_s3_models("rf_model_final.joblib")
+rf_model_final = load("rf_model_final.joblib")
+gb_model_final = load("gb_model_final.joblib")
 
-with fs.open(FILE_PATH_S3, mode="rb") as model:
-    rf_model_final = load(model)
 
-FILE_PATH_S3 = generate_file_path_s3_models("gb_model_final.joblib") 
-
-with fs.open(FILE_PATH_S3, mode="rb") as model:
-    gb_model_final = load(model)
-
-# %%
-
-## Exercice 10: Compute evaluation metrics
 # %%
 
 # best RF
@@ -51,9 +69,10 @@ gb_residuals = y_test - y_pred_GB
 
 
 # %%
+
 from sklearn.metrics import root_mean_squared_error, mean_absolute_error, r2_score
 
-def print_metrics(model, split, X=X_train, y=y_train):
+def print_metrics(model, split, X=X_test, y=y_test):
     """
     Print metrics for trained model
     """
@@ -68,9 +87,11 @@ models = [("RF", rf_model_final), ("GB", gb_model_final)]
 for name, model in models:
     print_metrics(model, name, X_test, y_test)
 
+rmse_rf = root_mean_squared_error(y_test, y_pred_RF)
+rmse_gb = root_mean_squared_error(y_test, y_pred_GB)
 
 # %%
-# Disponible à partir de scikit-learn >= 0.24
+
 from sklearn.metrics import mean_absolute_percentage_error
 
 mape_pct_rf = mean_absolute_percentage_error(y_test, y_pred_RF) * 100
@@ -81,6 +102,7 @@ print(f"MAPE GB: {mape_pct_gb:.2f} %")
 
 ## Exercice 11: Generate diagnostic plots
 # %%
+
 import matplotlib.pyplot as plt
 
 def residuals_distribution(residuals: pd.Series, rmse: float, ax=None, label=None, color=None):
@@ -102,6 +124,7 @@ residuals_distribution(gb_residuals, rmse_gb, ax=ax, label=f"GB (RMSE={rmse_gb:.
 plt.show()
 
 # %%
+
 import numpy as np
 
 def QQplot(y_test: pd.Series, y_pred: pd.Series, ax=None, label=None, color=None):
@@ -163,6 +186,7 @@ plt.title("Target distribution — predicted values with GB model")
 plt.show()
 
 # %%
+
 def plot_combined_distribution(y_test: pd.Series, y_pred: pd.Series, ax=None, label=None, color=None, show_actual=True):
     """
     Plots the target distributions of actual and predicted values on the same graph.
