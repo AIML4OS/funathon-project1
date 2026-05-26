@@ -11,6 +11,11 @@ Now that we have trained and evaluated a Random Forest model, we will train a **
 
 A methodological guide on ensemble methods by Insee is available [here](https://inseefrlab-github-io.translate.goog/DT_methodes_ensemblistes/chapters/chapter2/4-boosting.html?_x_tr_sl=fr&_x_tr_tl=en&_x_tr_hl=en&_x_tr_pto=wapp). If you are unfamiliar with gradient boosting, we recommend reading it before proceeding.
 
+You can start from the script `main.py` stored in the folder `starting_point/`. 
+
+If you want, you can also directly use the complete script of this step. 
+It is stored in `intermediate_solutions/3_GB.py`.
+
 # Concepts of Gradient Boosting
 
 Like Random Forests, **Gradient Boosting** is an ensemble method that combines many decision trees. However, the two methods differ fundamentally in how those trees are built and combined.

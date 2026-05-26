@@ -11,6 +11,11 @@ Training a model is only half the work. Before drawing any conclusions or deploy
 
 Before evaluating our trained models, you will discover some metrics and plots to measure the quality of the predictions.
 
+You can start from the script `main.py` stored in the folder `starting_point/`. 
+
+If you want, you can also directly use the complete script of this step. 
+It is stored in `intermediate_solutions/4_metrics.py`.
+
 # How can you evaluate the model's inference ?
 
 ## Regression metrics

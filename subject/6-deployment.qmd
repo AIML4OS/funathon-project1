@@ -12,6 +12,11 @@ format:
 
 So far, we have trained and evaluated a housing price prediction model, and tracked our experiments with MLFlow. The final step of a machine learning pipeline is to make the model **available to end users**, so that it can produce predictions on new data without requiring anyone to re-run training code.
 
+You can start from the script `main.py` stored in the folder `intermediate_solutions/5_api.py`. 
+
+If you want, you can also directly use the complete script of this step. 
+It is stored in `solution/api.py`.
+
 In this chapter, we build a local **REST API** using [FastAPI](https://fastapi.tiangolo.com/) that wraps our trained model. A user (or another service) will be able to send a POST request describing a property — floor area, location, number of rooms, etc. — and receive a predicted price in return.
 
 The overall architecture we are aiming for:

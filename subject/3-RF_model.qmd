@@ -13,6 +13,11 @@ In the first part of this project, we prepared the data to train the model. We r
 
 An Insee working document on ensemble methods is available [here](https://inseefrlab-github-io.translate.goog/DT_methodes_ensemblistes/chapters/chapter2/3-random_forest.html?_x_tr_sl=fr&_x_tr_tl=en&_x_tr_hl=en&_x_tr_pto=wapp). If you are unfamiliar with random forests, we recommend reading this document before processing.
 
+You can start from the script `main.py` stored in the folder `starting_point/`. 
+
+If you want, you can also directly use the complete script of this step. 
+It is stored in `intermediate_solutions/3_RF.py`.
+
 # Concepts of Random Forests
 
 **Random Forests** extend [bagging](https://inseefrlab-github-io.translate.goog/DT_methodes_ensemblistes/chapters/chapter2/2-bagging.html?_x_tr_sl=fr&_x_tr_tl=en&_x_tr_hl=en&_x_tr_pto=wapp) by introducing an additional level of randomness: at each node, the splitting rule is determined using only a **randomly selected subset of features**. This further **reduces correlation between trees**, thereby **lowering the variance of the aggregated model's predictions**.
