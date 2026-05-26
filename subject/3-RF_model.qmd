@@ -477,6 +477,7 @@ y_test  = pd.read_parquet("https://minio.lab.sspcloud.fr/projet-funathon/2026/pr
 #| echo: false
 #| output: false
 
+# To speed up computation time to render the site
 X_train = X_train.sample(frac=0.1, random_state=RANDOM_STATE)
 y_train = y_train[X_train.index]
 
@@ -511,6 +512,21 @@ param_grid = {
 
 2.  Using the [Grid Search documentation](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html), **set up and run cross-validated hyperparameter tuning for the RF model**. Note that training the model should last around 10 minutes. You can sample the dataset if you want to have a faster training. 
 
+::: {.callout-tip title="Filter error messages"}
+
+When doing your gridsearch, you may have many error messages about `sklearn.utils.parallel.delayed` that should be used with `sklearn.utils.parallel.Parallel`.
+This error does not matter here. 
+To filter this error, just add the following lines of code before running your gridsearch : 
+
+
+```{python}
+import warnings
+warnings.filterwarnings("ignore", message=".*sklearn.utils.parallel.delayed.*")
+```
+
+:::
+
+
 ```{python}
 #| code-fold: true
 #| code-summary: See the solution
@@ -532,6 +548,8 @@ grid_search = GridSearchCV(
 # Train
 grid_search.fit(X_train, y_train)
 ```
+
+
 
 3.  From the fitted `grid_search` object, **retrieve the best hyperparameters found for the model.**
 

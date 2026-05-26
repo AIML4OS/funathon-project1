@@ -295,6 +295,20 @@ When using `GridSearchCV`, the parameter names must match those of the estimator
 To retrieve all fold scores after fitting, use `cv_results_` — it is a dict that contains `mean_train_score`, `mean_test_score`, and the corresponding parameter values.
 :::
 
+::: {.callout-tip title="Filter error messages"}
+
+When doing your gridsearch, you may have many error messages about `sklearn.utils.parallel.delayed` that should be used with `sklearn.utils.parallel.Parallel`.
+This error does not matter here. 
+To filter this error, just add the following lines of code before running your gridsearch : 
+
+
+```{python}
+import warnings
+warnings.filterwarnings("ignore", message=".*sklearn.utils.parallel.delayed.*")
+```
+
+:::
+
 ```{python}
 #| code-fold: true
 #| code-summary: See the solution

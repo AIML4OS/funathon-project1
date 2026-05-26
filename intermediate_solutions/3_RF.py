@@ -260,6 +260,10 @@ param_grid = {
 }
 
 # %%
+import warnings
+warnings.filterwarnings("ignore", message=".*sklearn.utils.parallel.delayed.*")
+
+# %%
 
 from sklearn.model_selection import GridSearchCV
 
