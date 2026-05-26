@@ -53,7 +53,7 @@
     "href": "subject/introduction.html#running-scripts",
     "title": "Project 1: predicting housing prices",
     "section": "3.7 Running scripts",
-    "text": "3.7 Running scripts\nYou need to use uv to run a Python script using uv’s managed environment. uv will manage all the dependancies of your script. To do so, you need to be in the working directory where the pyproject.toml file is stored.\nTo run the script in starting point for example, run the following command:\n:~/work/funathon-project1$ uv run starting_point/main.py"
+    "text": "3.7 Running scripts\nYou need to use uv to run a Python script using uv’s managed environment. uv will manage all the dependancies of your script. To do so, you need to be in the working directory where the pyproject.toml file is stored.\nTo run the script in starting point for example, run the following command:\n~/work/funathon-project1$ uv run starting_point/main.py"
   },
   {
     "objectID": "subject/5-logging.html",
