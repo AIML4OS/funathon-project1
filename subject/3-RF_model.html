@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.37">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -74,7 +74,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap-5a3d0b27430484980d075601037230b8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -231,6 +231,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>In the first part of this project, we prepared the data to train the model. We reflected on which target variable to use, how to transform features and how to use scikit-learn tools for pipeline construction. Now, we are going to train a Random Forest model, covering both the theoretical background and its implementation.</p>
 <p><strong>Random Forests</strong> (RF) is a powerful and widely used ensemble method for classification and regression tasks. It combines the simplicity of decision trees and the sampling of observations and variables with the power of aggregation to improve predictive performance and reduce the risk of overfitting.</p>
 <p>An Insee working document on ensemble methods is available <a href="https://inseefrlab-github-io.translate.goog/DT_methodes_ensemblistes/chapters/chapter2/3-random_forest.html?_x_tr_sl=fr&amp;_x_tr_tl=en&amp;_x_tr_hl=en&amp;_x_tr_pto=wapp">here</a>. If you are unfamiliar with random forests, we recommend reading this document before processing.</p>
+<p>You can start from the script <code>main.py</code> stored in the folder <code>starting_point/</code>.</p>
+<p>If you want, you can also directly use the complete script of this step. It is stored in <code>intermediate_solutions/3_RF.py</code>.</p>
 <section id="concepts-of-random-forests" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Concepts of Random Forests</h1>
 <p><strong>Random Forests</strong> extend <a href="https://inseefrlab-github-io.translate.goog/DT_methodes_ensemblistes/chapters/chapter2/2-bagging.html?_x_tr_sl=fr&amp;_x_tr_tl=en&amp;_x_tr_hl=en&amp;_x_tr_pto=wapp">bagging</a> by introducing an additional level of randomness: at each node, the splitting rule is determined using only a <strong>randomly selected subset of features</strong>. This further <strong>reduces correlation between trees</strong>, thereby <strong>lowering the variance of the aggregated model’s predictions</strong>.</p>
@@ -262,7 +264,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 In case you start from here, here is the parameters you need from past sections :
 </div>
 </div>
-<div id="ad247e91" class="cell" data-execution_count="1">
+<div id="c87d6f59" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -355,7 +357,7 @@ In case you start from here, here is the parameters you need from past sections 
 </div>
 </div>
 </div>
-<div id="685467af" class="cell" data-execution_count="2">
+<div id="0f0d5f43" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Defining train and test sets</span></span>
@@ -381,7 +383,7 @@ In case you start from here, here is the parameters you need from past sections 
 </ul></li>
 </ol>
 <p><strong>Note: All parameters of RandomForestRegressor have a default value - you only need to explicitly pass the ones you wish to override.</strong> Have a careful look at the various hyperparameters in the documentation. Do you understand what they do? If no, you can read the paragraph on RF hyperparameters <a href="https://inseefrlab-github-io.translate.goog/DT_methodes_ensemblistes/chapters/chapter3/2-guide_usage_RF.html?_x_tr_sl=fr&amp;_x_tr_tl=en&amp;_x_tr_hl=en&amp;_x_tr_pto=wapp#sec-hyperparam-rf">here</a>.</p>
-<div id="f94cca0a" class="cell" data-execution_count="3">
+<div id="9d6f6ad8" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> RandomForestRegressor</span>
@@ -399,7 +401,7 @@ In case you start from here, here is the parameters you need from past sections 
 <li>You will now train the model. Since it is your very first model, we simplify things in two ways. First, we will drop the <code>trans_date</code> and <code>prop_type</code> features. Second, we will work with the <strong>non transformed target</strong> (i.e.&nbsp;price/sqm) rather than the transformed target (i.e.&nbsp;log price/sqm) defined at the end of the pre-processing. We will come back to these two points later.</li>
 </ol>
 <p><strong>Train the model with the non-transformed target using the training data (NOT the test data)</strong>. It should take a few minutes to train.</p>
-<div id="05a889ff" class="cell" data-execution_count="5">
+<div id="ddb48987" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Train the model</span></span>
@@ -422,13 +424,13 @@ Important
 <p>Scikit-learn distinguishes <strong>parameters</strong> from <strong>fitted attributes</strong>. Here, to access the attributes sent back by the training phase listed in the documentation, we need to search for the <code>oob_score_</code> attributes of the random forest.</p>
 </div>
 </div>
-<div id="91a33265" class="cell" data-execution_count="6">
+<div id="2be43226" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"OOB Score : </span><span class="sc">{</span>rf<span class="sc">.</span>oob_score_<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>OOB Score : 0.27056012297347365</code></pre>
+<pre><code>OOB Score : 0.2699823068469026</code></pre>
 </div>
 </div>
 <ol start="5" type="1">
@@ -451,7 +453,7 @@ Important
 </div>
 </div>
 </div>
-<div id="b4b0aa44" class="cell" data-execution_count="7">
+<div id="65a31872" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_squared_error</span>
@@ -463,7 +465,7 @@ Important
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test - MSE: </span><span class="sc">{</span>mean_squared_error(y_test, y_pred_test)<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>Test - MSE: 7822556.939533075</code></pre>
+<pre><code>Test - MSE: 7815625.796937441</code></pre>
 </div>
 </div>
 <p>Congrats 🥳! You have trained your first RF model. Now, try to find the best hyperparameters to minimize the final predicted error of the model.</p>
@@ -497,7 +499,7 @@ Note
 <ol type="1">
 <li><strong>Subsample a fraction ( <code>0.1</code> ) of the <code>df</code> dataset to reduce computation time and define X_sub and y_sub.</strong> To stick to the characteristics of the target, stratify the sampling to the target’s distribution thanks to <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.qcut.html#pandas.qcut">pandas’ <code>qcut</code> function</a>.</li>
 </ol>
-<div id="136bdf5d" class="cell" data-execution_count="8">
+<div id="9c3ffa36" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sample the train dataset using Pandas' index</span></span>
@@ -549,7 +551,7 @@ Note
 </div>
 </div></li>
 </ol>
-<div id="b0d5de93" class="cell" data-execution_count="9">
+<div id="76ace0aa" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
@@ -605,7 +607,7 @@ Note
 </div>
 </div></li>
 </ol>
-<div id="ee3a03c9" class="cell" data-execution_count="10">
+<div id="8bb88dff" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -681,7 +683,7 @@ Note
 </details>
 </div>
 <p>You can select the number of trees (<code>n_estimators</code>) now, with the OOB error plot. <strong>Which number do you choose ?</strong></p>
-<div id="e4e36007" class="cell" data-execution_count="11">
+<div id="58723372" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>oob_error_ntrees <span class="op">=</span> rf_error_oob_plot(X_train<span class="op">=</span>X_train,</span>
@@ -703,12 +705,12 @@ Note
 </section>
 <section id="tuning-all-others-hyperparameters-with-cross-validation" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="tuning-all-others-hyperparameters-with-cross-validation"><span class="header-section-number">3.2</span> Tuning all others hyperparameters with cross validation</h2>
-<p><strong>Cross-validation</strong> is a key step in model training : it is a technique used to evaluate the model’s ability to generalize to unseendata, by splitting the dataset into multiple folds (typically 5) and iteratively using each fold as a validation set while the remaining folds are used for training. It also allows you to compare different set of hyperparameters and select the configuration that yields the best predictive performance.</p>
+<p><strong>Cross-validation</strong> is a key step in model training : it is a technique used to evaluate the model’s ability to generalize to unseen data, by splitting the dataset into multiple folds (typically 5) and iteratively using each fold as a validation set while the remaining folds are used for training. It also allows you to compare different set of hyperparameters and select the configuration that yields the best predictive performance.</p>
 <p>Note that in the Preprocessing section, you saw how to build a Pipeline. In this exercise, we will use a Pipeline again. The first exercise didn’t use it to let you practice scikit-learn tools documented <a href="https://scikit-learn.org/stable/modules/compose.html#pipelines-and-composite-estimators">here</a>.</p>
 <ol start="0" type="1">
 <li>For convenience, we dropped the features <code>prop_type</code>, <code>trans_date</code> and trained our model on absolute prices and not on the transformed ones. <strong>Get them back and define the new training and testing datasets <code>X_train, X_test, y_train, y_test</code></strong>.</li>
 </ol>
-<div id="c6f03593" class="cell" data-execution_count="12">
+<div id="c5bf9eeb" class="cell" data-execution_count="12">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Split features / target</span></span>
@@ -742,7 +744,7 @@ Note
 </div>
 </div></li>
 </ol>
-<div id="17564be4" class="cell" data-execution_count="14">
+<div id="045f32eb" class="cell" data-execution_count="14">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>param_grid <span class="op">=</span> {</span>
@@ -756,32 +758,49 @@ Note
 <ol start="2" type="1">
 <li>Using the <a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html">Grid Search documentation</a>, <strong>set up and run cross-validated hyperparameter tuning for the RF model</strong>. Note that training the model should last around 10 minutes. You can sample the dataset if you want to have a faster training.</li>
 </ol>
-<div id="f517e02f" class="cell" data-execution_count="15">
+<div class="callout callout-style-default callout-tip callout-titled" title="Filter error messages">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Filter error messages
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When doing your gridsearch, you may have many error messages about <code>sklearn.utils.parallel.delayed</code> that should be used with <code>sklearn.utils.parallel.Parallel</code>. This error does not matter here. To filter this error, just add the following lines of code before running your gridsearch :</p>
+<div id="86524e54" class="cell" data-execution_count="15">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>warnings.filterwarnings(<span class="st">"ignore"</span>, message<span class="op">=</span><span class="st">".*sklearn.utils.parallel.delayed.*"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<div id="083bcd8f" class="cell" data-execution_count="16">
 <details class="code-fold">
 <summary>See the solution</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> GridSearchCV</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Grid search</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>grid_search <span class="op">=</span> GridSearchCV(</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    estimator<span class="op">=</span>model, <span class="co"># it is the TransformedTargetRegressor created in the preprocessing part</span></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    param_grid<span class="op">=</span>param_grid,</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    cv<span class="op">=</span><span class="dv">4</span>,  <span class="co"># number of folds</span></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    scoring<span class="op">=</span><span class="st">"r2"</span>, <span class="co"># 'r2' or 'neg_root_mean_squared_error' or 'neg_mean_absolute_error'</span></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    n_jobs<span class="op">=-</span><span class="dv">1</span>,</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="dv">1</span></span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Train</span></span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>grid_search.fit(X_train, y_train)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> GridSearchCV</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Grid search</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>grid_search <span class="op">=</span> GridSearchCV(</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    estimator<span class="op">=</span>model, <span class="co"># it is the TransformedTargetRegressor created in the preprocessing part</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    param_grid<span class="op">=</span>param_grid,</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    cv<span class="op">=</span><span class="dv">4</span>,  <span class="co"># number of folds</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    scoring<span class="op">=</span><span class="st">"r2"</span>, <span class="co"># 'r2' or 'neg_root_mean_squared_error' or 'neg_mean_absolute_error'</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    n_jobs<span class="op">=-</span><span class="dv">1</span>,</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="dv">1</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Train</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>grid_search.fit(X_train, y_train)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <ol start="3" type="1">
 <li>From the fitted <code>grid_search</code> object, <strong>retrieve the best hyperparameters found for the model.</strong></li>
 </ol>
-<div id="9d590705" class="cell" data-execution_count="16">
+<div id="221ab956" class="cell" data-execution_count="17">
 <details class="code-fold">
 <summary>See the solution</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Best params : </span><span class="sc">{</span>grid_search<span class="sc">.</span>best_params_<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Best params : </span><span class="sc">{</span>grid_search<span class="sc">.</span>best_params_<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Best params : {'regressor__RF__max_depth': 13, 'regressor__RF__max_features': 'sqrt', 'regressor__RF__min_samples_leaf': 40, 'regressor__RF__n_estimators': 80}</code></pre>
@@ -798,19 +817,19 @@ Important
 </div>
 <div class="callout-body-container callout-body">
 <p>Scikit-learn distinguishes <strong>original parameters</strong> from **fitted attributes with a trailing _**. The <code>_</code> suffix is a consistent scikit-learn convention: any attribute that only exists after fitting ends with <code>_</code> (e.g., <code>coef_</code>, <code>n_features_in_</code>, <code>classes_</code>). It signals “this was learned from data.”</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>grid_search.myfittedparam_  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>grid_search.myfittedparam_  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <ol start="4" type="1">
 <li>From the fitted <code>grid_search</code> object, <strong>retrieve the best model</strong>. As it has only been trained on a fraction of the training set, <strong>retrain it on the full training set</strong>. Which type is <code>best_estimator_</code> attribute ?</li>
 </ol>
-<div id="7a5a55c4" class="cell" data-execution_count="17">
+<div id="df8b1fa3" class="cell" data-execution_count="18">
 <details class="code-fold">
 <summary>See the solution</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>rf_model_final <span class="op">=</span> grid_search.best_estimator_</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">type</span>(rf_model_final))</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>rf_model_final.fit(X_train, y_train)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>rf_model_final <span class="op">=</span> grid_search.best_estimator_</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">type</span>(rf_model_final))</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>rf_model_final.fit(X_train, y_train)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p>Congrats ! You have optimized your RF model. Now, you need to evaluate its accuracy — that is, how close the model’s predictions are to the actual values..</p>
@@ -836,17 +855,17 @@ Important
 If you’re stuck, you can fetch back the final trained model by executing the following code. The fetched model can then be used to predict any values and evaluate it.
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> joblib <span class="im">import</span> load</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> s3fs</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Create filesystem object</span></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>S3_ENDPOINT_URL <span class="op">=</span> <span class="st">"https://"</span> <span class="op">+</span> os.environ[<span class="st">"AWS_S3_ENDPOINT"</span>]</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>fs <span class="op">=</span> s3fs.S3FileSystem(client_kwargs<span class="op">=</span>{<span class="st">'endpoint_url'</span>: S3_ENDPOINT_URL})</span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>FILE_PATH_S3 <span class="op">=</span> <span class="st">"projet-funathon/2026/project1/models/rf_model_final.joblib"</span> </span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> fs.<span class="bu">open</span>(FILE_PATH_S3, mode<span class="op">=</span><span class="st">"rb"</span>) <span class="im">as</span> model:</span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    rf_model_final <span class="op">=</span> load(model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> joblib <span class="im">import</span> load</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> s3fs</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Create filesystem object</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>S3_ENDPOINT_URL <span class="op">=</span> <span class="st">"https://"</span> <span class="op">+</span> os.environ[<span class="st">"AWS_S3_ENDPOINT"</span>]</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>fs <span class="op">=</span> s3fs.S3FileSystem(client_kwargs<span class="op">=</span>{<span class="st">'endpoint_url'</span>: S3_ENDPOINT_URL})</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>FILE_PATH_S3 <span class="op">=</span> <span class="st">"projet-funathon/2026/project1/models/rf_model_final.joblib"</span> </span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> fs.<span class="bu">open</span>(FILE_PATH_S3, mode<span class="op">=</span><span class="st">"rb"</span>) <span class="im">as</span> model:</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>    rf_model_final <span class="op">=</span> load(model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Now that your model has been optimized, it is time to rigorously evaluate its performance on the test set — data the model has never seen during training. This step is essential to assess how well your model generalizes to new observations.</p>
@@ -859,53 +878,14 @@ If you’re stuck, you can fetch back the final trained model by executing the f
 <ol type="1">
 <li><strong>Compute predictions on the test set using the best model retrieved from the previous exercise</strong>.</li>
 </ol>
-<div id="9a54f450" class="cell" data-execution_count="18">
+<div id="25d2d260" class="cell" data-execution_count="19">
 <details class="code-fold">
 <summary>See the solution</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>y_pred_test <span class="op">=</span> rf_model_final.predict(X_test)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>y_pred_test <span class="op">=</span> rf_model_final.predict(X_test)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <ol start="2" type="1">
 <li>Calculate the three evaluation metrics on the test set.</li>
-</ol>
-<div class="callout callout-style-default callout-tip callout-titled" title="Hint">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Hint
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-11" class="callout-11-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>You can use <code>mean_squared_error</code>, <code>mean_absolute_error</code>, and <code>r2_score</code> from <code>sklearn.metrics</code>. To obtain <strong>RMSE</strong> from <strong>MSE</strong>, apply <code>np.sqrt()</code>.</p>
-</div>
-</div>
-</div>
-<div id="90f96e8d" class="cell" data-execution_count="19">
-<details class="code-fold">
-<summary>See the solution</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_squared_error, mean_absolute_error, r2_score</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>rmse <span class="op">=</span> np.sqrt(mean_squared_error(y_test, y_pred_test))</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>mae  <span class="op">=</span> mean_absolute_error(y_test, y_pred_test)</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>r2   <span class="op">=</span> r2_score(y_test, y_pred_test)</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test - RMSE : </span><span class="sc">{</span>rmse<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test - MAE  : </span><span class="sc">{</span>mae<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test - R²   : </span><span class="sc">{</span>r2<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>Test - RMSE : 2956.42
-Test - MAE  : 1847.72
-Test - R²   : 0.1918</code></pre>
-</div>
-</div>
-<ol start="3" type="1">
-<li>(Optional) <strong>Plot predicted values against actual values to visually assess model quality</strong>. A well-calibrated model should have points closely aligned along the diagonal.</li>
 </ol>
 <div class="callout callout-style-default callout-tip callout-titled" title="Hint">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
@@ -919,47 +899,86 @@ Test - R²   : 0.1918</code></pre>
 </div>
 <div id="callout-12" class="callout-12-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
+<p>You can use <code>mean_squared_error</code>, <code>mean_absolute_error</code>, and <code>r2_score</code> from <code>sklearn.metrics</code>. To obtain <strong>RMSE</strong> from <strong>MSE</strong>, apply <code>np.sqrt()</code>.</p>
+</div>
+</div>
+</div>
+<div id="d32f398e" class="cell" data-execution_count="20">
+<details class="code-fold">
+<summary>See the solution</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_squared_error, mean_absolute_error, r2_score</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>rmse <span class="op">=</span> np.sqrt(mean_squared_error(y_test, y_pred_test))</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>mae  <span class="op">=</span> mean_absolute_error(y_test, y_pred_test)</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>r2   <span class="op">=</span> r2_score(y_test, y_pred_test)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test - RMSE : </span><span class="sc">{</span>rmse<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test - MAE  : </span><span class="sc">{</span>mae<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test - R²   : </span><span class="sc">{</span>r2<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Test - RMSE : 2956.42
+Test - MAE  : 1847.72
+Test - R²   : 0.1918</code></pre>
+</div>
+</div>
+<ol start="3" type="1">
+<li>(Optional) <strong>Plot predicted values against actual values to visually assess model quality</strong>. A well-calibrated model should have points closely aligned along the diagonal.</li>
+</ol>
+<div class="callout callout-style-default callout-tip callout-titled" title="Hint">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Hint
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-13" class="callout-13-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <p>Use <code>matplotlib.pyplot</code> to create a scatter plot of <code>y_test</code> against <code>y_pred_test</code>. Add a reference diagonal line (representing perfect predictions) using <code>ax.plot([min, max], [min, max])</code>.</p>
 </div>
 </div>
 </div>
-<div id="cb405b08" class="cell" data-execution_count="20">
+<div id="3d5caa34" class="cell" data-execution_count="21">
 <details class="code-fold">
 <summary>See the solution</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> predicted_actual_plot(y_test, y_pred_test, model_name):</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="dv">7</span>))</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    ax.scatter(y_test, y_pred_test, alpha<span class="op">=</span><span class="fl">0.3</span>, s<span class="op">=</span><span class="dv">5</span>, label<span class="op">=</span><span class="st">"Predictions"</span>)</span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>    lims <span class="op">=</span> [<span class="bu">min</span>(y_test.<span class="bu">min</span>(), y_pred_test.<span class="bu">min</span>()),</span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>            <span class="bu">max</span>(y_test.<span class="bu">max</span>(), y_pred_test.<span class="bu">max</span>())]</span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>    ax.plot(lims, lims, <span class="st">"r--"</span>, linewidth<span class="op">=</span><span class="fl">1.5</span>, label<span class="op">=</span><span class="st">"Perfect prediction"</span>)</span>
-<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"Actual values (log)"</span>)</span>
-<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="st">"Predicted values (log)"</span>)</span>
-<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="ss">f"Comparison of predicted values vs. actual values on the test set</span><span class="ch">\n</span><span class="ss">(</span><span class="sc">{</span>model_name<span class="sc">}</span><span class="ss">)"</span>)</span>
-<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>    ax.legend()</span>
-<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>    plt.xscale(<span class="st">'log'</span>)</span>
-<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>    plt.yscale(<span class="st">'log'</span>)</span>
-<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> fig</span>
-<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>predicted_actual_plot(y_test, y_pred_test, <span class="st">"Random Forest"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> predicted_actual_plot(y_test, y_pred_test, model_name):</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="dv">7</span>))</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    ax.scatter(y_test, y_pred_test, alpha<span class="op">=</span><span class="fl">0.3</span>, s<span class="op">=</span><span class="dv">5</span>, label<span class="op">=</span><span class="st">"Predictions"</span>)</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    lims <span class="op">=</span> [<span class="bu">min</span>(y_test.<span class="bu">min</span>(), y_pred_test.<span class="bu">min</span>()),</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>            <span class="bu">max</span>(y_test.<span class="bu">max</span>(), y_pred_test.<span class="bu">max</span>())]</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>    ax.plot(lims, lims, <span class="st">"r--"</span>, linewidth<span class="op">=</span><span class="fl">1.5</span>, label<span class="op">=</span><span class="st">"Perfect prediction"</span>)</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"Actual values (log)"</span>)</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="st">"Predicted values (log)"</span>)</span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="ss">f"Comparison of predicted values vs. actual values on the test set</span><span class="ch">\n</span><span class="ss">(</span><span class="sc">{</span>model_name<span class="sc">}</span><span class="ss">)"</span>)</span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>    ax.legend()</span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>    plt.xscale(<span class="st">'log'</span>)</span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>    plt.yscale(<span class="st">'log'</span>)</span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> fig</span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>predicted_actual_plot(y_test, y_pred_test, <span class="st">"Random Forest"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="19">
+<div class="cell-output cell-output-display" data-execution_count="20">
 <div>
 <figure class="figure">
-<p><img src="3-RF_model_files/figure-html/cell-21-output-1.png" width="591" height="616" class="figure-img"></p>
+<p><img src="3-RF_model_files/figure-html/cell-22-output-1.png" width="591" height="616" class="figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="3-RF_model_files/figure-html/cell-21-output-2.png" width="591" height="616" class="figure-img"></p>
+<p><img src="3-RF_model_files/figure-html/cell-22-output-2.png" width="591" height="616" class="figure-img"></p>
 </figure>
 </div>
 </div>
@@ -971,124 +990,124 @@ Test - R²   : 0.1918</code></pre>
 <ol type="1">
 <li><strong>Create a function <code>build_feature_dict</code> that returns a dictionary of features ready for prediction.</strong></li>
 </ol>
-<div id="44ddc78f" class="cell" data-execution_count="21">
+<div id="7c4504fa" class="cell" data-execution_count="22">
 <details class="code-fold">
 <summary>See the solution</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_feature_dict(loc_x, loc_y, fare_a, prop_type, feature_dict<span class="op">=</span><span class="va">None</span>):</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Return a feature dict ready for the model.</span></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co">    If `feature_dict` is provided, it is returned unchanged.</span></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co">    Otherwise, a default dict is built from the required arguments.</span></span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="co">        loc_x, loc_y : ()</span></span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> feature_dict <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> feature_dict</span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>    _prop_type_map <span class="op">=</span> {<span class="dv">1</span>: <span class="st">"House"</span>, <span class="dv">2</span>: <span class="st">"Flat"</span>}</span>
-<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>    prop_type_str <span class="op">=</span> _prop_type_map.get(prop_type, <span class="bu">str</span>(prop_type))</span>
-<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
-<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">"farea"</span>: fare_a,</span>
-<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>        <span class="st">"trans_date"</span>: <span class="st">"01/02/2023"</span>,</span>
-<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>        <span class="st">"trans_year"</span>: <span class="dv">2023</span>,</span>
-<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>        <span class="st">"trans_month"</span>: <span class="dv">2</span>,</span>
-<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>        <span class="st">"prop_type"</span>: prop_type_str,</span>
-<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>        <span class="st">"prop_year_harm_10"</span>: <span class="dv">1870</span>,</span>
-<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>        <span class="st">"prop_loc_x"</span>: loc_x,</span>
-<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>        <span class="st">"prop_loc_y"</span>: loc_y,</span>
-<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>        <span class="st">"has_cheating"</span>: <span class="dv">0</span>,</span>
-<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>        <span class="st">"has_elec"</span>: <span class="dv">2</span>,</span>
-<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a>        <span class="st">"has_elevator"</span>: <span class="dv">2</span>,</span>
-<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>        <span class="st">"has_gas"</span>: <span class="dv">2</span>,</span>
-<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a>        <span class="st">"has_mdrainage"</span>: <span class="dv">2</span>,</span>
-<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a>        <span class="st">"has_rchute"</span>: <span class="dv">0</span>,</span>
-<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a>        <span class="st">"has_water"</span>: <span class="dv">2</span>,</span>
-<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_floors"</span>: <span class="dv">6</span>,</span>
-<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_bath"</span>: <span class="dv">0</span>,</span>
-<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_eatr"</span>: <span class="dv">0</span>,</span>
-<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_kit8"</span>: <span class="dv">1</span>,</span>
-<span id="cb26-35"><a href="#cb26-35" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_kit9"</span>: <span class="dv">0</span>,</span>
-<span id="cb26-36"><a href="#cb26-36" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_ancrooms"</span>: <span class="dv">0</span>,</span>
-<span id="cb26-37"><a href="#cb26-37" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_attic"</span>: <span class="dv">1</span>,</span>
-<span id="cb26-38"><a href="#cb26-38" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_basmt"</span>: <span class="dv">1</span>,</span>
-<span id="cb26-39"><a href="#cb26-39" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_garage"</span>: <span class="dv">0</span>,</span>
-<span id="cb26-40"><a href="#cb26-40" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_pool"</span>: <span class="dv">0</span>,</span>
-<span id="cb26-41"><a href="#cb26-41" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_mrooms"</span>: <span class="dv">3</span>,</span>
-<span id="cb26-42"><a href="#cb26-42" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_otherannex"</span>: <span class="dv">0</span>,</span>
-<span id="cb26-43"><a href="#cb26-43" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_rooms"</span>: <span class="dv">4</span>,</span>
-<span id="cb26-44"><a href="#cb26-44" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_show"</span>: <span class="dv">1</span>,</span>
-<span id="cb26-45"><a href="#cb26-45" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_sink"</span>: <span class="dv">1</span>,</span>
-<span id="cb26-46"><a href="#cb26-46" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_slr"</span>: <span class="dv">2</span>,</span>
-<span id="cb26-47"><a href="#cb26-47" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_terrace"</span>: <span class="dv">1</span>,</span>
-<span id="cb26-48"><a href="#cb26-48" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_washr"</span>: <span class="dv">1</span>,</span>
-<span id="cb26-49"><a href="#cb26-49" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_wc"</span>: <span class="dv">1</span>,</span>
-<span id="cb26-50"><a href="#cb26-50" aria-hidden="true" tabindex="-1"></a>        <span class="st">"nth_floor"</span>: <span class="dv">3</span>,</span>
-<span id="cb26-51"><a href="#cb26-51" aria-hidden="true" tabindex="-1"></a>        <span class="st">"s_land_agri"</span>: <span class="dv">0</span>,</span>
-<span id="cb26-52"><a href="#cb26-52" aria-hidden="true" tabindex="-1"></a>        <span class="st">"s_land_artif"</span>: <span class="dv">0</span>,</span>
-<span id="cb26-53"><a href="#cb26-53" aria-hidden="true" tabindex="-1"></a>        <span class="st">"s_land_nat"</span>: <span class="dv">0</span>,</span>
-<span id="cb26-54"><a href="#cb26-54" aria-hidden="true" tabindex="-1"></a>        <span class="st">"stair"</span>: <span class="dv">2</span>,</span>
-<span id="cb26-55"><a href="#cb26-55" aria-hidden="true" tabindex="-1"></a>    }</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_feature_dict(loc_x, loc_y, fare_a, prop_type, feature_dict<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Return a feature dict ready for the model.</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co">    If `feature_dict` is provided, it is returned unchanged.</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="co">    Otherwise, a default dict is built from the required arguments.</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="co">        loc_x, loc_y : ()</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> feature_dict <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> feature_dict</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>    _prop_type_map <span class="op">=</span> {<span class="dv">1</span>: <span class="st">"House"</span>, <span class="dv">2</span>: <span class="st">"Flat"</span>}</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>    prop_type_str <span class="op">=</span> _prop_type_map.get(prop_type, <span class="bu">str</span>(prop_type))</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">"farea"</span>: fare_a,</span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>        <span class="st">"trans_date"</span>: <span class="st">"01/02/2023"</span>,</span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>        <span class="st">"trans_year"</span>: <span class="dv">2023</span>,</span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>        <span class="st">"trans_month"</span>: <span class="dv">2</span>,</span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>        <span class="st">"prop_type"</span>: prop_type_str,</span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a>        <span class="st">"prop_year_harm_10"</span>: <span class="dv">1870</span>,</span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a>        <span class="st">"prop_loc_x"</span>: loc_x,</span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a>        <span class="st">"prop_loc_y"</span>: loc_y,</span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a>        <span class="st">"has_cheating"</span>: <span class="dv">0</span>,</span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a>        <span class="st">"has_elec"</span>: <span class="dv">2</span>,</span>
+<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a>        <span class="st">"has_elevator"</span>: <span class="dv">2</span>,</span>
+<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a>        <span class="st">"has_gas"</span>: <span class="dv">2</span>,</span>
+<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a>        <span class="st">"has_mdrainage"</span>: <span class="dv">2</span>,</span>
+<span id="cb27-29"><a href="#cb27-29" aria-hidden="true" tabindex="-1"></a>        <span class="st">"has_rchute"</span>: <span class="dv">0</span>,</span>
+<span id="cb27-30"><a href="#cb27-30" aria-hidden="true" tabindex="-1"></a>        <span class="st">"has_water"</span>: <span class="dv">2</span>,</span>
+<span id="cb27-31"><a href="#cb27-31" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_floors"</span>: <span class="dv">6</span>,</span>
+<span id="cb27-32"><a href="#cb27-32" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_bath"</span>: <span class="dv">0</span>,</span>
+<span id="cb27-33"><a href="#cb27-33" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_eatr"</span>: <span class="dv">0</span>,</span>
+<span id="cb27-34"><a href="#cb27-34" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_kit8"</span>: <span class="dv">1</span>,</span>
+<span id="cb27-35"><a href="#cb27-35" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_kit9"</span>: <span class="dv">0</span>,</span>
+<span id="cb27-36"><a href="#cb27-36" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_ancrooms"</span>: <span class="dv">0</span>,</span>
+<span id="cb27-37"><a href="#cb27-37" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_attic"</span>: <span class="dv">1</span>,</span>
+<span id="cb27-38"><a href="#cb27-38" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_basmt"</span>: <span class="dv">1</span>,</span>
+<span id="cb27-39"><a href="#cb27-39" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_garage"</span>: <span class="dv">0</span>,</span>
+<span id="cb27-40"><a href="#cb27-40" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_pool"</span>: <span class="dv">0</span>,</span>
+<span id="cb27-41"><a href="#cb27-41" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_mrooms"</span>: <span class="dv">3</span>,</span>
+<span id="cb27-42"><a href="#cb27-42" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_otherannex"</span>: <span class="dv">0</span>,</span>
+<span id="cb27-43"><a href="#cb27-43" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_rooms"</span>: <span class="dv">4</span>,</span>
+<span id="cb27-44"><a href="#cb27-44" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_show"</span>: <span class="dv">1</span>,</span>
+<span id="cb27-45"><a href="#cb27-45" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_sink"</span>: <span class="dv">1</span>,</span>
+<span id="cb27-46"><a href="#cb27-46" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_slr"</span>: <span class="dv">2</span>,</span>
+<span id="cb27-47"><a href="#cb27-47" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_terrace"</span>: <span class="dv">1</span>,</span>
+<span id="cb27-48"><a href="#cb27-48" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_washr"</span>: <span class="dv">1</span>,</span>
+<span id="cb27-49"><a href="#cb27-49" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_wc"</span>: <span class="dv">1</span>,</span>
+<span id="cb27-50"><a href="#cb27-50" aria-hidden="true" tabindex="-1"></a>        <span class="st">"nth_floor"</span>: <span class="dv">3</span>,</span>
+<span id="cb27-51"><a href="#cb27-51" aria-hidden="true" tabindex="-1"></a>        <span class="st">"s_land_agri"</span>: <span class="dv">0</span>,</span>
+<span id="cb27-52"><a href="#cb27-52" aria-hidden="true" tabindex="-1"></a>        <span class="st">"s_land_artif"</span>: <span class="dv">0</span>,</span>
+<span id="cb27-53"><a href="#cb27-53" aria-hidden="true" tabindex="-1"></a>        <span class="st">"s_land_nat"</span>: <span class="dv">0</span>,</span>
+<span id="cb27-54"><a href="#cb27-54" aria-hidden="true" tabindex="-1"></a>        <span class="st">"stair"</span>: <span class="dv">2</span>,</span>
+<span id="cb27-55"><a href="#cb27-55" aria-hidden="true" tabindex="-1"></a>    }</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <ol start="2" type="1">
 <li><strong>Create another dictionary with a few example properties to run predictions on.</strong></li>
 </ol>
-<div id="9247da51" class="cell" data-execution_count="22">
+<div id="7641dd20" class="cell" data-execution_count="23">
 <details class="code-fold">
 <summary>See the solution</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>prediction_examples <span class="op">=</span> {</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"adresse1"</span> : {<span class="st">"nom"</span> : <span class="st">"88 avenue Verdier 92120 Montrouge"</span>, <span class="st">"fare_a"</span> : <span class="dv">80</span>, <span class="st">"loc_x"</span>: <span class="fl">2.244608</span>, <span class="st">"loc_y"</span>: <span class="fl">48.8865792</span>, <span class="st">"prop_type"</span> : <span class="dv">2</span>},</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"adresse2"</span> : {<span class="st">"nom"</span> : <span class="st">"3 rue Sadi Carnot 78120 Rambouillet"</span>, <span class="st">"fare_a"</span> : <span class="dv">140</span>, <span class="st">"loc_x"</span>: <span class="fl">1.8300153</span>, <span class="st">"loc_y"</span>: <span class="fl">48.6431721</span>, <span class="st">"prop_type"</span> : <span class="dv">1</span>},</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"adresse3"</span> : {<span class="st">"nom"</span> : <span class="st">"1 rue des arts 92700 Colombes"</span>, <span class="st">"fare_a"</span> : <span class="dv">35</span>, <span class="st">"loc_x"</span>: <span class="fl">2.2410483</span>, <span class="st">"loc_y"</span>: <span class="fl">48.9109437</span>, <span class="st">"prop_type"</span> : <span class="dv">2</span>},</span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"adresse4"</span> : {<span class="st">"nom"</span> : <span class="st">"152 Rue de Sèvres 75015 Paris"</span>, <span class="st">"fare_a"</span> : <span class="dv">93</span>, <span class="st">"loc_x"</span>: <span class="fl">2.3146301</span>, <span class="st">"loc_y"</span>: <span class="fl">48.8462097</span>, <span class="st">"prop_type"</span> : <span class="dv">2</span>},</span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"adresse5"</span> : {<span class="st">"nom"</span> : <span class="st">"3 rue Paul Doumer 93100 Montreuil"</span>, <span class="st">"fare_a"</span> : <span class="dv">105</span>, <span class="st">"loc_x"</span>: <span class="fl">2.45626</span>, <span class="st">"loc_y"</span>: <span class="fl">48.861197</span>, <span class="st">"prop_type"</span> : <span class="dv">1</span>},  </span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>prediction_examples <span class="op">=</span> {</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"adresse1"</span> : {<span class="st">"nom"</span> : <span class="st">"88 avenue Verdier 92120 Montrouge"</span>, <span class="st">"fare_a"</span> : <span class="dv">80</span>, <span class="st">"loc_x"</span>: <span class="fl">2.244608</span>, <span class="st">"loc_y"</span>: <span class="fl">48.8865792</span>, <span class="st">"prop_type"</span> : <span class="dv">2</span>},</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"adresse2"</span> : {<span class="st">"nom"</span> : <span class="st">"3 rue Sadi Carnot 78120 Rambouillet"</span>, <span class="st">"fare_a"</span> : <span class="dv">140</span>, <span class="st">"loc_x"</span>: <span class="fl">1.8300153</span>, <span class="st">"loc_y"</span>: <span class="fl">48.6431721</span>, <span class="st">"prop_type"</span> : <span class="dv">1</span>},</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"adresse3"</span> : {<span class="st">"nom"</span> : <span class="st">"1 rue des arts 92700 Colombes"</span>, <span class="st">"fare_a"</span> : <span class="dv">35</span>, <span class="st">"loc_x"</span>: <span class="fl">2.2410483</span>, <span class="st">"loc_y"</span>: <span class="fl">48.9109437</span>, <span class="st">"prop_type"</span> : <span class="dv">2</span>},</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"adresse4"</span> : {<span class="st">"nom"</span> : <span class="st">"152 Rue de Sèvres 75015 Paris"</span>, <span class="st">"fare_a"</span> : <span class="dv">93</span>, <span class="st">"loc_x"</span>: <span class="fl">2.3146301</span>, <span class="st">"loc_y"</span>: <span class="fl">48.8462097</span>, <span class="st">"prop_type"</span> : <span class="dv">2</span>},</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"adresse5"</span> : {<span class="st">"nom"</span> : <span class="st">"3 rue Paul Doumer 93100 Montreuil"</span>, <span class="st">"fare_a"</span> : <span class="dv">105</span>, <span class="st">"loc_x"</span>: <span class="fl">2.45626</span>, <span class="st">"loc_y"</span>: <span class="fl">48.861197</span>, <span class="st">"prop_type"</span> : <span class="dv">1</span>},  </span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <ol start="3" type="1">
 <li><strong>Now, predict the price per square meter for each example.</strong></li>
 </ol>
-<div id="2ab5ae7f" class="cell" data-execution_count="23">
+<div id="5e34e79a" class="cell" data-execution_count="24">
 <details class="code-fold">
 <summary>See the solution</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Build a DataFrame with one row per address — batching is faster than</span></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co"># calling predict() in a loop and ensures consistent column ordering.</span></span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> []</span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> key, infos <span class="kw">in</span> prediction_examples.items():</span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    features <span class="op">=</span> build_feature_dict(</span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>        loc_x<span class="op">=</span>infos[<span class="st">"loc_x"</span>],</span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>        loc_y<span class="op">=</span>infos[<span class="st">"loc_y"</span>],</span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>        fare_a<span class="op">=</span>infos[<span class="st">"fare_a"</span>],</span>
-<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>        prop_type<span class="op">=</span>infos[<span class="st">"prop_type"</span>],</span>
-<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>    features[<span class="st">"adresse"</span>] <span class="op">=</span> infos[<span class="st">"nom"</span>]</span>
-<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>    features[<span class="st">"id"</span>] <span class="op">=</span> key</span>
-<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>    rows.append(features)</span>
-<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>X_examples <span class="op">=</span> pd.DataFrame(rows)</span>
-<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep metadata aside; the model only sees the feature columns it was trained on.</span></span>
-<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>meta_cols <span class="op">=</span> [<span class="st">"id"</span>, <span class="st">"adresse"</span>]</span>
-<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>feature_cols <span class="op">=</span> [c <span class="cf">for</span> c <span class="kw">in</span> X_examples.columns <span class="cf">if</span> c <span class="kw">not</span> <span class="kw">in</span> meta_cols]</span>
-<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicted price per square meter</span></span>
-<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>predicted_price_sqm <span class="op">=</span> rf_model_final.predict(X_examples[feature_cols])</span>
-<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> X_examples[meta_cols].copy()</span>
-<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a>results[<span class="st">"price_per_sqm"</span>] <span class="op">=</span> predicted_price_sqm.<span class="bu">round</span>(<span class="dv">0</span>)</span>
-<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a>results[<span class="st">"surface"</span>]       <span class="op">=</span> X_examples[<span class="st">"farea"</span>].values</span>
-<span id="cb28-29"><a href="#cb28-29" aria-hidden="true" tabindex="-1"></a>results[<span class="st">"total_price"</span>]   <span class="op">=</span> (results[<span class="st">"price_per_sqm"</span>] <span class="op">*</span> results[<span class="st">"surface"</span>]).<span class="bu">round</span>(<span class="dv">0</span>)</span>
-<span id="cb28-30"><a href="#cb28-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-31"><a href="#cb28-31" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _, row <span class="kw">in</span> results.iterrows():</span>
-<span id="cb28-32"><a href="#cb28-32" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(</span>
-<span id="cb28-33"><a href="#cb28-33" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"For the property at </span><span class="sc">{</span>row[<span class="st">'adresse'</span>]<span class="sc">}</span><span class="ss"> "</span></span>
-<span id="cb28-34"><a href="#cb28-34" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"(</span><span class="sc">{</span>row[<span class="st">'surface'</span>]<span class="sc">:.0f}</span><span class="ss"> sqm), the estimated price is "</span></span>
-<span id="cb28-35"><a href="#cb28-35" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"</span><span class="sc">{</span>row[<span class="st">'price_per_sqm'</span>]<span class="sc">:,.0f}</span><span class="ss"> €/sqm, "</span></span>
-<span id="cb28-36"><a href="#cb28-36" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"i.e. a total of about </span><span class="sc">{</span>row[<span class="st">'total_price'</span>]<span class="sc">:,.0f}</span><span class="ss"> €."</span></span>
-<span id="cb28-37"><a href="#cb28-37" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Build a DataFrame with one row per address — batching is faster than</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="co"># calling predict() in a loop and ensures consistent column ordering.</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> []</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> key, infos <span class="kw">in</span> prediction_examples.items():</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>    features <span class="op">=</span> build_feature_dict(</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>        loc_x<span class="op">=</span>infos[<span class="st">"loc_x"</span>],</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>        loc_y<span class="op">=</span>infos[<span class="st">"loc_y"</span>],</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>        fare_a<span class="op">=</span>infos[<span class="st">"fare_a"</span>],</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>        prop_type<span class="op">=</span>infos[<span class="st">"prop_type"</span>],</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>    features[<span class="st">"adresse"</span>] <span class="op">=</span> infos[<span class="st">"nom"</span>]</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>    features[<span class="st">"id"</span>] <span class="op">=</span> key</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>    rows.append(features)</span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>X_examples <span class="op">=</span> pd.DataFrame(rows)</span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep metadata aside; the model only sees the feature columns it was trained on.</span></span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>meta_cols <span class="op">=</span> [<span class="st">"id"</span>, <span class="st">"adresse"</span>]</span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>feature_cols <span class="op">=</span> [c <span class="cf">for</span> c <span class="kw">in</span> X_examples.columns <span class="cf">if</span> c <span class="kw">not</span> <span class="kw">in</span> meta_cols]</span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicted price per square meter</span></span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a>predicted_price_sqm <span class="op">=</span> rf_model_final.predict(X_examples[feature_cols])</span>
+<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> X_examples[meta_cols].copy()</span>
+<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a>results[<span class="st">"price_per_sqm"</span>] <span class="op">=</span> predicted_price_sqm.<span class="bu">round</span>(<span class="dv">0</span>)</span>
+<span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a>results[<span class="st">"surface"</span>]       <span class="op">=</span> X_examples[<span class="st">"farea"</span>].values</span>
+<span id="cb29-29"><a href="#cb29-29" aria-hidden="true" tabindex="-1"></a>results[<span class="st">"total_price"</span>]   <span class="op">=</span> (results[<span class="st">"price_per_sqm"</span>] <span class="op">*</span> results[<span class="st">"surface"</span>]).<span class="bu">round</span>(<span class="dv">0</span>)</span>
+<span id="cb29-30"><a href="#cb29-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-31"><a href="#cb29-31" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _, row <span class="kw">in</span> results.iterrows():</span>
+<span id="cb29-32"><a href="#cb29-32" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(</span>
+<span id="cb29-33"><a href="#cb29-33" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"For the property at </span><span class="sc">{</span>row[<span class="st">'adresse'</span>]<span class="sc">}</span><span class="ss"> "</span></span>
+<span id="cb29-34"><a href="#cb29-34" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"(</span><span class="sc">{</span>row[<span class="st">'surface'</span>]<span class="sc">:.0f}</span><span class="ss"> sqm), the estimated price is "</span></span>
+<span id="cb29-35"><a href="#cb29-35" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"</span><span class="sc">{</span>row[<span class="st">'price_per_sqm'</span>]<span class="sc">:,.0f}</span><span class="ss"> €/sqm, "</span></span>
+<span id="cb29-36"><a href="#cb29-36" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"i.e. a total of about </span><span class="sc">{</span>row[<span class="st">'total_price'</span>]<span class="sc">:,.0f}</span><span class="ss"> €."</span></span>
+<span id="cb29-37"><a href="#cb29-37" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>For the property at 88 avenue Verdier 92120 Montrouge (80 sqm), the estimated price is 3,099 €/sqm, i.e. a total of about 247,920 €.
