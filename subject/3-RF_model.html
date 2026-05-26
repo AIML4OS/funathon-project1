@@ -264,7 +264,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 In case you start from here, here is the parameters you need from past sections :
 </div>
 </div>
-<div id="c87d6f59" class="cell" data-execution_count="1">
+<div id="097e7960" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -357,7 +357,7 @@ In case you start from here, here is the parameters you need from past sections 
 </div>
 </div>
 </div>
-<div id="0f0d5f43" class="cell" data-execution_count="2">
+<div id="5952c2ba" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Defining train and test sets</span></span>
@@ -383,7 +383,7 @@ In case you start from here, here is the parameters you need from past sections 
 </ul></li>
 </ol>
 <p><strong>Note: All parameters of RandomForestRegressor have a default value - you only need to explicitly pass the ones you wish to override.</strong> Have a careful look at the various hyperparameters in the documentation. Do you understand what they do? If no, you can read the paragraph on RF hyperparameters <a href="https://inseefrlab-github-io.translate.goog/DT_methodes_ensemblistes/chapters/chapter3/2-guide_usage_RF.html?_x_tr_sl=fr&amp;_x_tr_tl=en&amp;_x_tr_hl=en&amp;_x_tr_pto=wapp#sec-hyperparam-rf">here</a>.</p>
-<div id="9d6f6ad8" class="cell" data-execution_count="3">
+<div id="ab83d7b5" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> RandomForestRegressor</span>
@@ -401,7 +401,7 @@ In case you start from here, here is the parameters you need from past sections 
 <li>You will now train the model. Since it is your very first model, we simplify things in two ways. First, we will drop the <code>trans_date</code> and <code>prop_type</code> features. Second, we will work with the <strong>non transformed target</strong> (i.e.&nbsp;price/sqm) rather than the transformed target (i.e.&nbsp;log price/sqm) defined at the end of the pre-processing. We will come back to these two points later.</li>
 </ol>
 <p><strong>Train the model with the non-transformed target using the training data (NOT the test data)</strong>. It should take a few minutes to train.</p>
-<div id="ddb48987" class="cell" data-execution_count="5">
+<div id="2e710dbb" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Train the model</span></span>
@@ -424,13 +424,13 @@ Important
 <p>Scikit-learn distinguishes <strong>parameters</strong> from <strong>fitted attributes</strong>. Here, to access the attributes sent back by the training phase listed in the documentation, we need to search for the <code>oob_score_</code> attributes of the random forest.</p>
 </div>
 </div>
-<div id="2be43226" class="cell" data-execution_count="6">
+<div id="eaa3dc1b" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"OOB Score : </span><span class="sc">{</span>rf<span class="sc">.</span>oob_score_<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>OOB Score : 0.2699823068469026</code></pre>
+<pre><code>OOB Score : 0.2720823524578395</code></pre>
 </div>
 </div>
 <ol start="5" type="1">
@@ -453,7 +453,7 @@ Important
 </div>
 </div>
 </div>
-<div id="65a31872" class="cell" data-execution_count="7">
+<div id="69e1ecfb" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_squared_error</span>
@@ -465,7 +465,7 @@ Important
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test - MSE: </span><span class="sc">{</span>mean_squared_error(y_test, y_pred_test)<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>Test - MSE: 7815625.796937441</code></pre>
+<pre><code>Test - MSE: 7754968.907756137</code></pre>
 </div>
 </div>
 <p>Congrats 🥳! You have trained your first RF model. Now, try to find the best hyperparameters to minimize the final predicted error of the model.</p>
@@ -499,7 +499,7 @@ Note
 <ol type="1">
 <li><strong>Subsample a fraction ( <code>0.1</code> ) of the <code>df</code> dataset to reduce computation time and define X_sub and y_sub.</strong> To stick to the characteristics of the target, stratify the sampling to the target’s distribution thanks to <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.qcut.html#pandas.qcut">pandas’ <code>qcut</code> function</a>.</li>
 </ol>
-<div id="9c3ffa36" class="cell" data-execution_count="8">
+<div id="214ae7b6" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sample the train dataset using Pandas' index</span></span>
@@ -551,7 +551,7 @@ Note
 </div>
 </div></li>
 </ol>
-<div id="76ace0aa" class="cell" data-execution_count="9">
+<div id="fe4e0a85" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
@@ -607,7 +607,7 @@ Note
 </div>
 </div></li>
 </ol>
-<div id="8bb88dff" class="cell" data-execution_count="10">
+<div id="63e3a6eb" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -683,7 +683,7 @@ Note
 </details>
 </div>
 <p>You can select the number of trees (<code>n_estimators</code>) now, with the OOB error plot. <strong>Which number do you choose ?</strong></p>
-<div id="58723372" class="cell" data-execution_count="11">
+<div id="e72020a2" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>oob_error_ntrees <span class="op">=</span> rf_error_oob_plot(X_train<span class="op">=</span>X_train,</span>
@@ -697,7 +697,7 @@ Note
 <div class="cell-output cell-output-display" data-execution_count="10">
 <div>
 <figure class="figure">
-<p><img src="3-RF_model_files/figure-html/cell-12-output-1.png" width="589" height="429" class="figure-img"></p>
+<p><img src="3-RF_model_files/figure-html/cell-12-output-1.png" width="589" height="433" class="figure-img"></p>
 </figure>
 </div>
 </div>
@@ -710,7 +710,7 @@ Note
 <ol start="0" type="1">
 <li>For convenience, we dropped the features <code>prop_type</code>, <code>trans_date</code> and trained our model on absolute prices and not on the transformed ones. <strong>Get them back and define the new training and testing datasets <code>X_train, X_test, y_train, y_test</code></strong>.</li>
 </ol>
-<div id="c5bf9eeb" class="cell" data-execution_count="12">
+<div id="568a1f0b" class="cell" data-execution_count="12">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Split features / target</span></span>
@@ -744,7 +744,7 @@ Note
 </div>
 </div></li>
 </ol>
-<div id="045f32eb" class="cell" data-execution_count="14">
+<div id="ca17707a" class="cell" data-execution_count="14">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>param_grid <span class="op">=</span> {</span>
@@ -769,13 +769,13 @@ Note
 </div>
 <div class="callout-body-container callout-body">
 <p>When doing your gridsearch, you may have many error messages about <code>sklearn.utils.parallel.delayed</code> that should be used with <code>sklearn.utils.parallel.Parallel</code>. This error does not matter here. To filter this error, just add the following lines of code before running your gridsearch :</p>
-<div id="86524e54" class="cell" data-execution_count="15">
+<div id="38ceebe8" class="cell" data-execution_count="15">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>warnings.filterwarnings(<span class="st">"ignore"</span>, message<span class="op">=</span><span class="st">".*sklearn.utils.parallel.delayed.*"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
-<div id="083bcd8f" class="cell" data-execution_count="16">
+<div id="f63adb62" class="cell" data-execution_count="16">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> GridSearchCV</span>
@@ -797,7 +797,7 @@ Note
 <ol start="3" type="1">
 <li>From the fitted <code>grid_search</code> object, <strong>retrieve the best hyperparameters found for the model.</strong></li>
 </ol>
-<div id="221ab956" class="cell" data-execution_count="17">
+<div id="423e0b9e" class="cell" data-execution_count="17">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Best params : </span><span class="sc">{</span>grid_search<span class="sc">.</span>best_params_<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -823,7 +823,7 @@ Important
 <ol start="4" type="1">
 <li>From the fitted <code>grid_search</code> object, <strong>retrieve the best model</strong>. As it has only been trained on a fraction of the training set, <strong>retrain it on the full training set</strong>. Which type is <code>best_estimator_</code> attribute ?</li>
 </ol>
-<div id="df8b1fa3" class="cell" data-execution_count="18">
+<div id="f1e9cb9d" class="cell" data-execution_count="18">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>rf_model_final <span class="op">=</span> grid_search.best_estimator_</span>
@@ -856,16 +856,12 @@ If you’re stuck, you can fetch back the final trained model by executing the f
 </div>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> joblib <span class="im">import</span> load</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> s3fs</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> io</span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Create filesystem object</span></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>S3_ENDPOINT_URL <span class="op">=</span> <span class="st">"https://"</span> <span class="op">+</span> os.environ[<span class="st">"AWS_S3_ENDPOINT"</span>]</span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>fs <span class="op">=</span> s3fs.S3FileSystem(client_kwargs<span class="op">=</span>{<span class="st">'endpoint_url'</span>: S3_ENDPOINT_URL})</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>FILE_PATH_S3 <span class="op">=</span> <span class="st">"projet-funathon/2026/project1/models/rf_model_final.joblib"</span> </span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> fs.<span class="bu">open</span>(FILE_PATH_S3, mode<span class="op">=</span><span class="st">"rb"</span>) <span class="im">as</span> model:</span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>    rf_model_final <span class="op">=</span> load(model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co"># RF</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/models/rf_model_final.joblib"</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>rf_model_final <span class="op">=</span> load(io.BytesIO(requests.get(url).content))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Now that your model has been optimized, it is time to rigorously evaluate its performance on the test set — data the model has never seen during training. This step is essential to assess how well your model generalizes to new observations.</p>
@@ -878,7 +874,7 @@ If you’re stuck, you can fetch back the final trained model by executing the f
 <ol type="1">
 <li><strong>Compute predictions on the test set using the best model retrieved from the previous exercise</strong>.</li>
 </ol>
-<div id="25d2d260" class="cell" data-execution_count="19">
+<div id="9b5f0b84" class="cell" data-execution_count="19">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>y_pred_test <span class="op">=</span> rf_model_final.predict(X_test)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -903,7 +899,7 @@ If you’re stuck, you can fetch back the final trained model by executing the f
 </div>
 </div>
 </div>
-<div id="d32f398e" class="cell" data-execution_count="20">
+<div id="bf823575" class="cell" data-execution_count="20">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_squared_error, mean_absolute_error, r2_score</span>
@@ -918,9 +914,9 @@ If you’re stuck, you can fetch back the final trained model by executing the f
 <span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test - R²   : </span><span class="sc">{</span>r2<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>Test - RMSE : 2956.42
-Test - MAE  : 1847.72
-Test - R²   : 0.1918</code></pre>
+<pre><code>Test - RMSE : 2940.74
+Test - MAE  : 1841.27
+Test - R²   : 0.1954</code></pre>
 </div>
 </div>
 <ol start="3" type="1">
@@ -942,7 +938,7 @@ Test - R²   : 0.1918</code></pre>
 </div>
 </div>
 </div>
-<div id="3d5caa34" class="cell" data-execution_count="21">
+<div id="4017d7bb" class="cell" data-execution_count="21">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -990,7 +986,7 @@ Test - R²   : 0.1918</code></pre>
 <ol type="1">
 <li><strong>Create a function <code>build_feature_dict</code> that returns a dictionary of features ready for prediction.</strong></li>
 </ol>
-<div id="7c4504fa" class="cell" data-execution_count="22">
+<div id="1699729f" class="cell" data-execution_count="22">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_feature_dict(loc_x, loc_y, fare_a, prop_type, feature_dict<span class="op">=</span><span class="va">None</span>):</span>
@@ -1053,7 +1049,7 @@ Test - R²   : 0.1918</code></pre>
 <ol start="2" type="1">
 <li><strong>Create another dictionary with a few example properties to run predictions on.</strong></li>
 </ol>
-<div id="7641dd20" class="cell" data-execution_count="23">
+<div id="1844bcbb" class="cell" data-execution_count="23">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>prediction_examples <span class="op">=</span> {</span>
@@ -1068,7 +1064,7 @@ Test - R²   : 0.1918</code></pre>
 <ol start="3" type="1">
 <li><strong>Now, predict the price per square meter for each example.</strong></li>
 </ol>
-<div id="5e34e79a" class="cell" data-execution_count="24">
+<div id="89aae32b" class="cell" data-execution_count="24">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -1110,11 +1106,11 @@ Test - R²   : 0.1918</code></pre>
 <span id="cb29-37"><a href="#cb29-37" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>For the property at 88 avenue Verdier 92120 Montrouge (80 sqm), the estimated price is 3,099 €/sqm, i.e. a total of about 247,920 €.
-For the property at 3 rue Sadi Carnot 78120 Rambouillet (140 sqm), the estimated price is 2,859 €/sqm, i.e. a total of about 400,260 €.
-For the property at 1 rue des arts 92700 Colombes (35 sqm), the estimated price is 4,867 €/sqm, i.e. a total of about 170,345 €.
-For the property at 152 Rue de Sèvres 75015 Paris (93 sqm), the estimated price is 2,977 €/sqm, i.e. a total of about 276,861 €.
-For the property at 3 rue Paul Doumer 93100 Montreuil (105 sqm), the estimated price is 2,848 €/sqm, i.e. a total of about 299,040 €.</code></pre>
+<pre><code>For the property at 88 avenue Verdier 92120 Montrouge (80 sqm), the estimated price is 2,932 €/sqm, i.e. a total of about 234,560 €.
+For the property at 3 rue Sadi Carnot 78120 Rambouillet (140 sqm), the estimated price is 2,753 €/sqm, i.e. a total of about 385,420 €.
+For the property at 1 rue des arts 92700 Colombes (35 sqm), the estimated price is 4,555 €/sqm, i.e. a total of about 159,425 €.
+For the property at 152 Rue de Sèvres 75015 Paris (93 sqm), the estimated price is 2,721 €/sqm, i.e. a total of about 253,053 €.
+For the property at 3 rue Paul Doumer 93100 Montreuil (105 sqm), the estimated price is 2,758 €/sqm, i.e. a total of about 289,590 €.</code></pre>
 </div>
 </div>
 <p>Real life prices are far more expensive in Paris :) It’s a confirmation that the model isn’t perfect, as the gradient boosting model. <strong>The model would need to be better suited before going to production but it takes more than 2 days to really fine-tune it !</strong></p>
