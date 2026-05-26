@@ -20,9 +20,9 @@ To have a better understanding of what we will do, here is an overview of the pr
 ::: {.callout-note appearance="simple"}
 ## Watch out
 
-All data inputs are available on the following  url : `https://minio.lab.sspcloud.fr/projet-funathon/`
+All data inputs are available in subfolders of the following  url : `https://minio.lab.sspcloud.fr/projet-funathon/`. Without the proper url, this link won't work. 
 
-You have to load the file `2026/project1/data/1_input/transactions_EN.parquet` for transactions.
+You have to load the file stored in the subfolder `2026/project1/data/1_input/transactions_EN.parquet` for the data transactions.
 
 :::
 
@@ -386,7 +386,7 @@ df = df.dropna()
 #| code-overflow: scroll
 
 df["prop_type"] = pd.Categorical(
-    df["prop_type"],
+    df["prop_type"].astype(str),
     categories=["1", "2"],
     ordered=False
 ).rename_categories({"1": "House", "2": "Flat"})
