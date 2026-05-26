@@ -82,7 +82,9 @@ To run the final API, run `uvicorn solution.app:app --reload`.
 
 ## Initialize your MLFlow service
 
-Launch a MLflow service by clicking on the below button with your Onyxia account opened: <a href="https://datalab.sspcloud.fr/launcher/automation/mlflow?autoLaunch=true" target="_blank" rel="noopener"><img src="https://custom-icon-badges.demolab.com/badge/SSP%20Cloud-Launch_MLFlow-blue?logo=mlflow&logoColor=white" alt="Onyxia"/></a>
+If you have already opened a MLFlow service, you can skip this step. 
+
+Launch a MLflow service by clicking on the following button below with your Onyxia account opened <a href="https://datalab.sspcloud.fr/launcher/automation/mlflow?autoLaunch=true" target="_blank" rel="noopener"><img src="https://custom-icon-badges.demolab.com/badge/SSP%20Cloud-Launch_MLFlow-blue?logo=mlflow&logoColor=white" alt="Onyxia"/></a>.
 
 ## Fork the project with `Git` {{< fa brands git-alt >}}
 
