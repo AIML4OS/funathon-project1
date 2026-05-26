@@ -428,7 +428,7 @@ plot_results_cv("max_iter", df_step1)
 
 If the best value of `max_iter` is the largest value tested (500), consider extending the grid before moving to the next step.
 
-In the end, we chose the hyperparameters 500 fot he number of iterations : going beyond doesn't improve the score. 
+In the end, we chose the hyperparameters 500 fot the number of iterations : going beyond doesn't improve the score. 
 For the learning rate, 0.25 is a good value. 
 
 ```{python}
