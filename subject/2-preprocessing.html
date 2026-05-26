@@ -290,7 +290,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="3fc8bf91" class="cell" data-execution_count="1">
+<div id="06c7a877" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> duckdb</span>
@@ -305,7 +305,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ol start="2" type="1">
 <li><strong>Load, with DuckDB, all data inputs in a DataFrame <code>trans</code></strong> (for transactions).</li>
 </ol>
-<div id="5216b4b7" class="cell" data-execution_count="2">
+<div id="edb2b4e3" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We load all transactions made in France between 2010 and 2022</span></span>
@@ -316,7 +316,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </details>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"e268acb8e22340ff9774680636963c77","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+{"model_id":"7e1c050de5ac4441bdf0ca97c73708d5","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
 </div>
 </div>
@@ -335,15 +335,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-overflow: scroll</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># We load all transactions made in France between 2010 and 2022</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>trans <span class="op">=</span> pd.read_parquet(<span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/1_input/transactions_EN.parquet"</span> </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># We load all transactions made in France between 2010 and 2024</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>trans <span class="op">=</span> pd.read_parquet(<span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/1_input/transactions_EN.parquet"</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <ol start="3" type="1">
-<li><p><strong>Search some information about <code>trans</code> dataframe : numbre of rows, columns, the types of your data, where they have null values, have a look at their distribution. </strong></p>
-<p>It is important to know the quality of your data and the definition of the columns when you train a ML model <em>(missings values, types of columns for exemple).</em> Details about the dataset, including a dictionnary of variables, is available <a href="../subject/introduction.html">here</a>.</p></li>
+<li><p><strong>Search some information about <code>trans</code> dataframe : number of rows, columns, the types of your data, where they have null values, have a look at their distribution. </strong></p>
+<p>It is important to know the quality of your data and the definition of the columns when you train a ML model <em>(missings values, types of columns for exemple).</em> Details about the dataset, including a dictionary of variables, is available <a href="../subject/introduction.html">here</a>.</p></li>
 </ol>
-<div id="c94d10d2" class="cell" data-execution_count="3">
+<div id="fa96d5c8" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>trans.shape <span class="co"># (nb_rows, nb_columns)</span></span>
@@ -376,7 +376,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="69c8759a" class="cell" data-execution_count="4">
+<div id="5cbd5666" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -418,7 +418,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div></li>
 </ol>
-<div id="961e3bf7" class="cell" data-execution_count="5">
+<div id="b643eb48" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>trans[<span class="st">"price_sqm"</span>] <span class="op">=</span> trans[<span class="st">"price"</span>] <span class="op">/</span> trans[<span class="st">"farea"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -428,13 +428,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p><strong>Check if the target must be transformed</strong></p>
 <p>For better prediction quality, you need to have a look at the distribution of your target variable and check whether it is roughly normal and approximately symmetric. If the distribution is not roughly normal or if it has a lot of extreme values, the prediction may be less accurate for certain ranges of values, and some extreme values will have too much influence on the final model.</p></li>
 </ol>
-<div class="callout callout-style-default callout-note callout-titled" title="Another way to load the data">
+<div class="callout callout-style-default callout-note callout-titled" title="Why extreme values are a problem">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Another way to load the data
+<span class="screen-reader-only">Note</span>Why extreme values are a problem
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -462,7 +462,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="327ca17f" class="cell" data-execution_count="6">
+<div id="ea3252c5" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -503,9 +503,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>If you want to focus your study on tails phenomena, the way you deal with this issue will be very important because you want to disentangle the richness of the extreme data from bad data. If you’re more focused on predicting the median price, the risk associated with cleaning too abruptly extreme phenomena is smaller.</p>
 <p>In our case, one of the problems of the data is partial transactions (when somebody sells only a fraction of the property - leading to price per square meter that are way too low) and clear mistakes in the data (prices can sometimes be in cents instead of euros - leading to prices per square meter that are 100 times too high). No expert knowledge can give a threshold above which a price is for sure too low or too high.</p>
 <p>We will therefore apply first a simple deterministic method. For example, we can set a threshold when analyzing housing price distribution (see previous plots and the describe methode). If the price per square meter of the transaction exceeds €200.000 for example, the value can be considered erroneous.</p>
-<p>In the same way, <strong>have a look at the lower dristribution to see if there is an issue with low price per square meter</strong>. To do so, plot the distribution of the target y for y below 2000€ per square meter and below 500 € per sqm.</p></li>
+<p>In the same way, <strong>have a look at the lower distribution to see if there is an issue with low price per square meter</strong>. To do so, plot the distribution of the target y for y below 2000€ per square meter and below 500 € per sqm.</p></li>
 </ol>
-<div id="2b26df2d" class="cell" data-execution_count="7">
+<div id="c5183eac" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">15</span>))</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, (data, label) <span class="kw">in</span> <span class="bu">zip</span>(axes, [(y[y <span class="op">&lt;=</span> <span class="dv">2000</span>], <span class="st">"Y below 2000€ per sqm"</span>), (y[y <span class="op">&lt;=</span> <span class="dv">500</span>], <span class="st">"Y below 500€ per sqm"</span>)]):</span>
@@ -524,7 +524,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>The graph is quite clean because the data are synthetic and cleaner than the original data. But with original data, we would have seen that the left tail gets bigger the closer we are to 0. It may indicate an issue with data around these points and the need to apply a filter for values that are too low. We will set a price ceiling of 100€ to micmic original issue, even if with the synthethic data it’s not warranted.</p>
+<p>The graph is quite clean because the data are synthetic and cleaner than the original data. But with original data, we would have seen that the left tail gets bigger the closer we are to 0. It may indicate an issue with data around these points and the need to apply a filter for values that are too low. We will set a price ceiling of 100€ to mimic original issue, even if with the synthetic data it’s not warranted.</p>
 <p>The second step is to apply some statistic methods. For example, we can use the <strong>Interquartile Range (IQR)</strong> <em>to remove outlier target values</em>.</p>
 <p><strong>Drop observations where the target values is above 200 000 € per square meter or below 100 € per sqm. Drop also all observations where the target value is not in the interquartile range.</strong></p>
 <div class="callout callout-style-default callout-tip callout-titled" title="Hint">
@@ -539,11 +539,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div id="callout-8" class="callout-8-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p><strong>Interquartile Range</strong> method can keep all observations with target value between <code>Q1-1.5*(Q9-Q1)</code> and <code>Q9+1.5*(Q9-Q1)</code> .</p>
+<p><strong>Interquartile Range</strong> method can keep all observations with target value between <code>D1-1.5*(D9-D1)</code> and <code>D9+1.5*(D9-D1)</code> with D1 and D9 the first and ninth deciles.</p>
 </div>
 </div>
 </div>
-<div id="3df14482" class="cell" data-execution_count="8">
+<div id="6dcfa06e" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>n0 <span class="op">=</span> trans.shape[<span class="dv">0</span>]</span>
@@ -591,7 +591,7 @@ Applying these filters methods has dropped about 1.94 % of the transactions.</co
 </ol>
 <p>The target variable should not contain missing values when using machine learning algorithms. They should therefore be either dropped or imputed if you have reliable information to support the imputation.</p>
 <p>For our project, <strong>delete all observations with a missing target value</strong>. You can see <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.dropna.html#pandas.DataFrame.dropna">pandas documentation</a> for help.</p>
-<div id="82348fbc" class="cell" data-execution_count="9">
+<div id="28a4b2af" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>trans <span class="op">=</span> trans.dropna(subset <span class="op">=</span> <span class="st">"price_sqm"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -641,7 +641,7 @@ Applying these filters methods has dropped about 1.94 % of the transactions.</co
 <section id="now-lets-go-prepare-the-dataframe-for-the-training" class="level3" data-number="2.1.3">
 <h3 data-number="2.1.3" class="anchored" data-anchor-id="now-lets-go-prepare-the-dataframe-for-the-training"><span class="header-section-number">2.1.3</span> Now let’s go : prepare the dataframe for the training</h3>
 <ol type="1">
-<li><p>Have a look at the list of variables available (called features in machine learning). <strong>Which feature do not bear any additionnal information and can be dropped ?</strong></p>
+<li><p>Have a look at the list of variables available (called features in machine learning). <strong>Which feature do not bear any additional information and can be dropped ?</strong></p>
 <div class="callout callout-style-default callout-tip callout-titled" title="Hint">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -659,7 +659,7 @@ Applying these filters methods has dropped about 1.94 % of the transactions.</co
 </div>
 </div></li>
 </ol>
-<div id="0c9d5d3b" class="cell" data-execution_count="10">
+<div id="f2bff215" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> trans.drop(columns<span class="op">=</span>[</span>
@@ -670,7 +670,7 @@ Applying these filters methods has dropped about 1.94 % of the transactions.</co
 <ol start="2" type="1">
 <li>For convenience, <strong>filter the rows containing at least one missing value</strong>. You can check pandas’s <code>dropna</code> function on <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.dropna.html#pandas.DataFrame.dropna">their documentation</a>. Check before filtering the number of rows concerned.</li>
 </ol>
-<div id="6a645056" class="cell" data-execution_count="11">
+<div id="32c47247" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Printing all rows containing at least one NA</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df[df.isna().<span class="bu">any</span>(axis<span class="op">=</span><span class="dv">1</span>)])</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -680,7 +680,7 @@ Applying these filters methods has dropped about 1.94 % of the transactions.</co
 <ol start="3" type="1">
 <li>For convenience, <strong>update the modalities of the <code>prop_type</code> variable : <code>1</code> means it’s a house and <code>2</code> it’s a flat</strong>. You can check pandas’s Categorical function on <a href="https://pandas.pydata.org/docs/reference/api/pandas.Categorical.html#pandas.Categorical">their documentation</a>.</li>
 </ol>
-<div id="88ac2d0d" class="cell" data-execution_count="12">
+<div id="54595c74" class="cell" data-execution_count="12">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"prop_type"</span>] <span class="op">=</span> pd.Categorical(</span>
@@ -693,7 +693,7 @@ Applying these filters methods has dropped about 1.94 % of the transactions.</co
 <ol start="4" type="1">
 <li>The codification of categorical variable can be computational intensive. <code>prop_type</code> has only two modalities but <strong>check the number of modalities of <code>prop_year_harm</code></strong>. To speed-up the computation, <strong>can we regroup some modalities together ?</strong> Does it make sense given how the variable has been transformed (see the <a href="../subject/introduction.html">presentation of the data</a>) ? How can we do it ?</li>
 </ol>
-<div id="ae401365" class="cell" data-execution_count="13">
+<div id="97ac85b5" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>counts <span class="op">=</span> df.value_counts(<span class="st">"prop_year_harm"</span>).reset_index()</span>
@@ -730,7 +730,7 @@ Applying these filters methods has dropped about 1.94 % of the transactions.</co
 </div>
 </div></li>
 </ol>
-<div id="35c0ff39" class="cell" data-execution_count="14">
+<div id="1b2dd7ee" class="cell" data-execution_count="14">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
@@ -862,14 +862,14 @@ Preprocessed data have been stored in case you need a fall-back. This data inclu
 <div class="callout-body-container callout-body">
 <p>For the preprocessing step, you have to :</p>
 <ul>
-<li>applyt the new function <code>date_to_days</code> with <a href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.FunctionTransformer.html">scikit-learn’s <code>FunctionTransformer</code></a> ;</li>
+<li>apply the new function <code>date_to_days</code> with <a href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.FunctionTransformer.html">scikit-learn’s <code>FunctionTransformer</code></a> ;</li>
 <li>apply the chosen encoding method (OneHotEncoder) on categorical features.</li>
 </ul>
 </div>
 </div>
 </div>
 <p>Here is the code for the new function <code>date_to_days</code> that will transform the <code>trans_date</code> variable, a <code>Timestamp</code>, to an elapsed feature (<code>ref_date = '2010-01-01 00:00'</code>). Note that the output of your <code>date_to_days</code> function is a Python array and that <code>.to_numpy().reshape(-1, 1)</code> applied to a Pandas Series will transform it to the correct type.</p>
-<div id="c4091635" class="cell" data-execution_count="15">
+<div id="54e4ece0" class="cell" data-execution_count="15">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> date_to_days(X: pd.Series, ref_date: pd.Timestamp):</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># converts a date to a difference to ref_date :</span></span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    diff_dt <span class="op">=</span> pd.to_datetime(X) <span class="op">-</span> ref_date</span>
@@ -880,7 +880,7 @@ Preprocessed data have been stored in case you need a fall-back. This data inclu
 <span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> diff_dt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="28d0e924" class="cell" data-execution_count="16">
+<div id="f561a6a1" class="cell" data-execution_count="16">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.compose <span class="im">import</span> ColumnTransformer</span>
@@ -900,7 +900,7 @@ Preprocessed data have been stored in case you need a fall-back. This data inclu
 <span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<ol start="2" type="1">
+<ol start="3" type="1">
 <li><strong>Create the Pipeline for training a RandomForestRegressor model.</strong> Go to the <a href="https://scikit-learn.org/stable/modules/compose.html#pipelines-and-composite-estimators">scikit-learn’s documentation</a> on the matter to understand how it works.</li>
 </ol>
 <div class="callout callout-style-default callout-tip callout-titled" title="Hint">
@@ -925,7 +925,7 @@ Preprocessed data have been stored in case you need a fall-back. This data inclu
 </div>
 </div>
 </div>
-<div id="efa9ce30" class="cell" data-execution_count="17">
+<div id="c960a137" class="cell" data-execution_count="17">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OneHotEncoder, FunctionTransformer</span>
@@ -1007,7 +1007,7 @@ Tip
 
 </main> <!-- /main -->
 <script type="application/vnd.jupyter.widget-state+json">
-{"state":{"414d8e9eac164799bbb5e294b3db4455":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"ProgressStyleModel","state":{"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"ProgressStyleModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"StyleView","bar_color":"black","description_width":""}},"c0cb4fb9358c4580b511b606f0e1ef3c":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":"auto"}},"e268acb8e22340ff9774680636963c77":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"FloatProgressModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"FloatProgressModel","_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"ProgressView","bar_style":"","description":"","description_allow_html":false,"layout":"IPY_MODEL_c0cb4fb9358c4580b511b606f0e1ef3c","max":100,"min":0,"orientation":"horizontal","style":"IPY_MODEL_414d8e9eac164799bbb5e294b3db4455","tabbable":null,"tooltip":null,"value":100}}},"version_major":2,"version_minor":0}
+{"state":{"2491dd992a5e483b8a8b70c95e1dfa46":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"ProgressStyleModel","state":{"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"ProgressStyleModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"StyleView","bar_color":"black","description_width":""}},"7e1c050de5ac4441bdf0ca97c73708d5":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"FloatProgressModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"FloatProgressModel","_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"ProgressView","bar_style":"","description":"","description_allow_html":false,"layout":"IPY_MODEL_f3fe9fe9637e49e1a7e5947836372f16","max":100,"min":0,"orientation":"horizontal","style":"IPY_MODEL_2491dd992a5e483b8a8b70c95e1dfa46","tabbable":null,"tooltip":null,"value":100}},"f3fe9fe9637e49e1a7e5947836372f16":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":"auto"}}},"version_major":2,"version_minor":0}
 </script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
