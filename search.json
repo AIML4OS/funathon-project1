@@ -39,7 +39,7 @@
     "href": "subject/introduction.html#technical-requirements",
     "title": "Project 1: predicting housing prices",
     "section": "3.1 Technical requirements",
-    "text": "3.1 Technical requirements\n\nYou need to have an account on Insee’s Onyxia platform, called SSPCloud (for cloud platform for the French Official Statistical System). When you are on this webpage, you should see something similar to this image once you’re logged in. You can select your preferred language in the bottom right hand corner (see the orange arrow on the screen shot below).\n\n\n\n\nHome page of https://datalab.sspcloud.fr/\n\n\n\nYou also need to have a Github account. Your Github credentials (username, email and token) should be registered in your Insee’s Onyxia account in the My account/Git tab."
+    "text": "3.1 Technical requirements\n\nYou need to have an account on Insee’s Onyxia platform, called SSPCloud (for cloud platform for the French Official Statistical System). When you are on this webpage, you should see something similar to this image once you’re logged in. You can select your preferred language in the bottom right hand corner (see the orange arrow on the screen shot below).\n\n\n\n\nHome page of https://datalab.sspcloud.fr/\n\n\n\nYou also need to have a Github account. Your Github credentials (username, email and token) should be registered in your Insee’s Onyxia account in the My account/Git tab.\n\nIf you haven’t attended one of the onboarding session, the steps to create a Github account, fork a repo, create a Github token and store it on the SSPCloud are detailled in the recording of the onboarding here from the minute 27."
   },
   {
     "objectID": "subject/introduction.html#initialize-your-mlflow-service",
