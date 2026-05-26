@@ -15,6 +15,11 @@ To have a better understanding of what we will do, here is an overview of the pr
 
 ![Overview of the pre-processing](../img/pre-processing.png)
 
+You can start from the script `main.py` stored in the folder `starting_point/`. 
+
+If you want, you can also directly use the complete script of this step. 
+It is stored in `intermediate_solutions/2_preprocessing.py` 
+
 # What are data inputs ?
 
 ::: {.callout-note appearance="simple"}
