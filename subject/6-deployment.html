@@ -191,7 +191,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
-  <li><a href="#exercise-8-deploying-a-local-api" id="toc-exercise-8-deploying-a-local-api" class="nav-link" data-scroll-target="#exercise-8-deploying-a-local-api"><span class="header-section-number">2</span> Exercise 8 – Deploying a local API</a></li>
+  <li><a href="#exercise-13-deploying-a-local-api" id="toc-exercise-13-deploying-a-local-api" class="nav-link" data-scroll-target="#exercise-13-deploying-a-local-api"><span class="header-section-number">2</span> Exercise 13 – Deploying a local API</a></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">3</span> Summary</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/AIML4OS/funathon-project1/edit/main/subject/6-deployment.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/AIML4OS/funathon-project1/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
@@ -292,8 +292,8 @@ You can fetch back the final trained models by executing the following code. The
 </div>
 </div>
 </section>
-<section id="exercise-8-deploying-a-local-api" class="level1" data-number="2">
-<h1 data-number="2"><span class="header-section-number">2</span> Exercise 8 – Deploying a local API</h1>
+<section id="exercise-13-deploying-a-local-api" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Exercise 13 – Deploying a local API</h1>
 <ol type="1">
 <li>We will first deploy a basic fastAPI. FastAPI allows you to define an HTTP endpoint in just a few lines of Python. Here is a minimal working example:</li>
 </ol>
@@ -365,7 +365,7 @@ You can fetch back the final trained models by executing the following code. The
 </div>
 </div>
 </div>
-<p>If you want to close down the API, go to the Terminal where it has been laucnhed and press <kbd>CTRL</kbd>+<kbd>C</kbd> from your keyboard.</p>
+<p>If you want to close down the API, go to the Terminal where it has been launched and press <kbd>CTRL</kbd>+<kbd>C</kbd> from your keyboard.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -454,11 +454,11 @@ Tip
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>MODEL_URI <span class="op">=</span> <span class="st">"models:/&lt;model_name&gt;/&lt;model_version&gt;"</span>  <span class="co"># For example "models:/GB/6" or "models:/GB@latest" to have the latest version you stored</span></span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> mlflow.sklearn.load_model(MODEL_URI)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ol start="4" type="1">
-<li>(<em>optionnal</em>) We will now write the prediction endpoint. To do so, <strong>add a <code>/predict</code> endpoint</strong> in you file <code>api.py</code> with the following characteristics:</li>
+<li>(<em>optional</em>) We will now write the prediction endpoint. To do so, <strong>add a <code>/predict</code> endpoint</strong> in you file <code>api.py</code> with the following characteristics:</li>
 </ol>
 <ul>
 <li>it takes as input a dictionary of features to run the prediction on;</li>
-<li>Transform the input data into a panda’s dataframe;</li>
+<li>Transform the input data into a pandas’ dataframe;</li>
 <li>Make sure that the data follows the same order as in <code>X_test</code> by using the <code>model.feature_names_in_</code> that gives back the list of features names the model was trained on;</li>
 <li>Transform <code>prop_type</code> into categorical data and <code>trans_date</code> into datetime data, as expected by the model;</li>
 <li>Store the floor area;</li>
@@ -467,7 +467,7 @@ Tip
 <li>return a dictionary with <code>predicted_price_sqm</code>, <code>predicted_price</code> and <code>farea</code>.</li>
 </ul>
 <p>In the end, <strong>the input data should have a similar format (same names, same data types) as <code>X_test</code></strong>.</p>
-<div id="fd2d99b4" class="cell" data-execution_count="1">
+<div id="0e9b6018" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -514,7 +514,7 @@ Tip
 <span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Turning prop_type to Categorical data</span></span>
 <span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a>    prop_features_df[<span class="st">"prop_type"</span>] <span class="op">=</span> pd.Categorical(</span>
-<span id="cb11-45"><a href="#cb11-45" aria-hidden="true" tabindex="-1"></a>        prop_features_df[<span class="st">"prop_type"</span>],</span>
+<span id="cb11-45"><a href="#cb11-45" aria-hidden="true" tabindex="-1"></a>        prop_features_df[<span class="st">"prop_type"</span>].astype(<span class="bu">str</span>),</span>
 <span id="cb11-46"><a href="#cb11-46" aria-hidden="true" tabindex="-1"></a>        categories<span class="op">=</span>[<span class="st">"1"</span>, <span class="st">"2"</span>],</span>
 <span id="cb11-47"><a href="#cb11-47" aria-hidden="true" tabindex="-1"></a>        ordered<span class="op">=</span><span class="va">False</span></span>
 <span id="cb11-48"><a href="#cb11-48" aria-hidden="true" tabindex="-1"></a>    ).rename_categories({<span class="st">"1"</span>: <span class="st">"House"</span>, <span class="st">"2"</span>: <span class="st">"Flat"</span>})</span>
@@ -537,7 +537,7 @@ Tip
 </details>
 </div>
 <ol start="5" type="1">
-<li>We will check that the API runs properly locally. <strong>Predict the price of a property with the following characteristics using python’s <code>requests</code> :</strong></li>
+<li>We will check that the API runs properly locally. <strong>Predict the price of a property with the following characteristics using Python’s <code>requests</code> :</strong></li>
 </ol>
 <ul>
 <li>a flat (prop_type: 2):
@@ -558,7 +558,7 @@ Tip
 <li>has stairs.</li>
 </ul></li>
 </ul>
-<p>To avoid typing everything, you can use the list of variables or use the <code>build_feature_dict</code> function from <a href="3-GB_model.qmdl#sec-gb-prediction">the gradient boosting section</a> or <a href="3-RF_model.qmdl#sec-rf-prediction">the random forest section</a>.</p>
+<p>To avoid typing everything, you can use the list of variables or use the <code>build_feature_dict</code> function from <a href="../subject/3-GB_model.html#sec-gb-prediction">the gradient boosting section</a> or <a href="../subject/3-RF_model.html#sec-rf-prediction">the random forest section</a>.</p>
 <p>Don’t forget to see how the variables are encoded in the <a href="../subject/1-intro_data.html">dedicated section</a> !</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>{</span>
@@ -602,8 +602,8 @@ Tip
 <span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a>    <span class="st">"s_land_nat"</span>: <span class="dv">0</span>, </span>
 <span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>    <span class="st">"stair"</span>: <span class="dv">1</span> </span>
 <span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a>  }</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>You can now query your API with python’s <code>request</code>.</p>
-<div id="877aec65" class="cell" data-execution_count="2">
+<p>You can now query your API with Python’s <code>request</code>.</p>
+<div id="727bc450" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
@@ -663,7 +663,7 @@ Tip
 <ul>
 <li>Built a <strong>FastAPI</strong> application that wraps our trained scikit-learn model,</li>
 <li>Exposed a <code>/predict</code> endpoint that returns a predicted <code>price_sqm</code> and total <code>predicted_price</code>,</li>
-<li>Tested the API locally <code>requests</code>.</li>
+<li>Tested the API locally with <code>requests</code>.</li>
 </ul>
 <p>The next natural step — beyond the scope of this tutorial — would be to containerize this API with Docker and deploy it on a cloud platform so it becomes accessible to external users.</p>
 
