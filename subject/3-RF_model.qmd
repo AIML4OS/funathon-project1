@@ -453,7 +453,7 @@ oob_error_ntrees
 
 ## Tuning all others hyperparameters with cross validation
 
-**Cross-validation** is a key step in model training : it is a technique used to evaluate the model's ability to generalize to unseendata, by splitting the dataset into multiple folds (typically 5) and iteratively using each fold as a validation set while the remaining folds are used for training. It also allows you to compare different set of hyperparameters and select the configuration that yields the best predictive performance.
+**Cross-validation** is a key step in model training : it is a technique used to evaluate the model's ability to generalize to unseen data, by splitting the dataset into multiple folds (typically 5) and iteratively using each fold as a validation set while the remaining folds are used for training. It also allows you to compare different set of hyperparameters and select the configuration that yields the best predictive performance.
 
 Note that in the Preprocessing section, you saw how to build a Pipeline. In this exercise, we will use a Pipeline again. The first exercise didn't use it to let you practice scikit-learn tools documented [here](https://scikit-learn.org/stable/modules/compose.html#pipelines-and-composite-estimators).
 
