@@ -53,7 +53,7 @@ Key variables include:
 | `dist_tosea` | Distance to the coastline |
 | `n_garage`, `n_pool`, `n_terrace`, ... | Outbuildings and amenities |
 
-> See the full variable dictionary in [the dedicated page](intro_data.Qmd).
+> See the full variable dictionary in [the dedicated page](subject/1-intro_data.qmd).
 
 ### 2. Pre-processing
 
