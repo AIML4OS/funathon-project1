@@ -74,7 +74,7 @@ To run the final API, run `uvicorn solution.app:app --reload`.
 
 ## Technical requirements
 
--   You need to have an account on [Insee's Onyxia platform](https://datalab.sspcloud.fr/), called SSPCloud (for *cloud platform for the French Official Statistical System*). When you are on this webpage, you should see something similar to this image once you're logged in. To change the language, you can do so on the bottom right part of the webpage (see the orange arrow on the screen shot below).
+-   You need to have an account on [Insee's Onyxia platform](https://datalab.sspcloud.fr/), called SSPCloud (for *cloud platform for the French Official Statistical System*). When you are on this webpage, you should see something similar to this image once you're logged in. You can select your preferred language in the bottom right hand corner (see the orange arrow on the screen shot below).
 
 ![Home page of <https://datalab.sspcloud.fr/>](../img/onyxia_home.png)
 
