@@ -86,7 +86,7 @@ def read_root():
 **Save this file, name it `api.py` and run it with:**
 
 ```{.bash filename="terminal"}
-uvicorn api:app --reload
+uv run uvicorn api:app --reload
 ```
 
 The `--reload` flag restarts the server automatically whenever you save changes to `api.py`, which is very convenient during development.
@@ -94,14 +94,14 @@ The `--reload` flag restarts the server automatically whenever you save changes 
 If you saved your file into a specific folder, you can access it with the following command : 
 
 ```{.bash filename="terminal"}
-uvicorn folder.script_name:app --reload
+uv run uvicorn folder.script_name:app --reload
 ```
 
 For example, you can launch the api with the following code. 
 It serves as a fall-back option.   
 
 ```{.bash filename="terminal"}
-uvicorn intermediate_solutions.5_api:app --reload
+uv run uvicorn intermediate_solutions.5_api:app --reload
 ```
 
 **Then open [http://localhost:8000](http://localhost:8000) in your browser. You should see the JSON response `"Housing price prediction API is running"`.**

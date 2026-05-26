@@ -67,7 +67,7 @@ The final script is stored in the `solution/` folder.
 A `main.py` script calls on other sub-scripts, following the different steps of the project.
 To run it, just run `uv run solution/main.py` and it will execute all the steps at once. 
 
-To run the final API, run `uvicorn solution.app:app --reload`. 
+To run the final API, run `uv run uvicorn solution.app:app --reload`. 
 
 # Project initialization
 

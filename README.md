@@ -155,7 +155,7 @@ In a similar way, the **fallback script is adapted manually.**
 To run the solution, run `uv run solution/main.py`. 
 **This script runs all subscripts, logs models to MLFlow, updates data and back-up models in the S3 storage. It doesn't launch a local API.**
 
-To **launch a local API**, run `uvicorn solution.api:app --reload`. You need to have your models stored in MLFlow for it to run properly.
+To **launch a local API**, run `uv run uvicorn solution.api:app --reload`. You need to have your models stored in MLFlow for it to run properly.
 
 ## Contributing
 
