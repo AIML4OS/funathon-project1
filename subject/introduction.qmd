@@ -88,17 +88,21 @@ Launch a MLflow service by clicking on the following button below with your Onyx
 
 ## Fork the project with `Git` {{< fa brands git-alt >}}
 
-First, you need to fork the funathons's project on Github by clicking on [this link](https://github.com/AIML4OS/funathon-project1/fork). For convenience, **please not to change the repository name**. Write down the owner's name `OWNER_NAME` for the next step.
+Decide on whether you want to work each one in your own repo or if you want to work in the same git repo for the whole team. 
+To improve collaborative work, we **recommend using a shared repo and working in different branches**. This way, you can use git's opportunities.  
+
+If you have only one repo, one person of your team has to fork the funathons's project on Github by clicking on [this link](https://github.com/AIML4OS/funathon-project1/fork). For convenience, **please not to change the repository name**. Write down the owner's name `OWNER_NAME` for the next step.
 
 ![Forking a github project](../img/github_fork.png)
 
+If you decide to work each one in your repo, every one in the team forks the project in his/her own repo with his/her own owner's name.  
 
 ## Open a VS Code on SSPCloud
 
 
 To launch the project, open a VS Code service with the following button: <a href="https://datalab.sspcloud.fr/launcher/ide/vscode-python?name=AIML4OS-funathon-project1&version=2.5.5&s3=region-79669f20&git.cache=«5000»&networking.user.enabled=true&autoLaunch=true" target="_blank" rel="noopener"><img src="https://custom-icon-badges.demolab.com/badge/SSP%20Cloud-Launch_with_VSCode-blue?logo=vsc&amp;logoColor=white" alt="Onyxia"/></a>.
 
-In the VS Code service, open a terminal (`CTRL` + `MAJ` + `C` or in the file menu go to `Terminal > New Terminal`). Clone the project repository with the following command after replacing `OWNER_NAME` with your name on Github from the previous step:
+In the VS Code service, open a terminal (`CTRL` + `MAJ` + `C` or in the file menu go to `Terminal > New Terminal`). Clone the project repository with the following command after replacing `OWNER_NAME` with the name of the owner of the repo where you'll be working from the previous step:
 
 ```{.bash}
 OWNER_NAME="AIML4OS"  # Change your Github name here
