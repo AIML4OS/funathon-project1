@@ -194,7 +194,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
-  <li><a href="#project-structure" id="toc-project-structure" class="nav-link" data-scroll-target="#project-structure"><span class="header-section-number">2</span> Project structure</a></li>
+  <li><a href="#project-structure" id="toc-project-structure" class="nav-link" data-scroll-target="#project-structure"><span class="header-section-number">2</span> Project structure</a>
+  <ul class="collapse">
+  <li><a href="#fall-back-options" id="toc-fall-back-options" class="nav-link" data-scroll-target="#fall-back-options"><span class="header-section-number">2.1</span> Fall-back options</a></li>
+  <li><a href="#solution" id="toc-solution" class="nav-link" data-scroll-target="#solution"><span class="header-section-number">2.2</span> Solution</a></li>
+  <li><a href="#computation-time" id="toc-computation-time" class="nav-link" data-scroll-target="#computation-time"><span class="header-section-number">2.3</span> Computation time</a></li>
+  <li><a href="#indicative-results" id="toc-indicative-results" class="nav-link" data-scroll-target="#indicative-results"><span class="header-section-number">2.4</span> Indicative results</a></li>
+  </ul></li>
   <li><a href="#project-initialization" id="toc-project-initialization" class="nav-link" data-scroll-target="#project-initialization"><span class="header-section-number">3</span> Project initialization</a>
   <ul class="collapse">
   <li><a href="#technical-requirements" id="toc-technical-requirements" class="nav-link" data-scroll-target="#technical-requirements"><span class="header-section-number">3.1</span> Technical requirements</a></li>
@@ -293,9 +299,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>model logging with MLflow;</li>
 <li>deployment.</li>
 </ul>
-<p><strong>Every step is independent from the other</strong> : one will be able to start from the next step if a step is too difficult by looking at the fall-back call-out note at the beginning of each page or by looking at the code stored in the <code>intermediaite_solutions</code> folder.</p>
-<p>The final script is stored in the <code>solution/</code> folder. A <code>main.py</code> script calls on other sub-scripts, following the different steps of the project. To run it, just run <code>uv run solution/main.py</code> and it will execute all the steps at once.</p>
+<section id="fall-back-options" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="fall-back-options"><span class="header-section-number">2.1</span> Fall-back options</h2>
+<p><strong>Every step is independent from the others</strong>: you can start from any step if a previous one is too difficult. A <strong>fall-back callout note</strong> at the beginning of each page provides the intermediate solution needed to proceed. The <strong>corresponding code is also available in the <code>intermediate_solutions/</code> folder for each step</strong>.</p>
+</section>
+<section id="solution" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="solution"><span class="header-section-number">2.2</span> Solution</h2>
+<p>A <strong>more advanced final script</strong> is stored in the <code>solution/</code> folder. A <code>main.py</code> script calls on other sub-scripts, following the different steps of the project. To run it, just run <code>uv run solution/main.py</code> and it will execute all the steps at once.</p>
 <p>To run the final API, run <code>uv run uvicorn solution.app:app --reload</code>.</p>
+</section>
+<section id="computation-time" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="computation-time"><span class="header-section-number">2.3</span> Computation time</h2>
+<p>To speed up computation time, you <strong>can work <em>after the pre-processing step</em> on a sample of the dataset</strong> rather than the full data.</p>
+</section>
+<section id="indicative-results" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="indicative-results"><span class="header-section-number">2.4</span> Indicative results</h2>
+<p>The <strong>results shown throughout this training are indicative only</strong> — they have been produced on a fraction of the dataset and with simplified hyperparameters. It is therefore completely normal if your results differ from those displayed.</p>
+</section>
 </section>
 <section id="project-initialization" class="level1" data-number="3">
 <h1 data-number="3"><span class="header-section-number">3</span> Project initialization</h1>
@@ -322,14 +342,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="fork-the-project-with-git-b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c206661206272616e6473206769742d616c74203e7d7d" class="level2" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="fork-the-project-with-git-b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c206661206272616e6473206769742d616c74203e7d7d"><span class="header-section-number">3.3</span> Fork the project with <code>Git</code> <i class="fa-brands fa-git-alt" aria-label="git-alt"></i></h2>
 <p>Decide on whether you want to work each one in your own repo or if you want to work in the same git repo for the whole team. To improve collaborative work, we <strong>recommend using a shared repo and working in different branches</strong>. This way, you can use git’s opportunities.</p>
-<p>If you have only one repo, one person of your team has to fork the funathons’s project on Github by clicking on <a href="https://github.com/AIML4OS/funathon-project1/fork">this link</a>. For convenience, <strong>please not to change the repository name</strong>. Write down the owner’s name <code>OWNER_NAME</code> for the next step.</p>
+<p>If you have only one repo, one person of your team has to fork the funathons’s project on Github by clicking on <a href="https://github.com/AIML4OS/funathon-project1/fork">this link</a>. For convenience, <strong>please do not change the repository name</strong>. Write down the owner’s name <code>OWNER_NAME</code> for the next step.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="../img/github_fork.png" class="img-fluid figure-img"></p>
 <figcaption>Forking a github project</figcaption>
 </figure>
 </div>
-<p>If you decide to work each one in your repo, every one in the team forks the project in his/her own repo with his/her own owner’s name.</p>
+<p>If you decide to work each one in your repo, everyone in the team forks the project in his/her own repo with his/her own owner’s name.</p>
 </section>
 <section id="open-a-vs-code-on-sspcloud" class="level2" data-number="3.4">
 <h2 data-number="3.4" class="anchored" data-anchor-id="open-a-vs-code-on-sspcloud"><span class="header-section-number">3.4</span> Open a VS Code on SSPCloud</h2>
@@ -349,7 +369,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>The <code>.qmd</code> files and the <code>_quarto.yaml</code> file are necessary to build the website;</li>
 <li>The file <code>pyproject.toml</code> describes the dependencies of the project (using uv);</li>
 <li>The starting point is available in the <code>starting_point</code> folder;</li>
-<li>Intermediate solutions to the exercices are available in the <code>intermediate_solutions</code> folder;</li>
+<li>Intermediate solutions to the exercises are available in the <code>intermediate_solutions</code> folder;</li>
 <li>The final solution is available in the <code>solution</code> folder.</li>
 </ul>
 </section>
@@ -371,7 +391,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="callout-body-container callout-body">
 <p>When running commands in the terminal, make sure you are working from the root of the Git repository.</p>
-<p>You can verify your current location by checking the terminal prompt: it should end with <em>funathon2024_project1</em>. If it does not, navigate to the correct directory using the <code>cd</code> command.</p>
+<p>You can verify your current location by checking the terminal prompt: it should end with <em>funathon2024-project1</em>. If it does not, navigate to the correct directory using the <code>cd</code> command.</p>
 <p><em>For example</em> :</p>
 <ul>
 <li><strong>good path</strong> ✅ :</li>
@@ -392,7 +412,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="running-scripts" class="level2" data-number="3.7">
 <h2 data-number="3.7" class="anchored" data-anchor-id="running-scripts"><span class="header-section-number">3.7</span> Running scripts</h2>
-<p>You need to use <code>uv</code> to run a Python script using uv’s managed environment. <code>uv</code> will manage all the dependancies of your script. To do so, you need to be in the working directory where the <code>pyproject.toml</code> file is stored.</p>
+<p>You need to use <code>uv</code> to run a Python script using uv’s managed environment. <code>uv</code> will manage all the dependencies of your script. To do so, you need to be in the working directory where the <code>pyproject.toml</code> file is stored.</p>
 <p>To run the script in starting point for example, run the following command:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">~/work/funathon-project1$</span> uv run starting_point/main.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>

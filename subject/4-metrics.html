@@ -223,8 +223,8 @@ window.Quarto = {
   </ul></li>
   <li><a href="#computing-evaluation-metrics" id="toc-computing-evaluation-metrics" class="nav-link" data-scroll-target="#computing-evaluation-metrics"><span class="header-section-number">2</span> Computing evaluation metrics</a>
   <ul class="collapse">
-  <li><a href="#exercice-10-compute-evaluation-metrics" id="toc-exercice-10-compute-evaluation-metrics" class="nav-link" data-scroll-target="#exercice-10-compute-evaluation-metrics"><span class="header-section-number">2.1</span> Exercice 10: Compute evaluation metrics</a></li>
-  <li><a href="#exercice-11-generate-diagnostic-plots" id="toc-exercice-11-generate-diagnostic-plots" class="nav-link" data-scroll-target="#exercice-11-generate-diagnostic-plots"><span class="header-section-number">2.2</span> Exercice 11: Generate diagnostic plots</a></li>
+  <li><a href="#exercise-10-compute-evaluation-metrics" id="toc-exercise-10-compute-evaluation-metrics" class="nav-link" data-scroll-target="#exercise-10-compute-evaluation-metrics"><span class="header-section-number">2.1</span> Exercise 10: Compute evaluation metrics</a></li>
+  <li><a href="#exercise-11-generate-diagnostic-plots" id="toc-exercise-11-generate-diagnostic-plots" class="nav-link" data-scroll-target="#exercise-11-generate-diagnostic-plots"><span class="header-section-number">2.2</span> Exercise 11: Generate diagnostic plots</a></li>
   </ul></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">3</span> Summary</a></li>
   </ul>
@@ -316,11 +316,11 @@ window.Quarto = {
 </section>
 <section id="computing-evaluation-metrics" class="level1" data-number="2">
 <h1 data-number="2"><span class="header-section-number">2</span> Computing evaluation metrics</h1>
-<section id="exercice-10-compute-evaluation-metrics" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="exercice-10-compute-evaluation-metrics"><span class="header-section-number">2.1</span> Exercice 10: Compute evaluation metrics</h2>
+<section id="exercise-10-compute-evaluation-metrics" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="exercise-10-compute-evaluation-metrics"><span class="header-section-number">2.1</span> Exercise 10: Compute evaluation metrics</h2>
 <p>In this exercise, you will generate predictions from the best RF and GB model and compute all four evaluation metrics on the test set.</p>
 <p>To be sure that you have everything already set-up properly, you can run the following code from previous section.</p>
-<div id="8418d334" class="cell" data-execution_count="1">
+<div id="5da574b0" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd </span>
@@ -373,7 +373,7 @@ window.Quarto = {
 <span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>y_test  <span class="op">=</span> pd.read_parquet(<span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_test.parquet"</span>)[<span class="st">"price_sqm"</span>]</span>
 <span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="co"># Importing fine-tuned RF and GB models</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="co"># Importing RF and GB models</span></span>
 <span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a><span class="co"># RF</span></span>
 <span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/models/rf_model_final.joblib"</span></span>
 <span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>rf_model_final <span class="op">=</span> load(io.BytesIO(requests.get(url).content))</span>
@@ -412,14 +412,14 @@ You can fetch back the final trained models by executing the following code. The
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># GB</span></span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/models/gb_model_final.joblib"</span></span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>gb_model_final <span class="op">=</span> load(io.BytesIO(requests.get(url).content))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>It will load the model, all parameters and data necessary to keep on going through the next exercices.</p>
+<p>It will load the model, all parameters and data necessary to keep on going through the next exercises.</p>
 </div>
 </div>
 </div>
 <ol type="1">
 <li><strong>Generate predictions on the test set using the best RF and GB models</strong> from exercise 5 and compute their residuals.</li>
 </ol>
-<div id="e7574c47" class="cell" data-execution_count="2">
+<div id="1d9032f8" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># best RF</span></span>
@@ -451,7 +451,7 @@ You can fetch back the final trained models by executing the following code. The
 </div>
 </div>
 </div>
-<div id="c4e6b42a" class="cell" data-execution_count="3">
+<div id="82ec4b65" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> root_mean_squared_error, mean_absolute_error, r2_score</span>
@@ -501,7 +501,7 @@ GB — RMSE: 2738.42  |  MAE: 1716.60  |  R²: 0.3023</code></pre>
 </div>
 </div>
 </div>
-<div id="a9e5cf97" class="cell" data-execution_count="4">
+<div id="71c02c4b" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_absolute_percentage_error</span>
@@ -517,8 +517,8 @@ MAPE GB: 59.71 %</code></pre>
 </div>
 </div>
 </section>
-<section id="exercice-11-generate-diagnostic-plots" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="exercice-11-generate-diagnostic-plots"><span class="header-section-number">2.2</span> Exercice 11: Generate diagnostic plots</h2>
+<section id="exercise-11-generate-diagnostic-plots" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="exercise-11-generate-diagnostic-plots"><span class="header-section-number">2.2</span> Exercise 11: Generate diagnostic plots</h2>
 <p>In this exercise, you will produce four diagnostic plots: a residuals distribution, a QQ-plot comparing actual and predicted quantiles, the target distribution and a feature importance plot. For each plot, take a moment to interpret what you observe.</p>
 <ol type="1">
 <li><strong>Write a <code>residuals_distribution(residuals, rmse)</code> function to plot the histogram of the residuals.</strong> It takes <code>residuals</code> (a pandas Series) and <code>rmse</code> (a float), along with <code>ax</code>, <code>label</code> and <code>color</code> parameters for overlay plotting.</li>
@@ -539,7 +539,7 @@ MAPE GB: 59.71 %</code></pre>
 </div>
 </div>
 </div>
-<div id="17cd55ac" class="cell" data-execution_count="5">
+<div id="3a6cf7d4" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -575,7 +575,7 @@ MAPE GB: 59.71 %</code></pre>
 </div>
 </div>
 </div>
-<div id="5deb5aae" class="cell" data-execution_count="6">
+<div id="dc29c36e" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
@@ -594,7 +594,7 @@ MAPE GB: 59.71 %</code></pre>
 <ol start="3" type="1">
 <li><strong>Write a <code>QQplot(y_test, y_pred)</code> function which computes 1000 quantile points for both series and plots them against each other.</strong> The parameters are <code>y_test</code>, <code>y_pred</code>, pandas series of observed and predicted target and the same parameters that question 1. for overlay plotting. The function should return the plot.</li>
 </ol>
-<div id="f31f207e" class="cell" data-execution_count="7">
+<div id="2ec81e8a" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -641,7 +641,7 @@ MAPE GB: 59.71 %</code></pre>
 </div>
 </div>
 </div>
-<div id="b818858e" class="cell" data-execution_count="8">
+<div id="d4c41f23" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
@@ -663,7 +663,7 @@ MAPE GB: 59.71 %</code></pre>
 <ol start="5" type="1">
 <li><strong>Define a <code>target_distribution()</code> function to plot the distribution of the parameter <code>y</code>, a pandas Serie.</strong></li>
 </ol>
-<div id="555a7d04" class="cell" data-execution_count="9">
+<div id="ed767085" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> target_distribution(y: pd.Series):</span>
@@ -697,7 +697,7 @@ MAPE GB: 59.71 %</code></pre>
 </div>
 </div>
 </div>
-<div id="4359f4ab" class="cell" data-execution_count="10">
+<div id="75be1608" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>fig_actual <span class="op">=</span> target_distribution(y_test)</span>
@@ -747,7 +747,7 @@ Tip
 <div id="callout-8" class="callout-8-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>If you want to <strong>plot both plots on a single figure</strong>, you can adapt the function :</p>
-<div id="0e706aa1" class="cell" data-execution_count="11">
+<div id="90c11ffd" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_combined_distribution(y_test: pd.Series, y_pred: pd.Series, ax<span class="op">=</span><span class="va">None</span>, label<span class="op">=</span><span class="va">None</span>, color<span class="op">=</span><span class="va">None</span>, show_actual<span class="op">=</span><span class="va">True</span>):</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Plots the target distributions of actual and predicted values on the same graph.</span></span>
@@ -806,7 +806,7 @@ Tip
 </div>
 </div>
 </div>
-<div id="415eb6d5" class="cell" data-execution_count="12">
+<div id="057ffe3a" class="cell" data-execution_count="12">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.inspection <span class="im">import</span> permutation_importance</span>
@@ -833,7 +833,7 @@ Tip
 <ol start="8" type="1">
 <li><strong>Write a <code>permutation_importance()</code> function to plot the bar chart of features importance.</strong></li>
 </ol>
-<div id="d4237a63" class="cell" data-execution_count="13">
+<div id="65246ede" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> importance_plot(importances):</span>
@@ -868,7 +868,7 @@ Tip
 </div>
 </div>
 </div>
-<div id="f18c0835" class="cell" data-execution_count="14">
+<div id="de2a0398" class="cell" data-execution_count="14">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>score <span class="op">=</span> <span class="st">"r2"</span></span>
