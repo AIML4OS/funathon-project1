@@ -175,7 +175,7 @@ To do so, you need to be in the working directory where the `pyproject.toml` fil
 To run the script in starting point for example, run the following command:
 
 ```{.bash}
-:~/work/funathon-project1$ uv run starting_point/main.py
+~/work/funathon-project1$ uv run starting_point/main.py
 ```
 
 # Next step
