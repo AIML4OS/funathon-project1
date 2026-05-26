@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Training a Gradient Boosting model – AIML4OS Funathon - Project 1</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-5a3d0b27430484980d075601037230b8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<meta property="og:title" content="Training a Gradient Boosting model – AIML4OS Funathon - Project 1">
+<meta property="og:description" content="Predicting housing prices">
+<meta property="og:image" content="https://AIML4OS.github.io/funathon-project1/img/GB.png">
+<meta property="og:site_name" content="AIML4OS Funathon - Project 1">
+<meta property="og:image:height" content="583">
+<meta property="og:image:width" content="798">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../subject/introduction.html"> 
+<span class="menu-text">0. Introduction</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../subject/1-intro_data.html"> 
+<span class="menu-text">1. Data presentation</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../subject/2-preprocessing.html"> 
+<span class="menu-text">2. Preprocessing</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-modelling" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">3. Modelling</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-modelling">    
+        <li>
+    <a class="dropdown-item" href="../subject/3-RF_model.html">
+ <span class="dropdown-text">with a random forest</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../subject/3-GB_model.html">
+ <span class="dropdown-text">with a gradient boosting</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../subject/4-metrics.html"> 
+<span class="menu-text">4. Model evaluation</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../subject/5-logging.html"> 
+<span class="menu-text">5. Model logging</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../subject/6-deployment.html"> 
+<span class="menu-text">6. Deployment</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/AIML4OS/funathon-project1"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#concepts-of-gradient-boosting" id="toc-concepts-of-gradient-boosting" class="nav-link active" data-scroll-target="#concepts-of-gradient-boosting"><span class="header-section-number">1</span> Concepts of Gradient Boosting</a></li>
+  <li><a href="#training-a-baseline-gradient-boosting-model" id="toc-training-a-baseline-gradient-boosting-model" class="nav-link" data-scroll-target="#training-a-baseline-gradient-boosting-model"><span class="header-section-number">2</span> Training a baseline Gradient Boosting model</a>
+  <ul class="collapse">
+  <li><a href="#exercice-7-train-your-first-gradient-boosting-model" id="toc-exercice-7-train-your-first-gradient-boosting-model" class="nav-link" data-scroll-target="#exercice-7-train-your-first-gradient-boosting-model"><span class="header-section-number">2.1</span> Exercice 7: Train your first Gradient Boosting model</a></li>
+  </ul></li>
+  <li><a href="#key-hyperparameters-of-gradient-boosting" id="toc-key-hyperparameters-of-gradient-boosting" class="nav-link" data-scroll-target="#key-hyperparameters-of-gradient-boosting"><span class="header-section-number">3</span> Key Hyperparameters of Gradient Boosting</a>
+  <ul class="collapse">
+  <li><a href="#tuning-gradient-boosting-hyperparameters" id="toc-tuning-gradient-boosting-hyperparameters" class="nav-link" data-scroll-target="#tuning-gradient-boosting-hyperparameters"><span class="header-section-number">3.1</span> Tuning Gradient Boosting Hyperparameters</a></li>
+  <li><a href="#exercice-8-tuning-gradient-boosting-hyperparameters" id="toc-exercice-8-tuning-gradient-boosting-hyperparameters" class="nav-link" data-scroll-target="#exercice-8-tuning-gradient-boosting-hyperparameters"><span class="header-section-number">3.2</span> Exercice 8: Tuning Gradient Boosting hyperparameters</a>
+  <ul class="collapse">
+  <li><a href="#step-1-jointly-optimise-the-number-of-trees-and-the-learning-rate" id="toc-step-1-jointly-optimise-the-number-of-trees-and-the-learning-rate" class="nav-link" data-scroll-target="#step-1-jointly-optimise-the-number-of-trees-and-the-learning-rate"><span class="header-section-number">3.2.1</span> Step 1 — Jointly optimise the number of trees and the learning rate</a></li>
+  <li><a href="#step-2-jointly-optimise-the-tree-structure" id="toc-step-2-jointly-optimise-the-tree-structure" class="nav-link" data-scroll-target="#step-2-jointly-optimise-the-tree-structure"><span class="header-section-number">3.2.2</span> Step 2 — Jointly optimise the tree structure</a></li>
+  <li><a href="#step-3-optimise-the-regularisation-parameters" id="toc-step-3-optimise-the-regularisation-parameters" class="nav-link" data-scroll-target="#step-3-optimise-the-regularisation-parameters"><span class="header-section-number">3.2.3</span> Step 3 — Optimise the regularisation parameters</a></li>
+  <li><a href="#step-4-train-the-final-model" id="toc-step-4-train-the-final-model" class="nav-link" data-scroll-target="#step-4-train-the-final-model"><span class="header-section-number">3.2.4</span> Step 4 — Train the final model</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#evaluation-of-grandient-boosting-model" id="toc-evaluation-of-grandient-boosting-model" class="nav-link" data-scroll-target="#evaluation-of-grandient-boosting-model"><span class="header-section-number">4</span> Evaluation of Grandient Boosting model</a>
+  <ul class="collapse">
+  <li><a href="#exercice-9-evaluate-the-final-gradient-boosting-model" id="toc-exercice-9-evaluate-the-final-gradient-boosting-model" class="nav-link" data-scroll-target="#exercice-9-evaluate-the-final-gradient-boosting-model"><span class="header-section-number">4.1</span> Exercice 9: Evaluate the final Gradient Boosting model</a></li>
+  <li><a href="#sec-gb-prediction" id="toc-sec-gb-prediction" class="nav-link" data-scroll-target="#sec-gb-prediction"><span class="header-section-number">4.2</span> Exercice 9bis: Now, let’s play : predict the housing price for your custom address</a></li>
+  </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">5</span> Summary</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/AIML4OS/funathon-project1/edit/main/subject/3-GB_model.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/AIML4OS/funathon-project1/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Training a Gradient Boosting model</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Now that we have trained and evaluated a Random Forest model, we will train a <strong>Gradient Boosting</strong> model on the same data. We will cover the theoretical background, train a baseline model, understand the key hyperparameters, and tune them following a simple validation procedure.</p>
+<p>A methodological guide on ensemble methods by Insee is available <a href="https://inseefrlab-github-io.translate.goog/DT_methodes_ensemblistes/chapters/chapter2/4-boosting.html?_x_tr_sl=fr&amp;_x_tr_tl=en&amp;_x_tr_hl=en&amp;_x_tr_pto=wapp">here</a>. If you are unfamiliar with gradient boosting, we recommend reading it before proceeding.</p>
+<p>You can start from the script <code>main.py</code> stored in the folder <code>starting_point/</code>.</p>
+<p>If you want, you can also directly use the complete script of this step. It is stored in <code>intermediate_solutions/3_GB.py</code>.</p>
+<section id="concepts-of-gradient-boosting" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Concepts of Gradient Boosting</h1>
+<p>Like Random Forests, <strong>Gradient Boosting</strong> is an ensemble method that combines many decision trees. However, the two methods differ fundamentally in how those trees are built and combined.</p>
+<ul>
+<li><p><strong>Random Forests</strong> build trees <strong>independently and in parallel</strong>, then average their predictions. Their strength comes from reducing variance through aggregation of decorrelated trees. By construction, they are quite robust to overfitting.</p></li>
+<li><p><strong>Gradient Boosting</strong> builds trees <strong>sequentially</strong>: each new tree is trained to correct the prediction errors — the <em>pseudo-residuals</em> — left by all previous trees. Formally, at each iteration <span class="math inline">\(t\)</span> the model is updated as:</p>
+<p><span class="math display">\[F_t(x) = F_{t-1}(x) + \eta \cdot f_t(x)\]</span></p>
+<p>where <span class="math inline">\(f_t\)</span> is the new tree and <span class="math inline">\(\eta \in (0, 1]\)</span> is the <strong>learning rate</strong>, which scales down the contribution of each tree to avodt_mid overreacting to individual observations.</p></li>
+</ul>
+<p>This sequential construction gives gradient boosting a stronger capacity to reduce <strong>bias</strong> — it can fit complex relationships that a random forest might miss. In a regression problem with squared-error loss, the pseudo-residual for observation <span class="math inline">\(i\)</span> is simply <span class="math inline">\(y_i - \hat{y}_i^{(t-1)}\)</span>: each tree literally predicts what the current model got wrong.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../img/GB.png" class="img-fluid figure-img"></p>
+<figcaption>Overview of the Gradient Boosting training</figcaption>
+</figure>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Gradient boosting and overfitting
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Unlike random forests, gradient boosting contains <strong>no built-in mechanism to limit overfitting</strong>. It is designed to approximate the training data as precisely as possible — including its noise. As the number of trees grows, the model increasingly captures random fluctuations in the training set rather than the true signal.</p>
+<p><strong>Controlling overfitting is therefore the central challenge when training a gradient boosting model</strong>, and it is the main purpose of its regularisation hyperparameters (see <a href="#key-hyperparameters-of-gradient-boosting">Section 3</a>).</p>
+</div>
+</div>
+<p><strong>scikit-learn’s <code>HistGradientBoostingRegressor</code></strong> is a histogram-based implementation, similar in spirit to LightGBM. It discretises continuous features into bins before constructing trees, making it significantly faster than the classic <code>GradientBoostingRegressor</code>, especially on large datasets. It also natively handles missing values without any imputation step.</p>
+<p>For more information, you can read the detailed presentation of the gradient boosting algorithm <a href="https://inseefrlab-github-io.translate.goog/DT_methodes_ensemblistes/chapters/chapter2/4-boosting.html?_x_tr_sl=fr&amp;_x_tr_tl=en&amp;_x_tr_hl=en&amp;_x_tr_pto=wapp">here</a> and the usage guide <a href="https://inseefrlab-github-io.translate.goog/DT_methodes_ensemblistes/chapters/chapter3/3-guide_usage_GB.html?_x_tr_sl=fr&amp;_x_tr_tl=en&amp;_x_tr_hl=en&amp;_x_tr_pto=wapp">here</a>.</p>
+</section>
+<section id="training-a-baseline-gradient-boosting-model" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Training a baseline Gradient Boosting model</h1>
+<p>To allow for comparison with the random forest section, we chose to use the same conditions : dropping the <code>trans_date</code> and <code>prop_type</code> features and working with the <strong>non transformed target</strong> (i.e.price per square meter) and not use the transformed target (i.e.&nbsp;log of the price per square meter) defined at the end of the pre-processing. We will come back to this later on and chain it with the preprocessing steps.</p>
+<div class="callout callout-style-default callout-important callout-titled" title="Code from previous section necessary for this section">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Code from previous section necessary for this section
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div style="display:flex;align-items:center;gap:0.4em;margin-bottom:0.8em;">
+<img src="../img/CheckpointSM3DL.webp" style="max-height:4em;width:auto;flex-shrink:0;">
+<div style="flex:1;margin:0;">
+In case you start from here, here is the parameters you need from past sections :
+</div>
+</div>
+<div id="98838065" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OneHotEncoder, FunctionTransformer</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.compose <span class="im">import</span> ColumnTransformer, TransformedTargetRegressor</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> Pipeline</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>RANDOM_STATE <span class="op">=</span> <span class="dv">202605</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> log_transform(y):</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.log10(y)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> inverse_log_transform(y):</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">10</span> <span class="op">**</span> y</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>y_transformer <span class="op">=</span> FunctionTransformer(</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    func<span class="op">=</span>log_transform,</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    inverse_func<span class="op">=</span>inverse_log_transform)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> date_to_days(X: pd.Series, ref_date: pd.Timestamp):</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># converts a date to a difference to ref_date :</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    diff_dt <span class="op">=</span> pd.to_datetime(X) <span class="op">-</span> ref_date</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Extract days part from datetime object</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    diff_dt <span class="op">=</span> diff_dt.dt.days</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Transform it from a Pandas series to a Numpy nd array, used by scikit learn for input</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    diff_dt <span class="op">=</span> diff_dt.to_numpy().reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> diff_dt</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>date_transformer <span class="op">=</span> FunctionTransformer(</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    date_to_days,</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    kw_args<span class="op">=</span>{<span class="st">"ref_date"</span>: pd.Timestamp(<span class="st">'2010-01-01 00:00'</span>)}</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>preprocessor <span class="op">=</span> ColumnTransformer(</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    transformers<span class="op">=</span>[</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>        (<span class="st">"cat"</span>, OneHotEncoder(handle_unknown<span class="op">=</span><span class="st">"ignore"</span>), [<span class="st">"prop_type"</span>, <span class="st">"prop_year_harm_10"</span>]),  <span class="co"># one-hot encoder on feature</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>        (<span class="st">"dat"</span>, date_transformer, <span class="st">"trans_date"</span>) <span class="co"># feature time since 01-01-2010</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    remainder<span class="op">=</span><span class="st">"passthrough"</span>  <span class="co"># to keep features not transformed</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> predicted_actual_plot(y_test, y_pred_test, model_name):</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="dv">7</span>))</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>    ax.scatter(y_test, y_pred_test, alpha<span class="op">=</span><span class="fl">0.3</span>, s<span class="op">=</span><span class="dv">5</span>, label<span class="op">=</span><span class="st">"Predictions"</span>)</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>    lims <span class="op">=</span> [<span class="bu">min</span>(y_test.<span class="bu">min</span>(), y_pred_test.<span class="bu">min</span>()),</span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>            <span class="bu">max</span>(y_test.<span class="bu">max</span>(), y_pred_test.<span class="bu">max</span>())]</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>    ax.plot(lims, lims, <span class="st">"r--"</span>, linewidth<span class="op">=</span><span class="fl">1.5</span>, label<span class="op">=</span><span class="st">"Perfect prediction"</span>)</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"Actual values (log)"</span>)</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="st">"Predicted values (log)"</span>)</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="ss">f"Comparison of predicted values vs. actual values on the test set</span><span class="ch">\n</span><span class="ss">(</span><span class="sc">{</span>model_name<span class="sc">}</span><span class="ss">)"</span>)</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>    ax.legend()</span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>    plt.xscale(<span class="st">'log'</span>)</span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>    plt.yscale(<span class="st">'log'</span>)</span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> fig</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</div>
+</div>
+<section id="exercice-7-train-your-first-gradient-boosting-model" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="exercice-7-train-your-first-gradient-boosting-model"><span class="header-section-number">2.1</span> Exercice 7: Train your first Gradient Boosting model</h2>
+<ol type="1">
+<li>Using the <code>HistGradientBoostingRegressor</code> class and its <a href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html">scikit-learn documentation page</a>, <strong>define and train a baseline model with default hyperparameters</strong>. For convenience, load the training and testing datasets <code>X_train, X_test, y_train, y_test</code> that were already defined at the end of the <a href="../subject/2-preprocessing.html">pre-processing section</a> using panda’s <code>read_parquet</code>. Drop the features <code>prop_type</code>, <code>trans_date</code> from <code>X_train</code> and <code>X_test</code>. It will simplify the scikit learn code - in real life you wouldn’t drop these features and that’s what we’ll do later on.</li>
+</ol>
+<p><strong>Note that just like for <code>RandomForestRegressor</code>, all parameters have default values — you do not need to pass any argument to get a working model.</strong></p>
+<div id="2b6b7611" class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>See the solution</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> HistGradientBoostingRegressor</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>X_train <span class="op">=</span> pd.read_parquet(<span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_train.parquet"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>X_test  <span class="op">=</span> pd.read_parquet(<span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_test.parquet"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>X_train <span class="op">=</span> X_train.drop(columns<span class="op">=</span>[<span class="st">"prop_type"</span>, <span class="st">"trans_date"</span>])</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>X_test  <span class="op">=</span>  X_test.drop(columns<span class="op">=</span>[<span class="st">"prop_type"</span>, <span class="st">"trans_date"</span>])</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>y_train <span class="op">=</span> pd.read_parquet(<span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_train.parquet"</span>)[<span class="st">"price_sqm"</span>]</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>y_test  <span class="op">=</span> pd.read_parquet(<span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_test.parquet"</span>)[<span class="st">"price_sqm"</span>]</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>gb_baseline <span class="op">=</span> HistGradientBoostingRegressor(random_state<span class="op">=</span>RANDOM_STATE)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>gb_baseline.fit(X_train, y_train)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<ol start="2" type="1">
+<li><strong>Compute the three evaluation metrics — RMSE, MAE and R² — on both the training set and the test set</strong>. Compare both sets of scores: what do you observe?</li>
+</ol>
+<p>Note that computing metrics on the training set alongside the test set is important with gradient boosting because it reveals whether the model is overfitting.</p>
+<div id="22333fa3" class="cell" data-execution_count="3">
+<details class="code-fold">
+<summary>See the solution</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> root_mean_squared_error, mean_absolute_error, r2_score</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> print_metrics(model, split, X<span class="op">=</span>X_train, y<span class="op">=</span>y_train):</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">    Print metrics for trained model</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    y_pred <span class="op">=</span> model.predict(X)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    rmse <span class="op">=</span> root_mean_squared_error(y, y_pred)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    mae <span class="op">=</span> mean_absolute_error(y, y_pred)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    r2  <span class="op">=</span> r2_score(y, y_pred)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>split<span class="sc">}</span><span class="ss"> — RMSE: </span><span class="sc">{</span>rmse<span class="sc">:.2f}</span><span class="ss">  |  MAE: </span><span class="sc">{</span>mae<span class="sc">:.2f}</span><span class="ss">  |  R²: </span><span class="sc">{</span>r2<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="bu">list</span> <span class="op">=</span> [(<span class="st">"Train"</span>, X_train, y_train), (<span class="st">"Test"</span>, X_test, y_test)]</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> gb_baseline</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> split, X, y <span class="kw">in</span> <span class="bu">list</span>:</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    print_metrics(model, split, X, y)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Train — RMSE: 2707.71  |  MAE: 1859.95  |  R²: 0.3182
+Test — RMSE: 2716.39  |  MAE: 1864.51  |  R²: 0.3177</code></pre>
+</div>
+</div>
+<ol start="3" type="1">
+<li><strong>How does the default Gradient Boosting model compare with the best Random Forest model from Exercise 6?</strong></li>
+</ol>
+</section>
+</section>
+<section id="key-hyperparameters-of-gradient-boosting" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Key Hyperparameters of Gradient Boosting</h1>
+<p>The gradient boosting algorithm has many hyperparameters, but the literature identifies a small set that most strongly influence model performance. Gradient-boosting hyperparameters are also coupled, so we cannot set them one after the other anymore. The important hyperparameters are <code>max_iter</code>, <code>learning_rate</code>, and <code>max_depth</code> or <code>max_leaf_nodes</code> (as previously discussed random forest). We recommend reading the scikit-learn MOOC on tuning <a href="https://inria.github.io/scikit-learn-mooc/python_scripts/ensemble_hyperparameters.html#histogram-gradient-boosting-decision-trees">here</a> for more details. Here for this tutorial, we focus on these four groups:</p>
+<p><strong>1. Number of trees (<code>max_iter</code>)</strong></p>
+<p><code>max_iter</code>, similarly to the <code>n_estimators</code> hyperparameter in random forests, controls the number of trees in the final estimator. <strong>With gradient boosting, if you add a tree, you will get closer to the target.</strong> Unlike a random forest, the performance of a gradient boosting model on the <strong>training set grows continuously</strong> as more trees are added — it never plateaus. But if the number of trees is too large, the model will overfit : your score on the training set will get close to 100% but the score on the test set will not increase. If the number of trees is too small, the model will underfit. The optimal number of trees therefore depends on the learning rate: a lower learning rate requires more trees to achieve equivalent performance.</p>
+<p>In <code>HistGradientBoostingRegressor</code>, the number of trees is controlled by <code>max_iter</code> (default: 100).</p>
+<p>As a reminder, overfitting occurs when a model captures statistical noise and idiosyncrasies of the training data. This information should not influence the model’s predictions on new data (i.e., during inference). Conversely, underfitting occurs when a model is too simple to capture the underlying patterns in the data, resulting in poor performance on both training and unseen data.</p>
+<p><strong>2. Tree complexity (<code>max_leaf_nodes</code>, <code>max_depth</code>)</strong></p>
+<p>These parameters control the complexity of each individual tree (the <em>weak learner</em>). <code>max_leaf_nodes</code> sets the maximum number of terminal leaves; <code>max_depth</code> sets the maximum depth. Shallow trees (few leaves, low depth) reduce overfitting but limit the ability of each tree to capture interactions between variables. Deeper trees are more expressive but risk overfitting and slow down training. <strong>In gradient boosting, trees are typically kept shallow (typically between 3 to 8 levels, equivalent to 8 (2^3) to 256 (2^8) leaves ) — the model’s power comes from combining many of them, not from the complexity of each one.</strong> Therefore, it can be beneficial to increase <code>max_iter</code> if <code>max_depth</code> is low.</p>
+<p>In <code>HistGradientBoostingRegressor</code>, the leaf-wise growth strategy is used, making <code>max_leaf_nodes</code> the primary parameter (default: 31).</p>
+<p><strong>3. Learning rate (<code>learning_rate</code>)</strong></p>
+<p>The learning rate <span class="math inline">\(\eta \in (0, 1]\)</span> scales the contribution of each tree to the ensemble. A lower value makes learning more gradual — each tree corrects errors more cautiously — which typically reduces overfitting but requires more trees to converge. A higher value speeds up training but can cause instability and overfitting. Typical values range from <code>0.01</code> to <code>0.3</code>. The learning rate and the number of trees are tightly linked.</p>
+<p>In <code>HistGradientBoostingRegressor</code>, the default learning-rate is 0.1.</p>
+<p><strong>4. Regularisation (<code>l2_regularization</code>, <code>min_samples_leaf</code>)</strong></p>
+<ul>
+<li><code>l2_regularization</code>: applies an L2 penalty to the leaf weights, shrinking them towards zero. This reduces the influence of outliers and limits overfitting.</li>
+</ul>
+<p>In <code>HistGradientBoostingRegressor</code>, default value is <code>0</code> (no regularisation), but a positive value is often recommended in practice.</p>
+<ul>
+<li><code>min_samples_leaf</code>: the minimum number of observations that a terminal leaf must contain. Higher values prevent the model from creating very small leaves and thus from overfitting.</li>
+</ul>
+<p>In <code>HistGradientBoostingRegressor</code>, default value is <code>20</code>.</p>
+<p>For more information, you can read the detailed description of these hyperparameters <a href="https://inseefrlab-github-io.translate.goog/DT_methodes_ensemblistes/chapters/chapter3/3-guide_usage_GB.html?_x_tr_sl=fr&amp;_x_tr_tl=en&amp;_x_tr_hl=en&amp;_x_tr_pto=wapp#sec-hyperparam-gb">here</a> or on scikit learn’s documentation (for the <a href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html"><code>HistGradientBoostingRegressor</code> function</a> or the <a href="https://inria.github.io/scikit-learn-mooc/python_scripts/ensemble_hyperparameters.html">MOOC material</a>).</p>
+<section id="tuning-gradient-boosting-hyperparameters" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="tuning-gradient-boosting-hyperparameters"><span class="header-section-number">3.1</span> Tuning Gradient Boosting Hyperparameters</h2>
+<p>We follow the <strong>iterative simple validation procedure</strong> described in the <a href="https://inseefrlab-github-io.translate.goog/DT_methodes_ensemblistes/chapters/chapter3/3-guide_usage_GB.html?_x_tr_sl=fr&amp;_x_tr_tl=en&amp;_x_tr_hl=en&amp;_x_tr_pto=wapp#approche-2-approche-it%C3%A9rative-par-validation-simple">usage guide</a>. Rather than using cross-validation (which would require training many models), we evaluate each hyperparameter configuration once on the test set and proceed in three sequential steps:</p>
+<ol type="1">
+<li><strong>Jointly optimise the number of trees and the learning rate</strong> — these two hyperparameters are tightly linked and must be tuned together.</li>
+<li><strong>Jointly optimise the tree structure</strong> — using the best values from step 1.</li>
+<li><strong>Optimise the regularisation parameters</strong> — using the best values from steps 1 and 2.</li>
+</ol>
+<p>For each step, we record <strong>both training and test scores</strong> to monitor overfitting. A large gap between train and test performance signals that the model is overfitting.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We use the same <code>X_train</code>, <code>X_test</code>, <code>y_train</code>, <code>y_test</code> splits defined in the preprocessing section. Note that strictly speaking, the test set should not be used to select hyperparameters — a proper hold-out validation set should be used instead. We use the test set here for simplicity and pedagogical clarity.</p>
+</div>
+</div>
+</section>
+<section id="exercice-8-tuning-gradient-boosting-hyperparameters" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="exercice-8-tuning-gradient-boosting-hyperparameters"><span class="header-section-number">3.2</span> Exercice 8: Tuning Gradient Boosting hyperparameters</h2>
+<ol start="0" type="1">
+<li>Let’s prepare the pipeline. This time, we will use all of the features :</li>
+</ol>
+<ul>
+<li><strong>Load the training and testing datasets <code>X_train, X_test, y_train, y_test</code> that we saved earlier using panda’s <code>read_parquet</code>.</strong></li>
+<li><strong>Update the definition of our previous pipeline structure (with <code>TransformedTargetRegressor</code>) with a Gradient Boosting model with <code>random state</code> and <code>early stopping</code> parameters.</strong></li>
+</ul>
+<p>Note that we will tune the hyperparameters using the whole pipeline and this set of training and test sets.</p>
+<div id="c5110b38" class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>See the solution</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>X_train <span class="op">=</span> pd.read_parquet(<span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_train.parquet"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>X_test  <span class="op">=</span> pd.read_parquet(<span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_test.parquet"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>y_train <span class="op">=</span> pd.read_parquet(<span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_train.parquet"</span>)[<span class="st">"price_sqm"</span>]</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>y_test  <span class="op">=</span> pd.read_parquet(<span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_test.parquet"</span>)[<span class="st">"price_sqm"</span>]</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>gb_pipeline <span class="op">=</span> Pipeline([</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'preprocessing'</span>, preprocessor),</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'GB'</span>, HistGradientBoostingRegressor(</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        random_state<span class="op">=</span>RANDOM_STATE,</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        early_stopping<span class="op">=</span><span class="va">True</span>))</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> TransformedTargetRegressor(</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    regressor<span class="op">=</span>gb_pipeline,</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    transformer<span class="op">=</span>y_transformer</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<section id="step-1-jointly-optimise-the-number-of-trees-and-the-learning-rate" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="step-1-jointly-optimise-the-number-of-trees-and-the-learning-rate"><span class="header-section-number">3.2.1</span> Step 1 — Jointly optimise the number of trees and the learning rate</h3>
+<ol type="1">
+<li><strong>Define the parameter grid for <code>max_iter</code> and <code>learning_rate</code>, then run a <code>GridSearchCV</code> with 2 folds (to speed-up training time), <code>scoring="r2"</code> and <code>return_train_score=True</code>.</strong> Use <code>n_jobs=-1</code> to parallelise the search.</li>
+</ol>
+<p>Note that the grid search can take some time to compute (for example, about 40 minutes for 36 iterations) so don’t choose more than 5 sets of values for each parameter to tune. You could also tune the hyperparameters bases on a sample of data to make it faster.</p>
+<p><strong>Be careful : usually, you have to choose more than 2 folds for the cross validation (often 5).</strong> We chose 2 folds of validation here to speed up training.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Hint">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Hint
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>When using <code>GridSearchCV</code>, the parameter names must match those of the estimator passed to it. Here we pass a <code>HistGradientBoostingRegressor</code> directly, so names are simply <code>max_iter</code> and <code>learning_rate</code>.</p>
+<p>To retrieve all fold scores after fitting, use <code>cv_results_</code> — it is a dict that contains <code>mean_train_score</code>, <code>mean_test_score</code>, and the corresponding parameter values.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Filter error messages">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Filter error messages
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When doing your gridsearch, you may have many error messages about <code>sklearn.utils.parallel.delayed</code> that should be used with <code>sklearn.utils.parallel.Parallel</code>. This error does not matter here. To filter this error, just add the following lines of code before running your gridsearch :</p>
+<div id="3712e961" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>warnings.filterwarnings(<span class="st">"ignore"</span>, message<span class="op">=</span><span class="st">".*sklearn.utils.parallel.delayed.*"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<div id="6433efce" class="cell" data-execution_count="6">
+<details class="code-fold">
+<summary>See the solution</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> GridSearchCV</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>param_grid_step1 <span class="op">=</span> {</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"regressor__GB__max_iter"</span>: [<span class="dv">200</span>, <span class="dv">500</span>],</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"regressor__GB__learning_rate"</span>: [<span class="fl">0.1</span>, <span class="fl">0.15</span>, <span class="fl">0.2</span>],</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>gs_step1 <span class="op">=</span> GridSearchCV(</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    estimator<span class="op">=</span>model,</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    param_grid<span class="op">=</span>param_grid_step1,</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    cv<span class="op">=</span><span class="dv">2</span>,</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    scoring<span class="op">=</span><span class="st">"r2"</span>,</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    return_train_score<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    n_jobs<span class="op">=-</span><span class="dv">1</span>,</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>gs_step1.fit(X_train, y_train)</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Best params : </span><span class="sc">{</span>gs_step1<span class="sc">.</span>best_params_<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Best CV R² : </span><span class="sc">{</span>gs_step1<span class="sc">.</span>best_score_<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<ol start="2" type="1">
+<li><p><strong>Make it a function called <code>results_to_df</code> which takes as input the cross-validation results and returns a dataframe, sorted by descending validation R² values.</strong> For that:</p>
+<ul>
+<li>Retrieve the cross-validation results as a dataFrame;</li>
+<li>Display the mean train and validation R² for each combination, sorted by descending validation R².</li>
+</ul></li>
+</ol>
+<div class="callout callout-style-default callout-tip callout-titled" title="Hint">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Hint
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The cross-validation results are available through the model’s <code>cv_results_</code> attribute. All parameters names are prefixed with <code>param_regressor__GB__</code>. The metrics we are looking for are suffixed <code>mean_train_score</code> and <code>mean_test_score</code>.</p>
+</div>
+</div>
+</div>
+<div id="48a41787" class="cell" data-execution_count="7">
+<details class="code-fold">
+<summary>See the solution</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> results_to_df(results_: <span class="bu">dict</span>):</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    pattern <span class="op">=</span> <span class="st">"param_regressor__GB__"</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    pattern_len <span class="op">=</span> <span class="bu">len</span>(pattern)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    params <span class="op">=</span> [key <span class="cf">for</span> key <span class="kw">in</span> results_.keys() <span class="cf">if</span> key.startswith(pattern)]</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    matching_keys <span class="op">=</span> params <span class="op">+</span> [<span class="st">"mean_train_score"</span>, <span class="st">"mean_test_score"</span>]</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    rename_params <span class="op">=</span> {key: key[pattern_len:] <span class="cf">for</span> key <span class="kw">in</span> params}</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    rename_params[<span class="st">"mean_train_score"</span>] <span class="op">=</span> <span class="st">"train_r2"</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    rename_params[<span class="st">"mean_test_score"</span>] <span class="op">=</span> <span class="st">"cross_val_r2"</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    results_df_ <span class="op">=</span> pd.DataFrame(results_)[matching_keys].rename(columns<span class="op">=</span>rename_params)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> results_df_.sort_values(<span class="st">"cross_val_r2"</span>, ascending<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div id="42fe02d3" class="cell" data-execution_count="8">
+<details class="code-fold">
+<summary>See the solution</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>df_step1 <span class="op">=</span> results_to_df(gs_step1.cv_results_)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In scikit-learn’s <code>GridSearchCV</code>, the column <code>mean_test_score</code> refers to the <strong>cross-validation score</strong> computed on the held-out fold at each split — <strong>not</strong> to a score on <code>X_test</code>. The naming can be confusing: “test” here means “not used for training this fold”. To avoid ambiguity we rename this column <code>cross_val_r2</code> in the results DataFrame.</p>
+</div>
+</div>
+<ol start="3" type="1">
+<li><p><strong>Plot the mean train and validation R² on a single plot, with one line per <code>learning_rate</code>. Make it a function called <code>def plot_results_cv</code> which takes as input the hyperparameter to put on the X axis and the results as a dataframe from previous function.</strong></p>
+<p>What do you observe about the interplay between the two hyperparameters?</p>
+<p>What value for the learning rate and the number of tree do you chose, taking into consideration computation efficiency ?</p></li>
+</ol>
+<div id="76f38237" class="cell" data-execution_count="9">
+<details class="code-fold">
+<summary>See the solution</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_results_cv(param_x:<span class="bu">str</span>, results_df_):</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    param_group_by <span class="op">=</span> [column <span class="cf">for</span> column <span class="kw">in</span> results_df_.columns.to_list() <span class="cf">if</span> column <span class="kw">not</span> <span class="kw">in</span> [param_x, <span class="st">"cross_val_r2"</span>, <span class="st">"train_r2"</span>]][<span class="dv">0</span>]</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    param_group_by_values <span class="op">=</span> results_df_[param_group_by].unique()</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">13</span>, <span class="dv">4</span>))</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> param_line <span class="kw">in</span> param_group_by_values:</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>        subset <span class="op">=</span> results_df_[results_df_[param_group_by] <span class="op">==</span> param_line].sort_values(param_x)</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>        line, <span class="op">=</span> ax.plot(subset[param_x], subset[<span class="st">"train_r2"</span>], linestyle<span class="op">=</span><span class="st">"--"</span>, marker<span class="op">=</span><span class="st">"o"</span>, label<span class="op">=</span><span class="ss">f"Train </span><span class="sc">{</span>param_group_by<span class="sc">}</span><span class="ss">=</span><span class="sc">{</span>param_line<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>        ax.plot(subset[param_x], subset[<span class="st">"cross_val_r2"</span>], marker<span class="op">=</span><span class="st">"x"</span>, color<span class="op">=</span>line.get_color(), label<span class="op">=</span><span class="ss">f"Cross-val </span><span class="sc">{</span>param_group_by<span class="sc">}</span><span class="ss">=</span><span class="sc">{</span>param_line<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="ss">f"</span><span class="sc">{</span>param_x<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="st">"R²"</span>)</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="ss">f"Joint optimisation of </span><span class="sc">{</span>param_group_by<span class="sc">}</span><span class="ss"> and </span><span class="sc">{</span>param_x<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    ax.legend(fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    ax.grid(<span class="va">True</span>, linestyle<span class="op">=</span><span class="st">":"</span>)</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div id="ba41c8b9" class="cell" data-execution_count="10">
+<details class="code-fold">
+<summary>See the solution</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>plot_results_cv(<span class="st">"max_iter"</span>, df_step1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<p>If the best value of <code>max_iter</code> is the largest value tested (500), consider extending the grid before moving to the next step.</p>
+<p>In the end, we chose the hyperparameters 500 fot the number of iterations : going beyond doesn’t improve the score. For the learning rate, 0.25 is a good value.</p>
+<div id="94a52770" class="cell" data-execution_count="11">
+<details class="code-fold">
+<summary>See the solution</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>BEST_ITER <span class="op">=</span> <span class="dv">500</span>  <span class="co"># to automatically catch the best hyperparameter, set to : gs_step1.best_params_["regressor__GB__max_iter"]</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>BEST_LR <span class="op">=</span> <span class="fl">0.25</span>  <span class="co"># to automatically catch the best hyperparameter, set to : gs_step1.best_params_["regressor__GB__learning_rate"]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="step-2-jointly-optimise-the-tree-structure" class="level3" data-number="3.2.2">
+<h3 data-number="3.2.2" class="anchored" data-anchor-id="step-2-jointly-optimise-the-tree-structure"><span class="header-section-number">3.2.2</span> Step 2 — Jointly optimise the tree structure</h3>
+<ol start="4" type="1">
+<li>Fix <code>max_iter</code> and <code>learning_rate</code> to the best values found in step 1, then <strong>run a second <code>GridSearchCV</code> over <code>max_depth</code> and <code>min_samples_leaf</code> with other settings unchanged.</strong></li>
+</ol>
+<div id="b7a210d1" class="cell" data-execution_count="12">
+<details class="code-fold">
+<summary>See the solution</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>param_grid_step2 <span class="op">=</span> {</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"regressor__GB__max_depth"</span> : [<span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">8</span>],</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"regressor__GB__min_samples_leaf"</span>: [<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">50</span>],</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>gb_pipeline_step2 <span class="op">=</span> Pipeline([</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'preprocessing'</span>, preprocessor),</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'GB'</span>, HistGradientBoostingRegressor(</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>        max_iter<span class="op">=</span>BEST_ITER,</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>        learning_rate<span class="op">=</span>BEST_LR,</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>        random_state<span class="op">=</span>RANDOM_STATE,</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>        early_stopping<span class="op">=</span><span class="va">True</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    ))</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>model_step2 <span class="op">=</span> TransformedTargetRegressor(</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>    regressor<span class="op">=</span>gb_pipeline_step2,</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>    transformer<span class="op">=</span>y_transformer</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>gs_step2 <span class="op">=</span> GridSearchCV(</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>    estimator<span class="op">=</span>model_step2,</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>    param_grid<span class="op">=</span>param_grid_step2,</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>    cv<span class="op">=</span><span class="dv">2</span>,</span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>    scoring<span class="op">=</span><span class="st">"r2"</span>,</span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>    return_train_score<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>    n_jobs<span class="op">=-</span><span class="dv">1</span>,</span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>gs_step2.fit(X_train, y_train)</span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Best params : </span><span class="sc">{</span>gs_step2<span class="sc">.</span>best_params_<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Best CV R² : </span><span class="sc">{</span>gs_step2<span class="sc">.</span>best_score_<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<ol start="5" type="1">
+<li><strong>Using our pre-defined functions <code>results_to_df</code> and <code>plot_results_cv</code> plot the result for each combination.</strong> Which combinations show signs of overfitting?</li>
+</ol>
+<div id="4205e85d" class="cell" data-execution_count="13">
+<details class="code-fold">
+<summary>See the solution</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>df_step2 <span class="op">=</span> results_to_df(gs_step2.cv_results_)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>plot_results_cv(<span class="st">"min_samples_leaf"</span>, df_step2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<p>Let’s set the max depth and minimal size of terminal leaves.</p>
+<div id="636ec23b" class="cell" data-execution_count="14">
+<details class="code-fold">
+<summary>See the solution</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>BEST_DEPTH <span class="op">=</span> <span class="dv">20</span> <span class="co"># to automatically catch the best hyperparameter, set to : gs_step2.best_params_["regressor__GB__max_depth"]</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>BEST_MIN_LEAF <span class="op">=</span> <span class="dv">75</span> <span class="co"># to automatically catch the best hyperparameter, set to : gs_step2.best_params_["regressor__GB__min_samples_leaf"]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="step-3-optimise-the-regularisation-parameters" class="level3" data-number="3.2.3">
+<h3 data-number="3.2.3" class="anchored" data-anchor-id="step-3-optimise-the-regularisation-parameters"><span class="header-section-number">3.2.3</span> Step 3 — Optimise the regularisation parameters</h3>
+<ol start="6" type="1">
+<li>Using the best hyperparameters found in steps 1 and 2,<strong>run a third <code>GridSearchCV</code> for value of <code>l2_regularization</code> in <code>[0.0, 0.1, 0.3, 0.5, 1.0]</code>.</strong> To be able to reuse our predefined function, <strong>make it as if it was a cross validation with <code>max_iter</code> set to <code>BEST_ITER</code>. Using our pre-defined functions <code>results_to_df</code> and <code>plot_results_cv</code> plot the result.</strong></li>
+</ol>
+<p>Does regularisation help reduce the gap between train and test performance?</p>
+<div id="f94d8f45" class="cell" data-execution_count="15">
+<details class="code-fold">
+<summary>See the solution</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>param_grid_step3 <span class="op">=</span> {</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"regressor__GB__l2_regularization"</span> : [<span class="fl">0.0</span>, <span class="fl">0.1</span>, <span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="fl">1.0</span>],</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"regressor__GB__max_iter"</span> : [BEST_ITER],</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>gb_pipeline_step3 <span class="op">=</span> Pipeline([</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'preprocessing'</span>, preprocessor),</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'GB'</span>, HistGradientBoostingRegressor(</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>        learning_rate<span class="op">=</span>BEST_LR,</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>        max_depth<span class="op">=</span>BEST_DEPTH,</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>        min_samples_leaf<span class="op">=</span>BEST_MIN_LEAF,</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>        random_state<span class="op">=</span>RANDOM_STATE,</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>        early_stopping<span class="op">=</span><span class="va">True</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    ))</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>model_step3 <span class="op">=</span> TransformedTargetRegressor(</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    regressor<span class="op">=</span>gb_pipeline_step3,</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>    transformer<span class="op">=</span>y_transformer</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>gs_step3 <span class="op">=</span> GridSearchCV(</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>    estimator<span class="op">=</span>model_step3,</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>    param_grid<span class="op">=</span>param_grid_step3,</span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>    cv<span class="op">=</span><span class="dv">2</span>,</span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>    scoring<span class="op">=</span><span class="st">"r2"</span>,</span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>    return_train_score<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>    n_jobs<span class="op">=-</span><span class="dv">1</span>,</span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>gs_step3.fit(X_train, y_train)</span>
+<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a>df_step3 <span class="op">=</span> results_to_df(gs_step3.cv_results_)</span>
+<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a>plot_results_cv(<span class="st">"l2_regularization"</span>, df_step3)</span>
+<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-37"><a href="#cb16-37" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Best params : </span><span class="sc">{</span>gs_step3<span class="sc">.</span>best_params_<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb16-38"><a href="#cb16-38" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Best CV R² : </span><span class="sc">{</span>gs_step3<span class="sc">.</span>best_score_<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<p><strong>Let’s set the regularization to 0 given the results of the fine-tuning.</strong></p>
+<div id="e9261086" class="cell" data-execution_count="16">
+<details class="code-fold">
+<summary>See the solution</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>BEST_L2 <span class="op">=</span> <span class="dv">0</span> <span class="co"># to automatically catch the best hyperparameter, set to : gs_step3.best_params_["regressor__GB__l2_regularization"]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="step-4-train-the-final-model" class="level3" data-number="3.2.4">
+<h3 data-number="3.2.4" class="anchored" data-anchor-id="step-4-train-the-final-model"><span class="header-section-number">3.2.4</span> Step 4 — Train the final model</h3>
+<ol start="7" type="1">
+<li><strong>Define the final <code>HistGradientBoostingRegressor</code> using all the best hyperparameters identified in the previous steps. Load the train and test datasets. Then re-train it on the full training set.</strong></li>
+</ol>
+<div id="18f42f62" class="cell" data-execution_count="17">
+<details class="code-fold">
+<summary>See the solution</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>gb_final <span class="op">=</span> HistGradientBoostingRegressor(</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    max_iter<span class="op">=</span>BEST_ITER,</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    learning_rate<span class="op">=</span>BEST_LR,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    max_depth<span class="op">=</span>BEST_DEPTH,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    min_samples_leaf<span class="op">=</span>BEST_MIN_LEAF,</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    l2_regularization<span class="op">=</span>BEST_L2,</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    random_state<span class="op">=</span>RANDOM_STATE,</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Wrap in the same pipeline / TransformedTargetRegressor as the RF section</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>gb_pipeline_best <span class="op">=</span> Pipeline([</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"preprocessor"</span>, preprocessor),  <span class="co"># same preprocessor as defined in the preprocessing section</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"GB"</span>, gb_final),</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>gb_model_final <span class="op">=</span> TransformedTargetRegressor(</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>    regressor<span class="op">=</span>gb_pipeline_best,</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>    transformer<span class="op">=</span>y_transformer  <span class="co"># same targettransformer as defined in preprocessing section</span></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>X_train <span class="op">=</span> pd.read_parquet(<span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_train.parquet"</span>)</span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>X_test  <span class="op">=</span> pd.read_parquet(<span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/X_test.parquet"</span>)</span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>y_train <span class="op">=</span> pd.read_parquet(<span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_train.parquet"</span>)[<span class="st">"price_sqm"</span>]</span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>y_test  <span class="op">=</span> pd.read_parquet(<span class="st">"https://minio.lab.sspcloud.fr/projet-funathon/2026/project1/data/2_preprocessing/y_test.parquet"</span>)[<span class="st">"price_sqm"</span>]</span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>gb_model_final.fit(X_train, y_train)</span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Final model trained."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+</section>
+</section>
+<section id="evaluation-of-grandient-boosting-model" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Evaluation of Grandient Boosting model</h1>
+<section id="exercice-9-evaluate-the-final-gradient-boosting-model" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="exercice-9-evaluate-the-final-gradient-boosting-model"><span class="header-section-number">4.1</span> Exercice 9: Evaluate the final Gradient Boosting model</h2>
+<div class="callout callout-style-default callout-important callout-titled" title="If you're stuck - fetch back final GB model">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>If you’re stuck - fetch back final GB model
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div style="display:flex;align-items:center;gap:0.4em;margin-bottom:0.8em;">
+<img src="../img/CheckpointSM3DL.webp" style="max-height:4em;width:auto;flex-shrink:0;">
+<div style="flex:1;margin:0;">
+If you’re stuck, you can fetch back the final trained model by executing the following code. The fetched model can then be used to predict any values and evaluate it.
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> joblib <span class="im">import</span> load</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> s3fs</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Create filesystem object</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>S3_ENDPOINT_URL <span class="op">=</span> <span class="st">"https://"</span> <span class="op">+</span> os.environ[<span class="st">"AWS_S3_ENDPOINT"</span>]</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>fs <span class="op">=</span> s3fs.S3FileSystem(client_kwargs<span class="op">=</span>{<span class="st">'endpoint_url'</span>: S3_ENDPOINT_URL})</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>FILE_PATH_S3 <span class="op">=</span> <span class="st">"projet-funathon/2026/project1/models/gb_model_final.joblib"</span> </span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> fs.<span class="bu">open</span>(FILE_PATH_S3, mode<span class="op">=</span><span class="st">"rb"</span>) <span class="im">as</span> model:</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    gb_model_final <span class="op">=</span> load(model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p>Now that the model has been tuned, evaluate its performance on the test set and compare it to the Random Forest baseline.</p>
+<ol type="1">
+<li>Compute <strong>RMSE</strong>, <strong>MAE</strong> and <strong>R²</strong> on both the training and test sets for the final gradient boosting model using our <code>print_metrics</code> function.</li>
+</ol>
+<div id="233bbc44" class="cell" data-execution_count="18">
+<details class="code-fold">
+<summary>See the solution</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="bu">list</span> <span class="op">=</span> [(<span class="st">"train"</span>, X_train, y_train), (<span class="st">"test"</span>, X_test, y_test)]</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> split, X, y <span class="kw">in</span> <span class="bu">list</span>:</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    print_metrics(gb_model_final, split, X, y)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>train — RMSE: 2735.02  |  MAE: 1712.49  |  R²: 0.3044
+test — RMSE: 2757.83  |  MAE: 1730.26  |  R²: 0.2967</code></pre>
+</div>
+</div>
+<ol start="2" type="1">
+<li>Plot predicted values against actual values on the test set using the function <code>predicted_actual_plot</code> we defined in the section on <a href="../subject/3-RF_model.html">random forest</a>.</li>
+</ol>
+<div id="7a3842cb" class="cell" data-execution_count="19">
+<details class="code-fold">
+<summary>See the solution</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>y_pred_test <span class="op">=</span> gb_model_final.predict(X_test)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>predicted_actual_plot(y_test, y_pred_test, <span class="st">"Gradient Boosting"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<div>
+<figure class="figure">
+<p><img src="3-GB_model_files/figure-html/cell-20-output-1.png" width="591" height="616" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="3-GB_model_files/figure-html/cell-20-output-2.png" width="591" height="616" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>You see that the model isn’t perfect. <strong>It’s only a tutorial so we won’t try to fine-tune it more but the model would need to be better suited before going to production.</strong></p>
+</section>
+<section id="sec-gb-prediction" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="sec-gb-prediction"><span class="header-section-number">4.2</span> Exercice 9bis: Now, let’s play : predict the housing price for your custom address</h2>
+<p>For the prediction, you need to create a dictionary containing all the features X. Since we have more than ten features, we simplify the exercise with a function that builds the dictionary and lets you override some of its values.</p>
+<ol type="1">
+<li><strong>Create a function <code>build_feature_dict</code> that returns a dictionary of features ready for prediction.</strong></li>
+</ol>
+<div id="5256cafa" class="cell" data-execution_count="20">
+<details class="code-fold">
+<summary>See the solution</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_feature_dict(loc_x, loc_y, fare_a, prop_type, feature_dict<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Return a feature dict ready for the model.</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co">    If `feature_dict` is provided, it is returned unchanged.</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co">    Otherwise, a default dict is built from the required arguments.</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="co">        loc_x, loc_y : ()</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> feature_dict <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> feature_dict</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>    _prop_type_map <span class="op">=</span> {<span class="dv">1</span>: <span class="st">"House"</span>, <span class="dv">2</span>: <span class="st">"Flat"</span>}</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>    prop_type_str <span class="op">=</span> _prop_type_map.get(prop_type, <span class="bu">str</span>(prop_type))</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">"farea"</span>: fare_a,</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>        <span class="st">"trans_date"</span>: <span class="st">"01/02/2023"</span>,</span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>        <span class="st">"trans_year"</span>: <span class="dv">2023</span>,</span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>        <span class="st">"trans_month"</span>: <span class="dv">2</span>,</span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>        <span class="st">"prop_type"</span>: prop_type_str,</span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>        <span class="st">"prop_year_harm_10"</span>: <span class="dv">1870</span>,</span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>        <span class="st">"prop_loc_x"</span>: loc_x,</span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>        <span class="st">"prop_loc_y"</span>: loc_y,</span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>        <span class="st">"has_cheating"</span>: <span class="dv">0</span>,</span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a>        <span class="st">"has_elec"</span>: <span class="dv">2</span>,</span>
+<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a>        <span class="st">"has_elevator"</span>: <span class="dv">2</span>,</span>
+<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a>        <span class="st">"has_gas"</span>: <span class="dv">2</span>,</span>
+<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a>        <span class="st">"has_mdrainage"</span>: <span class="dv">2</span>,</span>
+<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a>        <span class="st">"has_rchute"</span>: <span class="dv">0</span>,</span>
+<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a>        <span class="st">"has_water"</span>: <span class="dv">2</span>,</span>
+<span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_floors"</span>: <span class="dv">6</span>,</span>
+<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_bath"</span>: <span class="dv">0</span>,</span>
+<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_eatr"</span>: <span class="dv">0</span>,</span>
+<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_kit8"</span>: <span class="dv">1</span>,</span>
+<span id="cb23-35"><a href="#cb23-35" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_kit9"</span>: <span class="dv">0</span>,</span>
+<span id="cb23-36"><a href="#cb23-36" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_ancrooms"</span>: <span class="dv">0</span>,</span>
+<span id="cb23-37"><a href="#cb23-37" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_attic"</span>: <span class="dv">1</span>,</span>
+<span id="cb23-38"><a href="#cb23-38" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_basmt"</span>: <span class="dv">1</span>,</span>
+<span id="cb23-39"><a href="#cb23-39" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_garage"</span>: <span class="dv">0</span>,</span>
+<span id="cb23-40"><a href="#cb23-40" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_pool"</span>: <span class="dv">0</span>,</span>
+<span id="cb23-41"><a href="#cb23-41" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_mrooms"</span>: <span class="dv">3</span>,</span>
+<span id="cb23-42"><a href="#cb23-42" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_otherannex"</span>: <span class="dv">0</span>,</span>
+<span id="cb23-43"><a href="#cb23-43" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_rooms"</span>: <span class="dv">4</span>,</span>
+<span id="cb23-44"><a href="#cb23-44" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_show"</span>: <span class="dv">1</span>,</span>
+<span id="cb23-45"><a href="#cb23-45" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_sink"</span>: <span class="dv">1</span>,</span>
+<span id="cb23-46"><a href="#cb23-46" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_slr"</span>: <span class="dv">2</span>,</span>
+<span id="cb23-47"><a href="#cb23-47" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_terrace"</span>: <span class="dv">1</span>,</span>
+<span id="cb23-48"><a href="#cb23-48" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_washr"</span>: <span class="dv">1</span>,</span>
+<span id="cb23-49"><a href="#cb23-49" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_wc"</span>: <span class="dv">1</span>,</span>
+<span id="cb23-50"><a href="#cb23-50" aria-hidden="true" tabindex="-1"></a>        <span class="st">"nth_floor"</span>: <span class="dv">3</span>,</span>
+<span id="cb23-51"><a href="#cb23-51" aria-hidden="true" tabindex="-1"></a>        <span class="st">"s_land_agri"</span>: <span class="dv">0</span>,</span>
+<span id="cb23-52"><a href="#cb23-52" aria-hidden="true" tabindex="-1"></a>        <span class="st">"s_land_artif"</span>: <span class="dv">0</span>,</span>
+<span id="cb23-53"><a href="#cb23-53" aria-hidden="true" tabindex="-1"></a>        <span class="st">"s_land_nat"</span>: <span class="dv">0</span>,</span>
+<span id="cb23-54"><a href="#cb23-54" aria-hidden="true" tabindex="-1"></a>        <span class="st">"stair"</span>: <span class="dv">2</span>,</span>
+<span id="cb23-55"><a href="#cb23-55" aria-hidden="true" tabindex="-1"></a>    }</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<ol start="2" type="1">
+<li><strong>Create another dictionary with a few example properties to run predictions on</strong>.</li>
+</ol>
+<div id="ee7aa192" class="cell" data-execution_count="21">
+<details class="code-fold">
+<summary>See the solution</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>prediction_examples <span class="op">=</span> {</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"adresse1"</span> : {<span class="st">"nom"</span> : <span class="st">"88 avenue Verdier 92120 Montrouge"</span>, <span class="st">"fare_a"</span> : <span class="dv">80</span>, <span class="st">"loc_x"</span>: <span class="fl">2.244608</span>, <span class="st">"loc_y"</span>: <span class="fl">48.8865792</span>, <span class="st">"prop_type"</span> : <span class="dv">2</span>},</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"adresse2"</span> : {<span class="st">"nom"</span> : <span class="st">"3 rue Sadi Carnot 78120 Rambouillet"</span>, <span class="st">"fare_a"</span> : <span class="dv">140</span>, <span class="st">"loc_x"</span>: <span class="fl">1.8300153</span>, <span class="st">"loc_y"</span>: <span class="fl">48.6431721</span>, <span class="st">"prop_type"</span> : <span class="dv">1</span>},</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"adresse3"</span> : {<span class="st">"nom"</span> : <span class="st">"1 rue des arts 92700 Colombes"</span>, <span class="st">"fare_a"</span> : <span class="dv">35</span>, <span class="st">"loc_x"</span>: <span class="fl">2.2410483</span>, <span class="st">"loc_y"</span>: <span class="fl">48.9109437</span>, <span class="st">"prop_type"</span> : <span class="dv">2</span>},</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"adresse4"</span> : {<span class="st">"nom"</span> : <span class="st">"152 Rue de Sèvres 75015 Paris"</span>, <span class="st">"fare_a"</span> : <span class="dv">93</span>, <span class="st">"loc_x"</span>: <span class="fl">2.3146301</span>, <span class="st">"loc_y"</span>: <span class="fl">48.8462097</span>, <span class="st">"prop_type"</span> : <span class="dv">2</span>},</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"adresse5"</span> : {<span class="st">"nom"</span> : <span class="st">"3 rue Paul Doumer 93100 Montreuil"</span>, <span class="st">"fare_a"</span> : <span class="dv">105</span>, <span class="st">"loc_x"</span>: <span class="fl">2.45626</span>, <span class="st">"loc_y"</span>: <span class="fl">48.861197</span>, <span class="st">"prop_type"</span> : <span class="dv">1</span>},  </span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<ol start="3" type="1">
+<li>Now, <strong>predict the price per square meter for each example</strong>.</li>
+</ol>
+<div id="62ec5a76" class="cell" data-execution_count="22">
+<details class="code-fold">
+<summary>See the solution</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Build a DataFrame with one row per address — batching is faster than</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co"># calling predict() in a loop and ensures consistent column ordering.</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> []</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> key, infos <span class="kw">in</span> prediction_examples.items():</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    features <span class="op">=</span> build_feature_dict(</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>        loc_x<span class="op">=</span>infos[<span class="st">"loc_x"</span>],</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>        loc_y<span class="op">=</span>infos[<span class="st">"loc_y"</span>],</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>        fare_a<span class="op">=</span>infos[<span class="st">"fare_a"</span>],</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>        prop_type<span class="op">=</span>infos[<span class="st">"prop_type"</span>],</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    features[<span class="st">"adresse"</span>] <span class="op">=</span> infos[<span class="st">"nom"</span>]</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>    features[<span class="st">"id"</span>] <span class="op">=</span> key</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>    rows.append(features)</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>X_examples <span class="op">=</span> pd.DataFrame(rows)</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep metadata aside; the model only sees the feature columns it was trained on.</span></span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>meta_cols <span class="op">=</span> [<span class="st">"id"</span>, <span class="st">"adresse"</span>]</span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>feature_cols <span class="op">=</span> [c <span class="cf">for</span> c <span class="kw">in</span> X_examples.columns <span class="cf">if</span> c <span class="kw">not</span> <span class="kw">in</span> meta_cols]</span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicted price per square meter</span></span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>predicted_price_sqm <span class="op">=</span> gb_model_final.predict(X_examples[feature_cols])</span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> X_examples[meta_cols].copy()</span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a>results[<span class="st">"price_per_sqm"</span>] <span class="op">=</span> predicted_price_sqm.<span class="bu">round</span>(<span class="dv">0</span>)</span>
+<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a>results[<span class="st">"surface"</span>]       <span class="op">=</span> X_examples[<span class="st">"farea"</span>].values</span>
+<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a>results[<span class="st">"total_price"</span>]   <span class="op">=</span> (results[<span class="st">"price_per_sqm"</span>] <span class="op">*</span> results[<span class="st">"surface"</span>]).<span class="bu">round</span>(<span class="dv">0</span>)</span>
+<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _, row <span class="kw">in</span> results.iterrows():</span>
+<span id="cb25-32"><a href="#cb25-32" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(</span>
+<span id="cb25-33"><a href="#cb25-33" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"For the property at </span><span class="sc">{</span>row[<span class="st">'adresse'</span>]<span class="sc">}</span><span class="ss"> "</span></span>
+<span id="cb25-34"><a href="#cb25-34" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"(</span><span class="sc">{</span>row[<span class="st">'surface'</span>]<span class="sc">:.0f}</span><span class="ss"> sqm), the estimated price is "</span></span>
+<span id="cb25-35"><a href="#cb25-35" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"</span><span class="sc">{</span>row[<span class="st">'price_per_sqm'</span>]<span class="sc">:,.0f}</span><span class="ss"> €/sqm, "</span></span>
+<span id="cb25-36"><a href="#cb25-36" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"i.e. a total of about </span><span class="sc">{</span>row[<span class="st">'total_price'</span>]<span class="sc">:,.0f}</span><span class="ss"> €."</span></span>
+<span id="cb25-37"><a href="#cb25-37" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>For the property at 88 avenue Verdier 92120 Montrouge (80 sqm), the estimated price is 2,374 €/sqm, i.e. a total of about 189,920 €.
+For the property at 3 rue Sadi Carnot 78120 Rambouillet (140 sqm), the estimated price is 2,008 €/sqm, i.e. a total of about 281,120 €.
+For the property at 1 rue des arts 92700 Colombes (35 sqm), the estimated price is 4,529 €/sqm, i.e. a total of about 158,515 €.
+For the property at 152 Rue de Sèvres 75015 Paris (93 sqm), the estimated price is 2,356 €/sqm, i.e. a total of about 219,108 €.
+For the property at 3 rue Paul Doumer 93100 Montreuil (105 sqm), the estimated price is 1,103 €/sqm, i.e. a total of about 115,815 €.</code></pre>
+</div>
+</div>
+<p>Real life prices are far more expensive in Paris :) It’s a confirmation that the model isn’t perfect. <strong>The model would need to be better suited before going to production but it takes more than 2 days to really fine-tune it !</strong></p>
+</section>
+</section>
+<section id="summary" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Summary</h1>
+<p>Congrats 🎉! In this section, you have successfully :</p>
+<ul>
+<li>seen the foundations of goosting models,</li>
+<li>trained a <code>HistGradientBoostingRegressor</code> with scikit-learn,</li>
+<li>optimized the <code>HistGradientBoostingRegressor</code> parameters through a gridsearch,</li>
+<li>and finally, evaluated the best gradient boosting model for price per square meter predictions with the RMSE and MAE metrics.</li>
+</ul>
+<p>You can now have a look at how to train a <a href="../subject/3-RF_model.html">random forest model</a>. Once you have trained both model, you can have a closer look at metrics with the <a href="../subject/4-metrics.html">metrics section</a>.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/AIML4OS\.github\.io\/funathon-project1\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/AIML4OS/funathon-project1/edit/main/subject/3-GB_model.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/AIML4OS/funathon-project1/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+    <a class="nav-link" href="../LICENCE">
+<p>License</p>
+</a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
