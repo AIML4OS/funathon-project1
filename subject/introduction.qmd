@@ -167,6 +167,18 @@ To do this, open the command palette `Show and Run commands` or press `Ctrl+Shif
 /home/onyxia/work/funathon-project1/.venv/bin/python3.13
 ```
 
+## Running scripts
+
+You need to use `uv` to run a Python script using uv's managed environment. 
+`uv` will manage all the dependancies of your script. 
+To do so, you need to be in the working directory where the `pyproject.toml` file is stored.   
+
+To run the script in starting point for example, run the following command:
+
+```{.bash}
+:~/work/funathon-project1$ uv run starting_point/main.py
+```
+
 # Next step
 Congrats, you're all set-up now. 
 
