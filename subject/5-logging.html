@@ -77,7 +77,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-5a3d0b27430484980d075601037230b8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-2166e07e90061561f63b1097d3bf9135.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -213,7 +213,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>After training and tuning a model, it is essential to track experiments and save artifacts in a reproducible way. <a href="https://mlflow.org/">MLflow</a> is an open-source platform that manages the full ML lifecycle: experiment tracking, model logging and deployment.</p>
+<p>After having seen how to train and tune a model, <strong>it is essential to track experiments and save artifacts in a reproducible way</strong>. <a href="https://mlflow.org/">MLflow</a> is an open-source platform that manages the full ML lifecycle: experiment tracking, model logging and deployment.</p>
 <p>In this section, we will use MLflow to log the pre-trained RF model built in the <a href="../subject/3-RF_model.html">dedicated section</a>, along with its configuration tags, hyperparameters, evaluation metrics, diagnostic figures and the model artifact itself.</p>
 <p>Key MLflow concepts you will use in this exercise are:</p>
 <ul>
@@ -227,13 +227,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>The MLflow tracking user interface (UI) lets you compare runs, visualize metrics over time and retrieve any logged artifact. All the logging calls in this exercise are made inside a single <code>with mlflow.start_run()</code> block, which automatically closes the run when the block exits.</p>
 <p>Don’t forget to search in <a href="https://mlflow.org/docs/latest/api_reference/python_api/mlflow.html#">MLFlow documentation</a> for the functions details you’re looking for.</p>
+<p>If you’re struggling with this part, the complete solution is available in the <code>solution/log_mlflow.py</code> and <code>solution/main.py</code> scripts,</p>
 <section id="exercise-12-log-your-rf-model-with-mlflow" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Exercise 12: Log your RF model with MLflow</h1>
 <p>In this exercise, you will log the pre-trained RF model step by step, following the structure of the main training script. By the end, every artifact produced during training — figures, parameters, metrics and the model itself — will be registered in MLflow.</p>
 <ol type="1">
 <li>Before starting, <strong>make sure that the MLflow tracking URI is set and that the experiment exists.</strong></li>
 </ol>
-<div id="3d83f6c9" class="cell" data-execution_count="1">
+<div id="550c6472" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> mlflow</span>
@@ -263,7 +264,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="d8da6491" class="cell" data-execution_count="2">
+<div id="fd57efd3" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> mlflow.start_run(run_name<span class="op">=</span><span class="st">"run_rf"</span>):</span>
@@ -290,7 +291,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="835898f6" class="cell" data-execution_count="3">
+<div id="ba9186aa" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>    mlflow.set_tags({</span>
@@ -321,7 +322,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="736a1aed" class="cell" data-execution_count="4">
+<div id="348892d1" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>    mlflow.log_params({</span>
@@ -358,7 +359,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="7adf7eb0" class="cell" data-execution_count="5">
+<div id="211703fc" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>    mlflow.log_figure(oob_error_ntrees, <span class="st">"convergence_ntrees_oob_error.png"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -383,7 +384,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="3e5cb244" class="cell" data-execution_count="6">
+<div id="e64f5ac0" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>    mlflow.log_params(grid_search.best_params_)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -408,7 +409,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="daf80f2b" class="cell" data-execution_count="7">
+<div id="05f36326" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>    <span class="im">from</span> sklearn.metrics <span class="im">import</span> root_mean_squared_error, r2_score, mean_absolute_error</span>
@@ -451,7 +452,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="dddd6409" class="cell" data-execution_count="8">
+<div id="5ebe8537" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>    mlflow.log_figure(</span>
@@ -496,7 +497,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="dc410230" class="cell" data-execution_count="9">
+<div id="a73cb54d" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> mlflow.sklearn</span>
@@ -532,7 +533,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="1f1aa42a" class="cell" data-execution_count="10">
+<div id="be0cffce" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>See the solution</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-overflow-scroll code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Run ID : </span><span class="sc">{</span>mlflow<span class="sc">.</span>active_run()<span class="sc">.</span>info<span class="sc">.</span>run_id<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
